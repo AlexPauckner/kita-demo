@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kita Betreuung">
+<title>Kinderladen — Betreuungsabfrage</title>
+<style>
+  :root {
+    --teal-900: #004d40;
+    --teal-800: #00695c;
+    --teal-700: #00897b;
+    --teal-600: #009688;
+    --teal-500: #26a69a;
+    --teal-400: #4db6ac;
+    --teal-100: #b2dfdb;
+    --teal-50: #e0f2f1;
+    --red-600: #e53935;
+    --red-100: #ffcdd2;
+    --red-50: #ffebee;
+    --orange-600: #ef6c00;
+    --orange-100: #ffe0b2;
+    --orange-50: #fff3e0;
+    --green-600: #2e7d32;
+    --green-100: #c8e6c9;
+    --green-50: #e8f5e9;
+    --gray-50: #fafafa;
+    --gray-100: #f5f5f5;
+    --gray-200: #eeeeee;
+    --gray-400: #bdbdbd;
+    --gray-600: #757575;
+    --gray-800: #424242;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,.1), 0 2px 4px rgba(0,0,0,.06);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,.15);
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-800);
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+    min-height: 100dvh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, var(--teal-800), var(--teal-600));
+    color: white;
+    padding: 16px 20px;
+    padding-top: calc(env(safe-area-inset-top, 12px) + 12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-md);
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    opacity: 0.85;
+    margin-top: 2px;
+  }
+
+  /* Container */
+  .container {
+    padding: 16px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* Ampel-Banner */
+  .ampel-banner {
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+  }
+  .ampel-banner.green {
+    background: var(--green-50);
+    border: 2px solid var(--green-100);
+  }
+  .ampel-banner.orange {
+    background: var(--orange-50);
+    border: 2px solid var(--orange-100);
+  }
+  .ampel-banner.red {
+    background: var(--red-50);
+    border: 2px solid var(--red-100);
+  }
+  .ampel-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .ampel-banner.green .ampel-dot { background: var(--green-600); }
+  .ampel-banner.orange .ampel-dot { background: var(--orange-600); }
+  .ampel-banner.red .ampel-dot { background: var(--red-600); }
+  .ampel-text { flex: 1; }
+  .ampel-text .label { font-weight: 700; font-size: 15px; }
+  .ampel-text .detail { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+
+  /* Tag-Auswahl */
+  .day-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  .day-tab {
+    flex: 1;
+    min-width: 60px;
+    padding: 10px 8px;
+    border-radius: 10px;
+    border: 2px solid var(--gray-200);
+    background: white;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .day-tab.active {
+    border-color: var(--teal-600);
+    background: var(--teal-50);
+    color: var(--teal-800);
+  }
+  .day-tab .day-name { display: block; font-size: 12px; font-weight: 500; }
+  .day-tab .day-date { display: block; font-size: 15px; margin-top: 2px; }
+
+  /* Personal-Karten */
+  .staff-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .staff-card:active {
+    transform: scale(0.98);
+  }
+  .staff-card.sick {
+    border-color: var(--red-100);
+    background: var(--red-50);
+  }
+  .staff-card.sick .staff-shift {
+    text-decoration: line-through;
+    color: var(--gray-400);
+  }
+  .staff-card.absent {
+    border-color: var(--gray-200);
+    background: var(--gray-50);
+    opacity: 0.6;
+  }
+
+  .staff-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+    flex-shrink: 0;
+  }
+  .staff-avatar.fk { background: var(--teal-700); }
+  .staff-avatar.ek { background: var(--teal-400); }
+
+  .staff-info { flex: 1; }
+  .staff-name {
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .staff-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .staff-badge.fk {
+    background: var(--teal-100);
+    color: var(--teal-800);
+  }
+  .staff-badge.ek {
+    background: var(--gray-200);
+    color: var(--gray-600);
+  }
+  .staff-shift {
+    font-size: 14px;
+    color: var(--gray-600);
+    margin-top: 2px;
+  }
+
+  .staff-status {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .staff-status.krank {
+    background: var(--red-600);
+    color: white;
+  }
+  .staff-status.frei {
+    background: var(--gray-200);
+    color: var(--gray-600);
+  }
+
+  /* Öffnungszeiten-Info */
+  .hours-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .hours-card h3 {
+    font-size: 14px;
+    color: var(--gray-600);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .hours-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+  }
+  .hours-row + .hours-row { border-top: 1px solid var(--gray-100); }
+  .hours-label { font-size: 14px; color: var(--gray-600); }
+  .hours-value { font-size: 16px; font-weight: 700; }
+  .hours-value.normal { color: var(--green-600); }
+  .hours-value.reduced { color: var(--orange-600); }
+  .hours-value.closed { color: var(--red-600); }
+
+  /* Action Button */
+  .action-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--radius);
+    border: none;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    margin-bottom: 12px;
+    letter-spacing: -0.2px;
+  }
+  .action-btn:active { transform: scale(0.98); }
+  .action-btn.primary {
+    background: linear-gradient(135deg, var(--teal-700), var(--teal-600));
+    color: white;
+    box-shadow: var(--shadow-md);
+  }
+  .action-btn.primary:disabled {
+    background: var(--gray-400);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+  .action-btn.secondary {
+    background: white;
+    color: var(--teal-700);
+    border: 2px solid var(--teal-100);
+  }
+
+  /* Nachrichten-Bereich */
+  .messages-section {
+    display: none;
+    animation: slideUp 0.3s ease;
+  }
+  .messages-section.visible { display: block; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message-card {
+    background: white;
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .message-header {
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .message-header.info { background: var(--orange-50); color: var(--orange-600); }
+  .message-header.urgent { background: var(--red-50); color: var(--red-600); }
+  .message-header.closed { background: var(--gray-100); color: var(--gray-800); }
+  .message-body {
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    color: var(--gray-800);
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .message-footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--gray-100);
+  }
+  .copy-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--teal-50);
+    color: var(--teal-700);
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .copy-btn:active { background: var(--teal-100); }
+  .copy-btn.copied {
+    background: var(--green-100);
+    color: var(--green-600);
+  }
+
+  /* Reset-Link */
+  .reset-link {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    color: var(--gray-400);
+    font-size: 14px;
+    text-decoration: none;
+    margin-top: 8px;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: calc(env(safe-area-inset-bottom, 20px) + 20px);
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--gray-800);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    z-index: 200;
+    opacity: 0;
+    transition: all 0.3s;
+    box-shadow: var(--shadow-lg);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Section Header */
+  .section-header {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 8px 4px 8px;
+  }
+
+  /* Hint */
+  .hint {
+    text-align: center;
+    color: var(--gray-400);
+    font-size: 13px;
+    padding: 8px 0 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Kinderladen Betreuung</h1>
+  <div class="subtitle" id="kwInfo"></div>
+</div>
+
+<div class="container">
+  <!-- Tag-Auswahl -->
+  <div class="day-tabs" id="dayTabs"></div>
+
+  <!-- Ampel -->
+  <div class="ampel-banner green" id="ampelBanner">
+    <div class="ampel-dot">✓</div>
+    <div class="ampel-text">
+      <div class="label" id="ampelLabel">Alles OK</div>
+      <div class="detail" id="ampelDetail">3 FK, 5 EK anwesend</div>
+    </div>
+  </div>
+
+  <!-- Öffnungszeiten -->
+  <div class="hours-card" id="hoursCard">
+    <h3>Öffnungszeiten</h3>
+    <div id="hoursContent"></div>
+  </div>
+
+  <!-- Personal -->
+  <div class="section-header">Pädagoginnen — Tap zum Krankmelden</div>
+  <div id="staffList"></div>
+  <div class="hint" id="staffHint">Tippe auf eine Person, um sie als KRANK zu markieren</div>
+
+  <!-- Nachrichten generieren -->
+  <button class="action-btn primary" id="generateBtn" disabled onclick="generateMessages()">
+    Nachrichten generieren
+  </button>
+
+  <!-- Nachrichten -->
+  <div class="messages-section" id="messagesSection">
+    <div class="section-header">Fertige WhatsApp-Nachrichten</div>
+
+    <div class="message-card">
+      <div class="message-header info">🆘 Nachricht 1 — Erste Info</div>
+      <div class="message-body" id="msg1"></div>
+      <div class="message-footer">
+        <button class="copy-btn" onclick="copyMessage(1, this)">
+          <span>📤</span> Kopieren / Teilen
+        </button>
+      </div>
+    </div>
+
+    <div class="message-card">
+      <div class="message-header urgent">🔴 Nachricht 2 — Dringende Nachfrage</div>
+      <div class="message-body" id="msg2"></div>
+      <div class="message-footer">
+        <button class="copy-btn" onclick="copyMessage(2, this)">
+          <span>📤</span> Kopieren / Teilen
+        </button>
+      </div>
+    </div>
+
+    <div class="message-card">
+      <div class="message-header closed">🚫 Nachricht 3 — Kita-Schließung</div>
+      <div class="message-body" id="msg3"></div>
+      <div class="message-footer">
+        <button class="copy-btn" onclick="copyMessage(3, this)">
+          <span>📤</span> Kopieren / Teilen
+        </button>
+      </div>
+    </div>
+
+    <a href="#" class="reset-link" onclick="resetAll(); return false;">↩ Zurücksetzen</a>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Kopiert!</div>
+
+<script>
+// ==========================================
+// DATEN — Echte Beispieldaten KW11 2026
+// ==========================================
+
+const STAFF = [
+  { name: 'Hannah',  type: 'FK', shifts: ['07:30-16:30','07:30-16:30','07:30-14:30','07:30-16:30','07:30-14:30'] },
+  { name: 'Lioba',   type: 'FK', shifts: ['07:45-16:00','07:45-16:00','07:45-16:00','07:45-16:00','07:45-16:00'] },
+  { name: 'Dilsad',  type: 'FK', shifts: ['08:00-14:30','08:00-14:30','08:00-16:30','FREI','08:00-14:30'] },
+  { name: 'Lidija',  type: 'EK', shifts: ['07:30-12:30','07:30-12:30','07:30-12:30','07:30-12:30','07:30-12:30'] },
+  { name: 'Hurguel', type: 'EK', shifts: ['10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30'] },
+  { name: 'Niels',   type: 'EK', shifts: ['09:00-14:00','FREI','09:00-14:00','09:00-14:00','FREI'] },
+  { name: 'Steffi',  type: 'EK', shifts: ['FREI','10:15-16:15','FREI','10:15-16:15','FREI'] },
+  { name: 'Gul',     type: 'EK', shifts: ['12:00-16:30','12:00-16:30','FREI','12:00-16:30','12:00-16:30'] },
+];
+
+const DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
+const DAYS_FULL = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
+
+// KW11 2026: 09.03 - 13.03
+const KW = 11;
+const DATES = ['09.03.', '10.03.', '11.03.', '12.03.', '13.03.'];
+const NORMAL_HOURS = '07:30 – 16:30';
+
+let selectedDay = 0; // Montag default
+let sickStaff = {}; // { "Hannah-0": true, "Lioba-2": true, ... }
+
+// ==========================================
+// INIT
+// ==========================================
+
+function init() {
+  document.getElementById('kwInfo').textContent = `KW ${KW} · ${DATES[0]} – ${DATES[4]} März 2026`;
+
+  // Aktuellen Wochentag vorselektieren (falls Mo-Fr)
+  const today = new Date().getDay(); // 0=So, 1=Mo
+  if (today >= 1 && today <= 5) {
+    selectedDay = today - 1;
+  }
+
+  renderDayTabs();
+  renderDay();
+}
+
+function renderDayTabs() {
+  const container = document.getElementById('dayTabs');
+  container.innerHTML = '';
+  DAYS.forEach((day, i) => {
+    const tab = document.createElement('div');
+    tab.className = 'day-tab' + (i === selectedDay ? ' active' : '');
+    tab.innerHTML = `<span class="day-name">${day}</span><span class="day-date">${DATES[i]}</span>`;
+    tab.onclick = () => { selectedDay = i; renderDayTabs(); renderDay(); };
+    container.appendChild(tab);
+  });
+}
+
+function renderDay() {
+  renderStaff();
+  updateAmpel();
+  updateHours();
+  updateGenerateBtn();
+
+  // Nachrichten-Bereich ausblenden bei Tag-Wechsel
+  document.getElementById('messagesSection').classList.remove('visible');
+}
+
+// ==========================================
+// PERSONAL RENDERN
+// ==========================================
+
+function renderStaff() {
+  const container = document.getElementById('staffList');
+  container.innerHTML = '';
+
+  STAFF.forEach((person, idx) => {
+    const shift = person.shifts[selectedDay];
+    const key = `${person.name}-${selectedDay}`;
+    const isSick = sickStaff[key] === true;
+    const isFrei = shift === 'FREI';
+
+    const card = document.createElement('div');
+    card.className = 'staff-card' + (isSick ? ' sick' : '') + (isFrei && !isSick ? ' absent' : '');
+
+    const initials = person.name.substring(0, 2).toUpperCase();
+
+    let statusHtml = '';
+    if (isSick) {
+      statusHtml = '<div class="staff-status krank">KRANK</div>';
+    } else if (isFrei) {
+      statusHtml = '<div class="staff-status frei">FREI</div>';
+    }
+
+    card.innerHTML = `
+      <div class="staff-avatar ${person.type.toLowerCase()}">${initials}</div>
+      <div class="staff-info">
+        <div class="staff-name">
+          ${person.name}
+          <span class="staff-badge ${person.type.toLowerCase()}">${person.type}</span>
+        </div>
+        <div class="staff-shift">${isFrei ? 'Frei' : shift}</div>
+      </div>
+      ${statusHtml}
+    `;
+
+    if (!isFrei || isSick) {
+      card.onclick = () => toggleSick(person.name);
+    }
+
+    container.appendChild(card);
+  });
+}
+
+function toggleSick(name) {
+  const key = `${name}-${selectedDay}`;
+  if (sickStaff[key]) {
+    delete sickStaff[key];
+  } else {
+    sickStaff[key] = true;
+  }
+  renderDay();
+}
+
+// ==========================================
+// AMPEL + ÖFFNUNGSZEITEN BERECHNEN
+// ==========================================
+
+function getActiveStaff(dayIndex) {
+  const active = [];
+  STAFF.forEach(person => {
+    const shift = person.shifts[dayIndex];
+    const key = `${person.name}-${dayIndex}`;
+    if (shift !== 'FREI' && !sickStaff[key]) {
+      const [startStr, endStr] = shift.split('-');
+      const start = parseTime(startStr);
+      const end = parseTime(endStr);
+      active.push({
+        name: person.name,
+        type: person.type,
+        isFK: person.type === 'FK',
+        isEK: person.type === 'EK',
+        start,
+        end
+      });
+    }
+  });
+  return active;
+}
+
+function parseTime(str) {
+  const [h, m] = str.split(':').map(Number);
+  return h * 60 + m;
+}
+
+function formatTime(minutes) {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+}
+
+function computeOpeningWindow(active) {
+  if (active.length === 0) {
+    return { start: null, end: null, status: 'GESCHLOSSEN', fkStart: null, fkEnd: null };
+  }
+
+  const rasterStart = 7 * 60;
+  const rasterEnd = 17 * 60;
+
+  let fkStart = null, fkEnd = null;
+  let notStart = null, notEnd = null;
+
+  for (let t = rasterStart; t <= rasterEnd; t += 5) {
+    let fkCount = 0, total = 0;
+    active.forEach(s => {
+      if (t >= s.start && t < s.end) {
+        total++;
+        if (s.isFK) fkCount++;
+      }
+    });
+
+    if (fkCount >= 2) {
+      if (fkStart === null) fkStart = t;
+      fkEnd = t + 5;
+    }
+    if (fkCount >= 1 && total >= 2) {
+      if (notStart === null) notStart = t;
+      notEnd = t + 5;
+    }
+  }
+
+  if (fkStart !== null) {
+    let oStart = fkStart;
+    let oEnd = fkEnd;
+    if (notStart !== null && notStart < fkStart) {
+      oStart = Math.max(notStart, fkStart - 30);
+    }
+    if (notEnd !== null && notEnd > fkEnd) {
+      oEnd = Math.min(notEnd, fkEnd + 30);
+    }
+    return { start: oStart, end: oEnd, status: 'OK', fkStart, fkEnd };
+  }
+
+  if (notStart !== null) {
+    return { start: notStart, end: Math.min(notEnd, notStart + 30), status: 'NOTBETRIEB', fkStart: null, fkEnd: null };
+  }
+
+  return { start: null, end: null, status: 'GESCHLOSSEN', fkStart: null, fkEnd: null };
+}
+
+function updateAmpel() {
+  const active = getActiveStaff(selectedDay);
+  const fkCount = active.filter(s => s.isFK).length;
+  const ekCount = active.filter(s => s.isEK).length;
+  const window = computeOpeningWindow(active);
+
+  const banner = document.getElementById('ampelBanner');
+  const label = document.getElementById('ampelLabel');
+  const detail = document.getElementById('ampelDetail');
+
+  banner.className = 'ampel-banner';
+
+  if (window.status === 'OK' && fkCount >= 2) {
+    banner.classList.add('green');
+    banner.querySelector('.ampel-dot').textContent = '✓';
+    label.textContent = 'Personaldecke OK';
+    detail.textContent = `${fkCount} FK, ${ekCount} EK anwesend`;
+  } else if (window.status === 'NOTBETRIEB' || (window.status === 'OK' && fkCount < 3)) {
+    banner.classList.add('orange');
+    banner.querySelector('.ampel-dot').textContent = '⚠';
+    label.textContent = 'Eingeschränkter Betrieb';
+    detail.textContent = `Nur ${fkCount} FK — reduzierte Öffnungszeiten`;
+  }
+
+  if (window.status === 'GESCHLOSSEN') {
+    banner.classList.add('red');
+    banner.querySelector('.ampel-dot').textContent = '✕';
+    label.textContent = 'Kita geschlossen';
+    detail.textContent = `Weniger als 2 Fachkräfte (KiBiz)`;
+  }
+}
+
+function updateHours() {
+  const active = getActiveStaff(selectedDay);
+  const window = computeOpeningWindow(active);
+  const content = document.getElementById('hoursContent');
+
+  if (window.status === 'GESCHLOSSEN') {
+    content.innerHTML = `
+      <div class="hours-row">
+        <span class="hours-label">Regulär</span>
+        <span class="hours-value normal">${NORMAL_HOURS}</span>
+      </div>
+      <div class="hours-row">
+        <span class="hours-label">${DAYS_FULL[selectedDay]}</span>
+        <span class="hours-value closed">GESCHLOSSEN</span>
+      </div>
+    `;
+  } else {
+    const reduced = `${formatTime(window.start)} – ${formatTime(window.end)}`;
+    const isReduced = window.start > parseTime('07:30') || window.end < parseTime('16:30');
+    content.innerHTML = `
+      <div class="hours-row">
+        <span class="hours-label">Regulär</span>
+        <span class="hours-value normal">${NORMAL_HOURS}</span>
+      </div>
+      <div class="hours-row">
+        <span class="hours-label">${DAYS_FULL[selectedDay]}</span>
+        <span class="hours-value ${isReduced ? 'reduced' : 'normal'}">${reduced}</span>
+      </div>
+    `;
+  }
+}
+
+function updateGenerateBtn() {
+  const hasSick = Object.keys(sickStaff).some(k => k.endsWith(`-${selectedDay}`));
+  const btn = document.getElementById('generateBtn');
+  btn.disabled = !hasSick;
+  btn.textContent = hasSick ? '💬 Nachrichten generieren' : 'Erst jemanden als KRANK markieren';
+}
+
+// ==========================================
+// NACHRICHTEN GENERIEREN
+// ==========================================
+
+function generateMessages() {
+  const dayName = DAYS_FULL[selectedDay];
+  const dayDate = DATES[selectedDay];
+  const kwTitel = `KW ${KW}`;
+
+  // Wer ist krank?
+  const sickToday = STAFF.filter(p => sickStaff[`${p.name}-${selectedDay}`]);
+  const sickNames = sickToday.map(p => p.name).join(', ');
+  const sickFK = sickToday.filter(p => p.type === 'FK');
+
+  // Aktive
+  const active = getActiveStaff(selectedDay);
+  const window = computeOpeningWindow(active);
+  const fkCount = active.filter(s => s.isFK).length;
+
+  let zeitInfo = '';
+  if (window.status === 'GESCHLOSSEN') {
+    zeitInfo = `Die Kita muss am ${dayName} (${dayDate}) leider GESCHLOSSEN bleiben.`;
+  } else {
+    const reduced = `${formatTime(window.start)} – ${formatTime(window.end)}`;
+    zeitInfo = `Reduzierte Öffnungszeiten am ${dayName} (${dayDate}): ${reduced}`;
+  }
+
+  const kritischerTag = `${dayName} ${dayDate} — ${sickNames} krank → nur ${fkCount} FK`;
+
+  // Nachricht 1: Erste Info
+  const msg1 = `🆘 BETREUUNGSHILFE GESUCHT
+
+Liebe Eltern,
+
+wir brauchen eure Hilfe! Aufgrund von Krankheitsausfällen haben wir in ${kwTitel} an folgendem Tag zu wenig Fachkräfte:
+
+⚠️ ${kritischerTag}
+
+${zeitInfo}
+
+Können Eltern an diesem Tag bei der Betreuung helfen?
+
+Bitte meldet euch schnell, damit wir planen können.
+
+Danke! 🙏`;
+
+  // Nachricht 2: Dringende Nachfrage
+  const msg2 = `🔴 DRINGENDE BETREUUNGSHILFE!
+
+Liebe Eltern,
+
+wir haben noch KEINE Rückmeldungen für den kritischen Tag in ${kwTitel}:
+
+🆘 ${kritischerTag}
+
+Ohne Eltern-Unterstützung müssen wir die Kita an diesem Tag SCHLIEẞEN! 🚫
+
+Bitte meldet euch JETZT, wenn ihr helfen könnt.
+
+Zeit läuft! ⏰`;
+
+  // Nachricht 3: Kita geschlossen
+  const msg3 = `🚫 KITA GESCHLOSSEN
+
+Liebe Eltern,
+
+da sich keine Eltern für die Betreuung gemeldet haben, müssen wir die Kita am folgenden Tag SCHLIEẞEN:
+
+🚫 ${dayName}, ${dayDate} März 2026
+
+Grund: Weniger als 2 Fachkräfte anwesend (KiBiz-Vorschrift)
+
+Bitte organisiert alternative Betreuung für eure Kinder.
+
+Entschuldigt die kurzfristige Absage.`;
+
+  document.getElementById('msg1').textContent = msg1;
+  document.getElementById('msg2').textContent = msg2;
+  document.getElementById('msg3').textContent = msg3;
+
+  const section = document.getElementById('messagesSection');
+  section.classList.add('visible');
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ==========================================
+// KOPIEREN
+// ==========================================
+
+async function copyMessage(num, btn) {
+  const text = document.getElementById(`msg${num}`).textContent;
+  let copied = false;
+
+  // Methode 1: Web Share API (iOS native Teilen-Dialog mit WhatsApp)
+  if (navigator.share) {
+    try {
+      await navigator.share({ text: text });
+      copied = true;
+    } catch(e) {
+      // User hat abgebrochen — weiter zu Fallback
+    }
+  }
+
+  // Methode 2: Clipboard API (braucht HTTPS)
+  if (!copied && navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      copied = true;
+    } catch(e) {}
+  }
+
+  // Methode 3: iOS-kompatibler Textarea-Trick
+  if (!copied) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100%;opacity:0.01;z-index:99999;font-size:16px;';
+    document.body.appendChild(ta);
+
+    if (navigator.userAgent.match(/ipad|iphone/i)) {
+      // iOS: Range-basierte Selektion
+      const range = document.createRange();
+      range.selectNodeContents(ta);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      ta.setSelectionRange(0, text.length);
+    } else {
+      ta.select();
+    }
+
+    try {
+      copied = document.execCommand('copy');
+    } catch(e) {}
+    document.body.removeChild(ta);
+  }
+
+  if (copied) {
+    btn.classList.add('copied');
+    btn.innerHTML = '<span>✓</span> Kopiert!';
+    showToast('✓ Nachricht kopiert — jetzt in WhatsApp einfügen');
+  } else {
+    // Letzter Fallback: Text sichtbar markieren zum manuellen Kopieren
+    const msgEl = document.getElementById(`msg${num}`);
+    const range = document.createRange();
+    range.selectNodeContents(msgEl);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    showToast('Text markiert — jetzt lange drücken → Kopieren');
+    btn.innerHTML = '<span>👆</span> Text markiert — kopiere manuell';
+  }
+
+  setTimeout(() => {
+    btn.classList.remove('copied');
+    btn.innerHTML = '<span>📤</span> Kopieren / Teilen';
+  }, 3000);
+}
+
+function showToast(text) {
+  const toast = document.getElementById('toast');
+  toast.textContent = text;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ==========================================
+// RESET
+// ==========================================
+
+function resetAll() {
+  sickStaff = {};
+  document.getElementById('messagesSection').classList.remove('visible');
+  renderDay();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Start
+init();
+</script>
+</body>
+</html>

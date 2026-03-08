@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kinderladen e.V. — App-Konzept</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --teal: #00897b;
+    --teal-dark: #00695c;
+    --green: #43a047;
+    --orange: #f57c00;
+    --red: #e53935;
+    --bg: #f5f7f6;
+    --card: #ffffff;
+    --text: #1a2b2a;
+    --muted: #78909c;
+    --light: #90a4ae;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* ===== NAVIGATION ===== */
+  .screen-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    padding: 8px 0 env(safe-area-inset-bottom, 20px);
+    z-index: 1000;
+  }
+  .screen-nav button {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 8px 0;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .screen-nav button .nav-icon { font-size: 22px; display: block; }
+  .screen-nav button .nav-text {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--light);
+    margin-top: 2px;
+  }
+  .screen-nav button.active .nav-text { color: var(--teal); }
+
+  /* ===== SCREENS ===== */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+  .screen.active { display: block; }
+
+  /* ===== SCREEN 1: DASHBOARD ===== */
+  .header {
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+    padding: env(safe-area-inset-top, 48px) 24px 24px;
+    border-radius: 0 0 28px 28px;
+    color: #fff;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .app-title {
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0.75;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .greeting {
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 4px;
+  }
+  .date-info {
+    font-size: 14px;
+    opacity: 0.85;
+    font-weight: 500;
+  }
+
+  .quick-stats {
+    display: flex;
+    gap: 10px;
+    padding: 0 20px;
+    margin-top: -16px;
+    position: relative;
+    z-index: 10;
+  }
+  .stat-card {
+    flex: 1;
+    background: var(--card);
+    border-radius: 16px;
+    padding: 14px 8px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .stat-value { font-size: 26px; font-weight: 900; color: var(--teal); }
+  .stat-value.warning { color: var(--orange); }
+  .stat-value.ok { color: var(--green); }
+  .stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 22px 24px 10px;
+  }
+
+  .fk-ampel {
+    display: flex;
+    gap: 6px;
+    padding: 0 20px;
+  }
+  .fk-day {
+    flex: 1;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 10px 4px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .fk-day.active { border-color: var(--teal); }
+  .fk-day .day-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--light);
+    margin-bottom: 6px;
+  }
+  .fk-day.active .day-label { color: var(--teal); font-weight: 800; }
+  .fk-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 0 auto 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+  }
+  .fk-dot.green { background: var(--green); }
+  .fk-dot.orange { background: var(--orange); }
+  .fk-dot.red { background: var(--red); }
+  .fk-count { font-size: 10px; color: var(--light); font-weight: 600; }
+
+  .opening-hours {
+    margin: 14px 20px;
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .opening-icon { font-size: 24px; }
+  .opening-title { font-size: 14px; font-weight: 700; color: #2e7d32; }
+  .opening-time { font-size: 12px; color: #388e3c; font-weight: 500; }
+
+  .personal-grid {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .person-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .person-card:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  }
+  .person-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .person-avatar.fk { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); }
+  .person-avatar.ek { background: linear-gradient(135deg, #7986cb, #5c6bc0); }
+  .person-info { flex: 1; }
+  .person-name { font-size: 15px; font-weight: 700; }
+  .person-role { font-size: 12px; color: var(--light); font-weight: 500; }
+  .person-shift { text-align: right; }
+  .shift-time { font-size: 14px; font-weight: 700; color: #37474f; }
+  .shift-hours { font-size: 11px; color: var(--light); font-weight: 500; }
+  .person-status {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+  }
+
+  /* ===== SCREEN 2: KRANKMELDUNG ===== */
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    padding: env(safe-area-inset-top, 48px) 20px 16px;
+    gap: 12px;
+  }
+  .back-btn {
+    font-size: 28px;
+    color: var(--teal);
+    font-weight: 300;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    padding: 4px 8px;
+  }
+  .nav-title { font-size: 20px; font-weight: 800; flex: 1; }
+
+  .person-header {
+    margin: 0 20px;
+    background: var(--card);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .person-avatar-lg {
+    width: 60px; height: 60px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 700; color: #fff;
+  }
+  .person-name-lg { font-size: 22px; font-weight: 900; }
+  .person-role-lg { font-size: 13px; color: var(--muted); font-weight: 500; }
+  .person-shift-lg { font-size: 13px; color: var(--teal); font-weight: 600; margin-top: 2px; }
+
+  .status-section {
+    margin: 16px 20px;
+    background: var(--card);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .status-label {
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;
+  }
+  .status-options { display: flex; gap: 8px; }
+  .status-btn {
+    flex: 1; padding: 14px 8px;
+    border-radius: 14px; text-align: center;
+    font-size: 14px; font-weight: 700; font-family: inherit;
+    border: 2px solid #e0e0e0; color: var(--muted);
+    background: var(--card); cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .status-btn.active-red {
+    border-color: var(--red); background: #ffebee; color: #c62828;
+  }
+
+  .impact-section {
+    margin: 16px 20px;
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    border: 2px solid var(--orange);
+    border-radius: 20px;
+    padding: 20px;
+  }
+  .impact-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .impact-icon { font-size: 24px; }
+  .impact-title { font-size: 17px; font-weight: 900; color: #e65100; }
+  .impact-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-bottom: 10px; padding: 12px;
+    background: rgba(255,255,255,0.7); border-radius: 12px;
+  }
+  .impact-bullet { font-size: 18px; flex-shrink: 0; }
+  .impact-text strong { display: block; font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .impact-text span { font-size: 13px; color: #5d4037; font-weight: 500; line-height: 1.4; }
+
+  .fk-update {
+    margin: 16px 20px;
+    background: var(--card);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .fk-update-title {
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px;
+  }
+  .fk-timeline { display: flex; flex-direction: column; gap: 8px; }
+  .fk-slot {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; border-radius: 12px; background: #f5f5f5;
+  }
+  .fk-slot.warning { background: #fff3e0; border: 1px solid #ffcc80; }
+  .fk-slot.danger { background: #ffebee; border: 1px solid #ef9a9a; }
+  .fk-time-slot { font-size: 13px; font-weight: 700; color: #37474f; width: 100px; flex-shrink: 0; }
+  .fk-badge {
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; color: #fff;
+  }
+  .fk-badge.green { background: var(--green); }
+  .fk-badge.orange { background: var(--orange); }
+  .fk-badge.red { background: var(--red); }
+  .fk-names { flex: 1; font-size: 12px; color: var(--muted); font-weight: 500; text-align: right; }
+
+  .action-section { margin: 16px 20px; }
+  .action-btn {
+    width: 100%; padding: 18px;
+    border-radius: 16px; border: none;
+    font-size: 16px; font-weight: 800; font-family: inherit;
+    color: #fff;
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0,137,123,0.35);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s;
+  }
+  .action-btn:active { transform: scale(0.97); }
+  .action-btn-secondary {
+    width: 100%; padding: 14px;
+    border-radius: 16px;
+    border: 2px solid var(--teal);
+    font-size: 14px; font-weight: 700; font-family: inherit;
+    color: var(--teal); background: var(--card);
+    cursor: pointer; margin-top: 10px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ===== SCREEN 3: NACHRICHTEN ===== */
+  .context-banner {
+    margin: 0 20px 16px;
+    background: linear-gradient(135deg, #ffebee, #ffcdd2);
+    border-radius: 16px; padding: 14px 16px;
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid #ef9a9a;
+  }
+  .context-icon { font-size: 20px; }
+  .context-text { font-size: 13px; font-weight: 600; color: #c62828; }
+  .context-text span { display: block; font-size: 12px; font-weight: 500; color: #d32f2f; margin-top: 2px; }
+
+  .message-card {
+    margin: 0 20px 14px;
+    background: var(--card);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .message-header { padding: 16px 18px 0; display: flex; align-items: center; gap: 8px; }
+  .msg-badge {
+    padding: 4px 10px; border-radius: 8px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .msg-badge.info { background: #e3f2fd; color: #1565c0; }
+  .msg-badge.urgent { background: #fff3e0; color: #e65100; }
+  .msg-badge.critical { background: #ffebee; color: #c62828; }
+  .msg-title { font-size: 15px; font-weight: 700; }
+
+  .wa-preview {
+    margin: 14px 18px;
+    background: #e7fdd8;
+    border-radius: 12px 12px 12px 4px;
+    padding: 14px 16px;
+    position: relative;
+  }
+  .wa-text {
+    font-size: 14px; line-height: 1.55; color: var(--text);
+    white-space: pre-line;
+  }
+  .wa-time {
+    text-align: right; font-size: 11px; color: var(--muted); margin-top: 6px;
+    display: flex; align-items: center; justify-content: flex-end; gap: 4px;
+  }
+  .wa-check { color: #4fc3f7; font-size: 14px; }
+
+  .message-actions { padding: 12px 18px 16px; display: flex; gap: 8px; }
+  .copy-btn {
+    flex: 1; padding: 12px;
+    border-radius: 12px;
+    border: 2px solid var(--teal);
+    font-size: 14px; font-weight: 700; font-family: inherit;
+    color: var(--teal); background: var(--card);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s;
+  }
+  .copy-btn.primary {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    color: #fff; border: none;
+    box-shadow: 0 4px 14px rgba(0,137,123,0.3);
+  }
+  .copy-btn:active { transform: scale(0.97); }
+
+  .send-all-section { margin: 8px 20px; }
+  .send-all-btn {
+    width: 100%; padding: 18px;
+    border-radius: 16px; border: none;
+    font-size: 16px; font-weight: 800; font-family: inherit;
+    color: #fff;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(37,211,102,0.35);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s;
+  }
+  .send-all-btn:active { transform: scale(0.97); }
+  .recipients-info {
+    text-align: center; font-size: 12px; color: var(--muted);
+    font-weight: 500; margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== SCREEN 1: DASHBOARD ===================== -->
+<div class="screen active" id="screen1">
+  <div class="header">
+    <div class="header-top">
+      <span class="app-title">Kinderladen e.V.</span>
+      <div class="avatar">D</div>
+    </div>
+    <div class="greeting">Guten Morgen, Denise</div>
+    <div class="date-info">Dienstag, 10. März 2026 &middot; KW 11</div>
+  </div>
+
+  <div class="quick-stats">
+    <div class="stat-card">
+      <div class="stat-value ok">8</div>
+      <div class="stat-label">Anwesend</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Krank</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value ok">3</div>
+      <div class="stat-label">Fachkräfte</div>
+    </div>
+  </div>
+
+  <div class="section-title">FK-Schlüssel diese Woche</div>
+  <div class="fk-ampel">
+    <div class="fk-day"><div class="day-label">Mo</div><div class="fk-dot green">3</div><div class="fk-count">8 Pers.</div></div>
+    <div class="fk-day active"><div class="day-label">Di</div><div class="fk-dot green">3</div><div class="fk-count">8 Pers.</div></div>
+    <div class="fk-day"><div class="day-label">Mi</div><div class="fk-dot green">3</div><div class="fk-count">7 Pers.</div></div>
+    <div class="fk-day"><div class="day-label">Do</div><div class="fk-dot green">2</div><div class="fk-count">6 Pers.</div></div>
+    <div class="fk-day"><div class="day-label">Fr</div><div class="fk-dot orange">1</div><div class="fk-count">5 Pers.</div></div>
+  </div>
+
+  <div class="opening-hours">
+    <div class="opening-icon">&#9203;</div>
+    <div>
+      <div class="opening-title">Reguläre Öffnungszeiten</div>
+      <div class="opening-time">08:00 – 16:30 Uhr &middot; Volles Programm</div>
+    </div>
+  </div>
+
+  <div class="section-title">Heutiges Team</div>
+  <div class="personal-grid">
+    <div class="person-card" onclick="showScreen(2)">
+      <div class="person-avatar fk">H</div>
+      <div class="person-info"><div class="person-name">Hannah</div><div class="person-role">Fachkraft</div></div>
+      <div class="person-shift"><div class="shift-time">08:00 – 16:00</div><div class="shift-hours">8,0 Std.</div></div>
+      <div class="person-status"></div>
+    </div>
+    <div class="person-card" onclick="showScreen(2)">
+      <div class="person-avatar fk">L</div>
+      <div class="person-info"><div class="person-name">Lioba</div><div class="person-role">Fachkraft</div></div>
+      <div class="person-shift"><div class="shift-time">08:30 – 16:30</div><div class="shift-hours">8,0 Std.</div></div>
+      <div class="person-status"></div>
+    </div>
+    <div class="person-card" onclick="showScreen(2)">
+      <div class="person-avatar fk">D</div>
+      <div class="person-info"><div class="person-name">Dilsad</div><div class="person-role">Fachkraft</div></div>
+      <div class="person-shift"><div class="shift-time">09:00 – 15:00</div><div class="shift-hours">6,0 Std.</div></div>
+      <div class="person-status"></div>
+    </div>
+    <div class="person-card" onclick="showScreen(2)">
+      <div class="person-avatar ek">Li</div>
+      <div class="person-info"><div class="person-name">Lidija</div><div class="person-role">Ergänzungskraft</div></div>
+      <div class="person-shift"><div class="shift-time">08:00 – 14:00</div><div class="shift-hours">6,0 Std.</div></div>
+      <div class="person-status"></div>
+    </div>
+    <div class="person-card" onclick="showScreen(2)">
+      <div class="person-avatar ek">H</div>
+      <div class="person-info"><div class="person-name">Hurguel</div><div class="person-role">Ergänzungskraft</div></div>
+      <div class="person-shift"><div class="shift-time">09:00 – 15:00</div><div class="shift-hours">6,0 Std.</div></div>
+      <div class="person-status"></div>
+    </div>
+    <div class="person-card" onclick="showScreen(2)">
+      <div class="person-avatar ek">N</div>
+      <div class="person-info"><div class="person-name">Niels</div><div class="person-role">Ergänzungskraft</div></div>
+      <div class="person-shift"><div class="shift-time">10:00 – 16:30</div><div class="shift-hours">6,5 Std.</div></div>
+      <div class="person-status"></div>
+    </div>
+    <div class="person-card" onclick="showScreen(2)">
+      <div class="person-avatar ek">S</div>
+      <div class="person-info"><div class="person-name">Steffi</div><div class="person-role">Ergänzungskraft</div></div>
+      <div class="person-shift"><div class="shift-time">08:30 – 14:30</div><div class="shift-hours">6,0 Std.</div></div>
+      <div class="person-status"></div>
+    </div>
+    <div class="person-card" onclick="showScreen(2)">
+      <div class="person-avatar ek">G</div>
+      <div class="person-info"><div class="person-name">Gul</div><div class="person-role">Ergänzungskraft</div></div>
+      <div class="person-shift"><div class="shift-time">09:00 – 13:00</div><div class="shift-hours">4,0 Std.</div></div>
+      <div class="person-status"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCREEN 2: KRANKMELDUNG ===================== -->
+<div class="screen" id="screen2">
+  <div class="nav-bar">
+    <div class="back-btn" onclick="showScreen(1)">&#8249;</div>
+    <div class="nav-title">Krankmeldung</div>
+  </div>
+
+  <div class="person-header">
+    <div class="person-avatar-lg">L</div>
+    <div>
+      <div class="person-name-lg">Lioba</div>
+      <div class="person-role-lg">Fachkraft</div>
+      <div class="person-shift-lg">Heute: 08:30 – 16:30</div>
+    </div>
+  </div>
+
+  <div class="status-section">
+    <div class="status-label">Status</div>
+    <div class="status-options">
+      <div class="status-btn">Anwesend</div>
+      <div class="status-btn active-red">Krank</div>
+      <div class="status-btn">Urlaub</div>
+    </div>
+  </div>
+
+  <div class="impact-section">
+    <div class="impact-header">
+      <div class="impact-icon">&#9888;&#65039;</div>
+      <div class="impact-title">Auswirkungen</div>
+    </div>
+    <div class="impact-item">
+      <div class="impact-bullet">&#128308;</div>
+      <div class="impact-text">
+        <strong>FK-Schlüssel kritisch</strong>
+        <span>Ab 15:00 nur noch 1 FK (Dilsad geht um 15:00) — keine Vertretung verfügbar</span>
+      </div>
+    </div>
+    <div class="impact-item">
+      <div class="impact-bullet">&#128992;</div>
+      <div class="impact-text">
+        <strong>Öffnungszeiten einschränken</strong>
+        <span>Empfehlung: Schließung um 15:00 statt 16:30</span>
+      </div>
+    </div>
+    <div class="impact-item">
+      <div class="impact-bullet">&#128221;</div>
+      <div class="impact-text">
+        <strong>Elternbenachrichtigung nötig</strong>
+        <span>12 Familien mit Abholzeit nach 15:00 betroffen</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="fk-update">
+    <div class="fk-update-title">FK-Verlauf Dienstag (ohne Lioba)</div>
+    <div class="fk-timeline">
+      <div class="fk-slot">
+        <div class="fk-time-slot">08:00 – 09:00</div>
+        <div class="fk-badge green">2 FK</div>
+        <div class="fk-names">Hannah, Dilsad</div>
+      </div>
+      <div class="fk-slot">
+        <div class="fk-time-slot">09:00 – 15:00</div>
+        <div class="fk-badge green">2 FK</div>
+        <div class="fk-names">Hannah, Dilsad</div>
+      </div>
+      <div class="fk-slot warning">
+        <div class="fk-time-slot">15:00 – 16:00</div>
+        <div class="fk-badge orange">1 FK</div>
+        <div class="fk-names">Hannah</div>
+      </div>
+      <div class="fk-slot danger">
+        <div class="fk-time-slot">16:00 – 16:30</div>
+        <div class="fk-badge red">0 FK</div>
+        <div class="fk-names">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-section">
+    <button class="action-btn" onclick="showScreen(3)">
+      <span>&#128172;</span> Eltern benachrichtigen
+    </button>
+    <button class="action-btn-secondary">
+      &#128197; Krankmeldung bestätigen
+    </button>
+  </div>
+</div>
+
+<!-- ===================== SCREEN 3: NACHRICHTEN ===================== -->
+<div class="screen" id="screen3">
+  <div class="nav-bar">
+    <div class="back-btn" onclick="showScreen(2)">&#8249;</div>
+    <div class="nav-title">Eltern-Nachrichten</div>
+  </div>
+
+  <div class="context-banner">
+    <div class="context-icon">&#128276;</div>
+    <div class="context-text">
+      Lioba krank — Schließung um 15:00
+      <span>12 Familien betroffen &middot; Dienstag, 10. März</span>
+    </div>
+  </div>
+
+  <div class="section-title">Vorgeschlagene Nachrichten</div>
+
+  <div class="message-card">
+    <div class="message-header">
+      <div class="msg-badge info">Info</div>
+      <div class="msg-title">Erste Information</div>
+    </div>
+    <div class="wa-preview">
+      <div class="wa-text">Liebe Eltern,
+
+leider fällt heute kurzfristig eine Fachkraft aus. Wir müssen die Betreuung daher anpassen.
+
+Bitte holt eure Kinder heute bis spätestens 15:00 Uhr ab.
+
+Vielen Dank füreuer Verständnis!
+Euer Kinderladen-Team</div>
+      <div class="wa-time">09:42 <span class="wa-check">&#10003;&#10003;</span></div>
+    </div>
+    <div class="message-actions">
+      <button class="copy-btn primary">&#128203; Kopieren</button>
+      <button class="copy-btn">&#9998; Bearbeiten</button>
+    </div>
+  </div>
+
+  <div class="message-card">
+    <div class="message-header">
+      <div class="msg-badge urgent">Dringend</div>
+      <div class="msg-title">Erinnerung (12:00)</div>
+    </div>
+    <div class="wa-preview">
+      <div class="wa-text">Liebe Eltern,
+
+nochmal zur Erinnerung: Heute schließen wir bereits um 15:00 Uhr wegen Personalmangel.
+
+Bitte stellt sicher, dass eure Kinder bis 15:00 abgeholt werden.
+
+Bei Notfällen meldet euch bitte direkt bei uns.
+Danke!</div>
+      <div class="wa-time">geplant 12:00</div>
+    </div>
+    <div class="message-actions">
+      <button class="copy-btn primary">&#128203; Kopieren</button>
+      <button class="copy-btn">&#9998; Bearbeiten</button>
+    </div>
+  </div>
+
+  <div class="message-card">
+    <div class="message-header">
+      <div class="msg-badge critical">Notfall</div>
+      <div class="msg-title">Ganztages-Schließung</div>
+    </div>
+    <div class="wa-preview">
+      <div class="wa-text">Liebe Eltern,
+
+wir müssen den Kinderladen heute leider GESCHLOSSEN halten. Es stehen nicht genügend Fachkräfte zur Verfügung, um den Betreuungsschlüssel zu erfüllen.
+
+Wir entschuldigen uns fürdie Unannehmlichkeiten und informieren euch, sobald der Betrieb wieder normal läuft.
+
+Euer Kinderladen-Team</div>
+      <div class="wa-time">Vorlage</div>
+    </div>
+    <div class="message-actions">
+      <button class="copy-btn primary">&#128203; Kopieren</button>
+      <button class="copy-btn">&#9998; Bearbeiten</button>
+    </div>
+  </div>
+
+  <div class="send-all-section">
+    <button class="send-all-btn">
+      <span style="font-size:22px">&#128172;</span> In WhatsApp öffnen
+    </button>
+    <div class="recipients-info">Nachricht wird an die Eltern-Gruppe gesendet (24 Mitglieder)</div>
+  </div>
+</div>
+
+<!-- ===== BOTTOM NAV ===== -->
+<div class="screen-nav">
+  <button id="nav1" class="active" onclick="showScreen(1)">
+    <span class="nav-icon">&#128197;</span>
+    <span class="nav-text">Heute</span>
+  </button>
+  <button id="nav2" onclick="showScreen(2)">
+    <span class="nav-icon">&#128276;</span>
+    <span class="nav-text">Meldung</span>
+  </button>
+  <button id="nav3" onclick="showScreen(3)">
+    <span class="nav-icon">&#128172;</span>
+    <span class="nav-text">Nachrichten</span>
+  </button>
+  <button>
+    <span class="nav-icon">&#9881;</span>
+    <span class="nav-text">Einstellungen</span>
+  </button>
+</div>
+
+<script>
+function showScreen(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen' + n).classList.add('active');
+  document.querySelectorAll('.screen-nav button').forEach(b => b.classList.remove('active'));
+  const navBtn = document.getElementById('nav' + n);
+  if (navBtn) navBtn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
