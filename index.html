@@ -569,6 +569,125 @@
     color: var(--purple-600);
   }
 
+  /* Editierbare Nachrichten */
+  .msg-textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px 16px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--gray-800);
+    border: none;
+    border-bottom: 2px solid var(--teal-100);
+    background: var(--gray-50);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .msg-textarea:focus {
+    border-color: var(--teal-500);
+    background: white;
+  }
+  .msg-actions {
+    display: flex;
+    gap: 8px;
+    padding: 10px 16px;
+    border-top: 1px solid var(--gray-100);
+  }
+  .msg-actions a, .msg-actions button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .msg-actions a:active, .msg-actions button:active { transform: scale(0.97); }
+  .btn-wa-send {
+    background: #25D366;
+    color: white;
+  }
+  .btn-save-tpl {
+    background: var(--gray-100);
+    color: var(--gray-600);
+  }
+  .btn-save-tpl.saved {
+    background: var(--green-100);
+    color: var(--green-600);
+  }
+
+  /* Template-Hinweis */
+  .tpl-hint {
+    padding: 6px 16px 2px;
+    font-size: 11px;
+    color: var(--teal-600);
+    font-weight: 600;
+  }
+  .tpl-reset {
+    font-size: 11px;
+    color: var(--gray-400);
+    cursor: pointer;
+    padding: 2px 16px 8px;
+    display: block;
+  }
+
+  /* Poll-Helfer */
+  .poll-card {
+    background: white;
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: 2px solid var(--green-100);
+  }
+  .poll-header {
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 14px;
+    background: var(--green-50);
+    color: var(--green-600);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .poll-body {
+    padding: 12px 16px;
+  }
+  .poll-option {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .poll-option .poll-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--gray-400);
+    flex-shrink: 0;
+  }
+  .poll-hint {
+    font-size: 12px;
+    color: var(--gray-600);
+    padding: 8px 0 4px;
+    line-height: 1.5;
+  }
+
   /* Nachrichten-Bereich */
   .message-card {
     background: white;
@@ -768,34 +887,67 @@
   <div class="animated-section" id="messagesSection">
     <div class="section-header">Schritt 2 — Eltern benachrichtigen</div>
 
+    <!-- Nachricht 1: Wichtige Info -->
     <div class="message-card">
-      <div class="message-header info">Nachricht 1 — Erste Info</div>
-      <div class="message-body" id="msg1"></div>
-      <div class="message-footer">
-        <a class="copy-btn" id="waLink1" href="#" target="_blank" style="text-decoration:none;">
-          <span>&#x1F4F2;</span> In WhatsApp senden
+      <div class="message-header info">Wichtige Info — Betreuungszeiten</div>
+      <div id="tplHint1" class="tpl-hint" style="display:none;"></div>
+      <textarea class="msg-textarea" id="msg1" rows="6" oninput="updateWaLink(1)"></textarea>
+      <div class="msg-actions">
+        <a class="btn-wa-send" id="waLink1" href="#" target="_blank">
+          &#x1F4F2; WhatsApp
         </a>
+        <button class="btn-save-tpl" onclick="saveTemplate(1, this)">
+          &#x1F4BE; Template speichern
+        </button>
+      </div>
+      <span class="tpl-reset" id="tplReset1" style="display:none;" onclick="resetTemplate(1)">Gespeichertes Template loeschen</span>
+    </div>
+
+    <!-- Poll-Helfer: Abfrage -->
+    <div class="poll-card">
+      <div class="poll-header">&#x1F4CA; WhatsApp-Umfrage erstellen</div>
+      <div class="poll-body">
+        <div class="poll-hint">
+          Erstelle eine Umfrage direkt in WhatsApp mit diesen Optionen. Tippe in der Eltern-Gruppe auf <strong>+</strong> &#x2192; <strong>Umfrage</strong>.
+        </div>
+        <div id="pollTitle" style="font-weight:700;font-size:14px;margin:8px 0;"></div>
+        <div id="pollOptions"></div>
+        <div class="poll-hint" style="margin-top:8px;">
+          Tipp: "Waehle mindestens eine Option aus" aktivieren.
+        </div>
       </div>
     </div>
 
+    <!-- Nachricht 2: Finale Info / Betreuungszeiten -->
     <div class="message-card">
-      <div class="message-header urgent">Nachricht 2 — Dringende Nachfrage</div>
-      <div class="message-body" id="msg2"></div>
-      <div class="message-footer">
-        <a class="copy-btn" id="waLink2" href="#" target="_blank" style="text-decoration:none;">
-          <span>&#x1F4F2;</span> In WhatsApp senden
+      <div class="message-header urgent">Betreuungszeit — Finale Info</div>
+      <div id="tplHint2" class="tpl-hint" style="display:none;"></div>
+      <textarea class="msg-textarea" id="msg2" rows="6" oninput="updateWaLink(2)"></textarea>
+      <div class="msg-actions">
+        <a class="btn-wa-send" id="waLink2" href="#" target="_blank">
+          &#x1F4F2; WhatsApp
         </a>
+        <button class="btn-save-tpl" onclick="saveTemplate(2, this)">
+          &#x1F4BE; Template speichern
+        </button>
       </div>
+      <span class="tpl-reset" id="tplReset2" style="display:none;" onclick="resetTemplate(2)">Gespeichertes Template loeschen</span>
     </div>
 
+    <!-- Nachricht 3: Kita geschlossen -->
     <div class="message-card">
-      <div class="message-header closed">Nachricht 3 — Kita-Schliessung</div>
-      <div class="message-body" id="msg3"></div>
-      <div class="message-footer">
-        <a class="copy-btn" id="waLink3" href="#" target="_blank" style="text-decoration:none;">
-          <span>&#x1F4F2;</span> In WhatsApp senden
+      <div class="message-header closed">Kita-Schliessung</div>
+      <div id="tplHint3" class="tpl-hint" style="display:none;"></div>
+      <textarea class="msg-textarea" id="msg3" rows="5" oninput="updateWaLink(3)"></textarea>
+      <div class="msg-actions">
+        <a class="btn-wa-send" id="waLink3" href="#" target="_blank">
+          &#x1F4F2; WhatsApp
         </a>
+        <button class="btn-save-tpl" onclick="saveTemplate(3, this)">
+          &#x1F4BE; Template speichern
+        </button>
       </div>
+      <span class="tpl-reset" id="tplReset3" style="display:none;" onclick="resetTemplate(3)">Gespeichertes Template loeschen</span>
     </div>
 
     <a href="#" class="reset-link" onclick="resetAll(); return false;">&#x21A9; Zuruecksetzen</a>
@@ -1447,58 +1599,179 @@ function showParentMessages() {
 function generateMessages() {
   const dayName = DAYS_FULL[selectedDay];
   const dayDate = DATES[selectedDay];
-  const kwTitel = 'KW ' + KW;
 
   const sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
-  const sickNames = sickToday.map(function(p) { return p.name; }).join(', ');
+  const sickNames = sickToday.map(function(p) { return p.name; }).join(' und ');
 
   const active = getActiveStaff(selectedDay);
   const win = computeOpeningWindow(active);
-  const fkCount = active.filter(function(s) { return s.isFK; }).length;
 
-  var zeitInfo = '';
+  // Betreuungszeiten berechnen
+  var zeitenText = '';
   if (win.status === 'GESCHLOSSEN') {
-    zeitInfo = 'Die Kita muss am ' + dayName + ' (' + dayDate + ') leider GESCHLOSSEN bleiben.';
+    zeitenText = dayName + ': Kita geschlossen';
   } else {
-    var reduced = formatTime(win.start) + ' \u2013 ' + formatTime(win.end);
-    zeitInfo = 'Reduzierte Oeffnungszeiten am ' + dayName + ' (' + dayDate + '): ' + reduced;
+    var startStr = formatTime(win.start);
+    var endStr = formatTime(win.end);
+    zeitenText = dayName + ' ' + dayDate + ' --- ' + startStr.replace(':', '.') + '-' + endStr.replace(':', '.');
+    // Pruefen ob reduziert
+    if (win.start > parseTime('07:30') || win.end < parseTime('16:30')) {
+      zeitenText += ' !';
+    }
   }
 
-  var kritischerTag = dayName + ' ' + dayDate + ' \u2014 ' + sickNames + ' krank \u2192 nur ' + fkCount + ' FK';
+  // ===== Nachricht 1: Wichtige Info (Denise-Stil) =====
+  var tpl1 = loadTemplate(1);
+  var msg1;
+  if (tpl1) {
+    msg1 = fillTemplate(tpl1, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText });
+  } else {
+    msg1 = 'Wichtige Info fuer ' + (selectedDay === 0 ? 'morgen' : dayName) + ', ' + dayDate + '\n\n' +
+      sickNames + ' faellt leider krankheitsbedingt aus' +
+      (sickToday.length > 1 ? '.' : ', daher bin ich gerade dabei umzuplanen.') + '\n\n' +
+      'Auf Grund dessen aendern sich die Betreuungszeiten wie folgt:\n\n' +
+      zeitenText + '\n\n' +
+      'Bitte schaut, dass ihr mind. 5min vor Ende dieser Zeit da seid und mit euren Kindern puenktlich die Kita verlasst.';
+  }
 
-  var msg1 = 'BETREUUNGSHILFE GESUCHT\n\n' +
-    'Liebe Eltern,\n\n' +
-    'wir brauchen eure Hilfe! Aufgrund von Krankheitsausfaellen haben wir in ' + kwTitel + ' an folgendem Tag zu wenig Fachkraefte:\n\n' +
-    kritischerTag + '\n\n' +
-    zeitInfo + '\n\n' +
-    'Koennen Eltern an diesem Tag bei der Betreuung helfen?\n\n' +
-    'Bitte meldet euch schnell, damit wir planen koennen.\n\n' +
-    'Danke!';
+  // ===== Poll-Optionen generieren =====
+  var pollTitle = 'Abfrage fuer ' + dayName + ', ' + dayDate;
+  var pollOpts = [];
+  if (win.status !== 'GESCHLOSSEN') {
+    var startF = formatTime(win.start).replace(':', '.');
+    var endF = formatTime(win.end).replace(':', '.');
+    // Frueh-Betreuung wenn reduziert
+    if (win.start > parseTime('07:30')) {
+      pollOpts.push('Mein Kind braucht ab ' + startF + ' Betreuung (Max 5)');
+    }
+    pollOpts.push('Mein Kind kann ab ' + (win.start > parseTime('08:30') ? startF : '9Uhr') + ' kommen.');
+    // Spaet-Betreuung wenn reduziert
+    if (win.end < parseTime('16:30')) {
+      pollOpts.push('Mein Kind braucht von ' + endF + '-16.00 noch Betreuung (Max 5)');
+    }
+    pollOpts.push('Mein Kind kommt am ' + dayName + ' nicht.');
+  }
 
-  var msg2 = 'DRINGENDE BETREUUNGSHILFE!\n\n' +
-    'Liebe Eltern,\n\n' +
-    'wir haben noch KEINE Rueckmeldungen fuer den kritischen Tag in ' + kwTitel + ':\n\n' +
-    kritischerTag + '\n\n' +
-    'Ohne Eltern-Unterstuetzung muessen wir die Kita an diesem Tag SCHLIESSEN!\n\n' +
-    'Bitte meldet euch JETZT, wenn ihr helfen koennt.\n\n' +
-    'Zeit laeuft!';
+  document.getElementById('pollTitle').textContent = pollTitle;
+  var pollHtml = '';
+  pollOpts.forEach(function(opt) {
+    pollHtml += '<div class="poll-option"><div class="poll-circle"></div><span>' + opt + '</span></div>';
+  });
+  document.getElementById('pollOptions').innerHTML = pollHtml;
 
-  var msg3 = 'KITA GESCHLOSSEN\n\n' +
-    'Liebe Eltern,\n\n' +
-    'da sich keine Eltern fuer die Betreuung gemeldet haben, muessen wir die Kita am folgenden Tag SCHLIESSEN:\n\n' +
-    dayName + ', ' + dayDate + ' Maerz 2026\n\n' +
-    'Grund: Weniger als 2 Fachkraefte anwesend (KiBiz-Vorschrift)\n\n' +
-    'Bitte organisiert alternative Betreuung fuer eure Kinder.\n\n' +
-    'Entschuldigt die kurzfristige Absage.';
+  // ===== Nachricht 2: Finale Info / Betreuungszeit (Denise-Stil) =====
+  var tpl2 = loadTemplate(2);
+  var msg2;
+  if (tpl2) {
+    msg2 = fillTemplate(tpl2, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText });
+  } else {
+    if (win.status === 'GESCHLOSSEN') {
+      msg2 = 'Betreuungszeit ' + dayName + ', ' + dayDate + '\n\n' +
+        'Leider muessen wir die Kita am ' + dayName + ' geschlossen halten.\n\n' +
+        'Bitte organisiert alternative Betreuung fuer eure Kinder.';
+    } else {
+      var startF2 = formatTime(win.start).replace(':', '.');
+      var endF2 = formatTime(win.end).replace(':', '.');
+      msg2 = 'Betreuungszeit ' + (selectedDay === 0 ? 'morgen' : dayName) + ', ' + dayDate + '\n\n' +
+        startF2 + '-' + endF2 + ' alle Kinder\n\n' +
+        'Die finalen Oeffnungszeiten stehen fest. Bitte haltet euch an die Zeiten.';
+    }
+  }
 
-  document.getElementById('msg1').textContent = msg1;
-  document.getElementById('msg2').textContent = msg2;
-  document.getElementById('msg3').textContent = msg3;
+  // ===== Nachricht 3: Kita geschlossen (Denise-Stil) =====
+  var tpl3 = loadTemplate(3);
+  var msg3;
+  if (tpl3) {
+    msg3 = fillTemplate(tpl3, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText });
+  } else {
+    msg3 = 'Wichtige Info fuer ' + dayName + ', ' + dayDate + '\n\n' +
+      'Auf Grund von krankheitsbedingten Ausfaellen muessen wir die Kita am ' + dayName + ' leider geschlossen halten.\n\n' +
+      'Grund: Weniger als 2 Fachkraefte anwesend (KiBiz-Vorschrift).\n\n' +
+      'Bitte organisiert alternative Betreuung fuer eure Kinder.\n\n' +
+      'Entschuldigt die kurzfristige Absage.';
+  }
+
+  document.getElementById('msg1').value = msg1;
+  document.getElementById('msg2').value = msg2;
+  document.getElementById('msg3').value = msg3;
 
   // WhatsApp-Direktlinks setzen
-  document.getElementById('waLink1').href = buildWhatsAppLink('', msg1);
-  document.getElementById('waLink2').href = buildWhatsAppLink('', msg2);
-  document.getElementById('waLink3').href = buildWhatsAppLink('', msg3);
+  updateWaLink(1);
+  updateWaLink(2);
+  updateWaLink(3);
+
+  // Template-Hinweise anzeigen
+  showTemplateHints();
+}
+
+function updateWaLink(num) {
+  var text = document.getElementById('msg' + num).value;
+  document.getElementById('waLink' + num).href = buildWhatsAppLink('', text);
+}
+
+// ==========================================
+// TEMPLATES (localStorage)
+// ==========================================
+
+function saveTemplate(num, btn) {
+  var text = document.getElementById('msg' + num).value;
+  // Platzhalter zurueck einsetzen
+  var tpl = text;
+  // Speichern
+  try {
+    localStorage.setItem('kita_tpl_' + num, tpl);
+  } catch(e) {}
+  btn.classList.add('saved');
+  btn.innerHTML = '\u2713 Gespeichert!';
+  showToast('\u2713 Template gespeichert — wird beim naechsten Mal automatisch geladen');
+  setTimeout(function() {
+    btn.classList.remove('saved');
+    btn.innerHTML = '\uD83D\uDCBE Template speichern';
+  }, 2500);
+  showTemplateHints();
+}
+
+function loadTemplate(num) {
+  try {
+    return localStorage.getItem('kita_tpl_' + num) || null;
+  } catch(e) {
+    return null;
+  }
+}
+
+function resetTemplate(num) {
+  try {
+    localStorage.removeItem('kita_tpl_' + num);
+  } catch(e) {}
+  showToast('Template geloescht — Standard wird verwendet');
+  showTemplateHints();
+  // Nachricht neu generieren
+  generateMessages();
+}
+
+function fillTemplate(tpl, data) {
+  // Einfache Platzhalter ersetzen
+  return tpl
+    .replace(/\{dayName\}/g, data.dayName)
+    .replace(/\{dayDate\}/g, data.dayDate)
+    .replace(/\{sickNames\}/g, data.sickNames)
+    .replace(/\{zeiten\}/g, data.zeiten);
+}
+
+function showTemplateHints() {
+  for (var i = 1; i <= 3; i++) {
+    var hint = document.getElementById('tplHint' + i);
+    var reset = document.getElementById('tplReset' + i);
+    var hasTpl = loadTemplate(i);
+    if (hasTpl) {
+      hint.textContent = '\u2713 Gespeichertes Template wird verwendet';
+      hint.style.display = 'block';
+      reset.style.display = 'block';
+    } else {
+      hint.style.display = 'none';
+      reset.style.display = 'none';
+    }
+  }
 }
 
 // ==========================================
@@ -1559,30 +1832,7 @@ async function doCopy(text) {
   return copied;
 }
 
-async function copyMessage(num, btn) {
-  var text = document.getElementById('msg' + num).textContent;
-  var copied = await doCopy(text);
-
-  if (copied) {
-    btn.classList.add('copied');
-    btn.innerHTML = '<span>\u2713</span> Kopiert!';
-    showToast('\u2713 Nachricht kopiert \u2014 jetzt in WhatsApp einfuegen');
-  } else {
-    var msgEl = document.getElementById('msg' + num);
-    var range = document.createRange();
-    range.selectNodeContents(msgEl);
-    var sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    showToast('Text markiert \u2014 jetzt lange druecken \u2192 Kopieren');
-    btn.innerHTML = '<span>\uD83D\uDC46</span> Text markiert \u2014 kopiere manuell';
-  }
-
-  setTimeout(function() {
-    btn.classList.remove('copied');
-    btn.innerHTML = '<span>\uD83D\uDCE4</span> Kopieren / Teilen';
-  }, 3000);
-}
+// copyMessage nicht mehr noetig — WhatsApp-Links direkt
 
 function showToast(text) {
   var toast = document.getElementById('toast');
