@@ -505,16 +505,24 @@
 
   /* WhatsApp-Nachricht in Vertretungs-Karte */
   .wa-preview {
+    width: 100%;
     background: var(--gray-50);
     border-radius: 8px;
     padding: 10px 12px;
+    font-family: inherit;
     font-size: 13px;
     line-height: 1.5;
     color: var(--gray-800);
-    white-space: pre-wrap;
     margin-bottom: 10px;
-    max-height: 120px;
-    overflow-y: auto;
+    min-height: 80px;
+    border: 1px solid var(--gray-200);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .wa-preview:focus {
+    border-color: var(--teal-500);
+    background: white;
   }
 
   .sub-card-actions {
@@ -694,7 +702,6 @@
     border-radius: var(--radius);
     margin-bottom: 14px;
     box-shadow: var(--shadow-sm);
-    overflow: hidden;
   }
   .message-header {
     padding: 12px 16px;
@@ -989,6 +996,7 @@ const NORMAL_HOURS = '07:30 - 16:30';
 let selectedDay = 0;
 let sickStaff = {};
 let subResponses = {}; // { "Hannah-0": "ja"|"nein"|"warten" }
+let shiftOverrides = {}; // { "Lioba-0": "08:00-14:00" } — akzeptierte Schichtaenderungen
 
 // ==========================================
 // INIT
@@ -1040,21 +1048,36 @@ function renderStaff() {
   container.innerHTML = '';
 
   STAFF.forEach(function(person) {
-    const shift = person.shifts[selectedDay];
+    const shift = getEffectiveShift(person, selectedDay);
+    const originalShift = person.shifts[selectedDay];
     const key = person.name + '-' + selectedDay;
     const isSick = sickStaff[key] === true;
     const isFrei = shift === 'FREI';
+    const hasOverride = shiftOverrides[key] && shiftOverrides[key] !== originalShift;
 
     const card = document.createElement('div');
     card.className = 'staff-card' + (isSick ? ' sick' : '') + (isFrei && !isSick ? ' absent' : '');
+    if (hasOverride) {
+      card.style.borderColor = '#c8e6c9';
+      card.style.background = '#e8f5e9';
+    }
 
     const initials = person.name.substring(0, 2).toUpperCase();
 
     var statusHtml = '';
     if (isSick) {
       statusHtml = '<div class="staff-status krank">KRANK</div>';
-    } else if (isFrei) {
+    } else if (isFrei && !hasOverride) {
       statusHtml = '<div class="staff-status frei">FREI</div>';
+    } else if (hasOverride) {
+      statusHtml = '<div class="staff-status" style="background:#c8e6c9;color:#2e7d32;">EINSPRINGER</div>';
+    }
+
+    var shiftDisplay = isFrei ? 'Frei' : shift;
+    if (hasOverride && originalShift !== 'FREI') {
+      shiftDisplay = '<s style="color:#bdbdbd;">' + originalShift + '</s> \u2192 ' + shift;
+    } else if (hasOverride && originalShift === 'FREI') {
+      shiftDisplay = shift + ' (springt ein)';
     }
 
     card.innerHTML =
@@ -1064,11 +1087,11 @@ function renderStaff() {
           person.name +
           ' <span class="staff-badge ' + person.type.toLowerCase() + '">' + person.type + '</span>' +
         '</div>' +
-        '<div class="staff-shift">' + (isFrei ? 'Frei' : shift) + '</div>' +
+        '<div class="staff-shift">' + shiftDisplay + '</div>' +
       '</div>' +
       statusHtml;
 
-    if (!isFrei || isSick) {
+    if (!hasOverride && (!isFrei || isSick)) {
       card.onclick = function() { toggleSick(person.name); };
     }
 
@@ -1090,10 +1113,17 @@ function toggleSick(name) {
 // AMPEL + OEFFNUNGSZEITEN
 // ==========================================
 
+function getEffectiveShift(person, dayIndex) {
+  var key = person.name + '-' + dayIndex;
+  // Override hat Vorrang (akzeptierte Vertretung)
+  if (shiftOverrides[key]) return shiftOverrides[key];
+  return person.shifts[dayIndex];
+}
+
 function getActiveStaff(dayIndex) {
   const active = [];
   STAFF.forEach(function(person) {
-    const shift = person.shifts[dayIndex];
+    const shift = getEffectiveShift(person, dayIndex);
     const key = person.name + '-' + dayIndex;
     if (shift !== 'FREI' && !sickStaff[key]) {
       const parts = shift.split('-');
@@ -1258,6 +1288,7 @@ function searchSubstitutes() {
   const fkCount = active.filter(function(s) { return s.isFK; }).length;
 
   // Wer hat FREI an diesem Tag und koennte einspringen?
+  // (Original-Schicht pruefen, nicht Override — sonst verschwindet die Option nach Zusage)
   const freeToday = STAFF.filter(function(p) {
     return p.shifts[selectedDay] === 'FREI' && !sickStaff[p.name + '-' + selectedDay];
   });
@@ -1390,6 +1421,9 @@ function searchSubstitutes() {
     }
   });
 
+  // Optionen cachen fuer markResponse
+  lastOptions = options;
+
   // Rendern
   renderSubstitutes(options, sickNames, dayName, dayDate);
 
@@ -1473,7 +1507,7 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
     if (!response) {
       actionsHtml =
         '<div class="sub-card-actions">' +
-          '<a href="' + waLink + '" target="_blank" class="btn-copy-wa" style="text-decoration:none;text-align:center;">' +
+          '<a href="' + waLink + '" target="_blank" id="walink-' + opt.person.name + '-' + idx + '" class="btn-copy-wa" style="text-decoration:none;text-align:center;">' +
             '\uD83D\uDCF2 WhatsApp an ' + opt.person.name +
           '</a>' +
         '</div>' +
@@ -1491,7 +1525,7 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
     } else if (response === 'warten') {
       actionsHtml =
         '<div class="sub-card-actions">' +
-          '<a href="' + waLink + '" target="_blank" class="btn-copy-wa" style="text-decoration:none;text-align:center;">' +
+          '<a href="' + waLink + '" target="_blank" id="walink-' + opt.person.name + '-' + idx + '" class="btn-copy-wa" style="text-decoration:none;text-align:center;">' +
             '\uD83D\uDCF2 Nochmal an ' + opt.person.name +
           '</a>' +
         '</div>' +
@@ -1520,7 +1554,7 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
       '<div class="sub-card-body">' +
         statusHtml +
         constraintsHtml +
-        '<div class="wa-preview" id="wa-' + opt.person.name + '-' + idx + '">' + waMsg + '</div>' +
+        '<textarea class="wa-preview" id="wa-' + opt.person.name + '-' + idx + '" oninput="updateSubWaLink(\'' + opt.person.name + '\', ' + idx + ')">' + waMsg + '</textarea>' +
         actionsHtml +
       '</div>';
 
@@ -1536,49 +1570,41 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
   });
 }
 
-// Letzte Optionen merken fuer re-render
+// Letzte Optionen merken fuer re-render und markResponse
 var lastOptions = [];
-var lastSickNames = [];
-var lastDayName = '';
-var lastDayDate = '';
-
-// searchSubstitutes ueberschreiben um Daten zu cachen
-var _origSearch = searchSubstitutes;
-searchSubstitutes = function() {
-  _origSearch();
-  // Cache wird in renderSubstitutes implizit gesetzt
-};
 
 function markResponse(name, response) {
   var key = name + '-' + selectedDay;
   subResponses[key] = response;
 
   if (response === 'ja') {
-    showToast('\u2713 ' + name + ' hat zugesagt!');
+    // Finde die akzeptierte Option und setze Shift-Override
+    var opt = lastOptions.find(function(o) { return o.person.name === name; });
+    if (opt) {
+      shiftOverrides[key] = opt.suggestedShift;
+    }
+    showToast('\u2713 ' + name + ' hat zugesagt! Oeffnungszeiten aktualisiert.');
+  } else if (response === 'nein') {
+    // Override entfernen falls vorher zugesagt
+    delete shiftOverrides[key];
   }
 
-  // Einfach den Suchen-Button nochmal triggern um neu zu rendern
+  // Alles neu rendern: Staff-Liste, Ampel, Oeffnungszeiten
+  renderStaff();
+  updateAmpel();
+  updateHours();
+
+  // Vertretungs-Bereich neu rendern
   searchSubstitutes();
 }
 
-async function copySubMessage(name, idx, btn) {
+function updateSubWaLink(name, idx) {
   var el = document.getElementById('wa-' + name + '-' + idx);
-  if (!el) return;
-  var text = el.textContent;
-
-  var copied = await doCopy(text);
-
-  if (copied) {
-    btn.innerHTML = '\u2713 Kopiert!';
-    btn.style.background = '#c8e6c9';
-    btn.style.color = '#2e7d32';
-    showToast('\u2713 Nachricht kopiert \u2014 in WhatsApp an ' + name + ' senden');
-    setTimeout(function() {
-      btn.innerHTML = '\uD83D\uDCE4 Nachricht kopieren';
-      btn.style.background = '';
-      btn.style.color = '';
-    }, 3000);
-  }
+  var link = document.getElementById('walink-' + name + '-' + idx);
+  if (!el || !link) return;
+  var text = el.value;
+  var person = STAFF.find(function(p) { return p.name === name; });
+  link.href = buildWhatsAppLink(person ? person.phone : '', text);
 }
 
 // ==========================================
@@ -1848,6 +1874,8 @@ function showToast(text) {
 function resetAll() {
   sickStaff = {};
   subResponses = {};
+  shiftOverrides = {};
+  lastOptions = [];
   document.getElementById('subSection').classList.remove('visible');
   document.getElementById('messagesSection').classList.remove('visible');
   document.getElementById('processSteps').style.display = 'none';
