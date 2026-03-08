@@ -811,15 +811,19 @@
 
 // Telefonnummern: Internationales Format ohne + (z.B. '491711234567')
 // Wenn leer/'': WhatsApp oeffnet Kontakt-Picker statt Direkt-Chat
+//
+// ECHTE DATEN aus dienstplan-grundschema.csv / _Erzieher-Tab
+// KW11 = UNGERADE Woche (09.03. - 13.03.2026)
+// Jenny: ausgeschieden → nicht im System
+// Steffi: Koechin → keine Betreuungskraft, nicht anfragbar
 const STAFF = [
-  { name: 'Hannah',  type: 'FK', hours: 38, phone: '', shifts: ['07:30-16:30','07:30-16:30','07:30-14:30','07:30-16:30','07:30-14:30'] },
-  { name: 'Lioba',   type: 'FK', hours: 39, phone: '', shifts: ['07:45-16:00','07:45-16:00','07:45-16:00','07:45-16:00','07:45-16:00'] },
-  { name: 'Dilsad',  type: 'FK', hours: 30, phone: '', shifts: ['08:00-14:30','08:00-14:30','08:00-16:30','FREI','08:00-14:30'] },
-  { name: 'Lidija',  type: 'EK', hours: 25, phone: '', shifts: ['07:30-12:30','07:30-12:30','07:30-12:30','07:30-12:30','07:30-12:30'] },
-  { name: 'Hurguel', type: 'EK', hours: 30, phone: '', shifts: ['10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30'] },
-  { name: 'Niels',   type: 'EK', hours: 15, phone: '', shifts: ['09:00-14:00','FREI','09:00-14:00','09:00-14:00','FREI'] },
-  { name: 'Steffi',  type: 'EK', hours: 12, phone: '', shifts: ['FREI','10:15-16:15','FREI','10:15-16:15','FREI'] },
-  { name: 'Gul',     type: 'EK', hours: 15.5, phone: '', shifts: ['12:00-16:30','12:00-16:30','FREI','12:00-16:30','12:00-16:30'] },
+  { name: 'Hannah',  type: 'FK', phone: '', shifts: ['07:30-16:00','08:00-16:30','08:00-16:30','07:30-15:00','07:30-10:30'] },
+  { name: 'Lioba',   type: 'FK', phone: '', shifts: ['09:00-14:00','08:00-13:00','08:00-13:00','09:00-14:00','FREI'] },
+  { name: 'Dilsad',  type: 'FK', phone: '', shifts: ['10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30'] },
+  { name: 'Lidija',  type: 'EK', phone: '', shifts: ['09:00-14:00','07:30-12:30','07:30-12:30','09:00-14:00','FREI'] },
+  { name: 'Hurguel', type: 'EK', phone: '', shifts: ['FREI','FREI','FREI','07:30-15:45','07:30-15:45'] },
+  { name: 'Niels',   type: 'EK', phone: '', shifts: ['FREI','FREI','FREI','FREI','08:00-14:00'] },
+  { name: 'Gul',     type: 'EK', phone: '', shifts: ['FREI','FREI','FREI','07:45-16:00','07:45-16:00'] },
 ];
 
 const DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
