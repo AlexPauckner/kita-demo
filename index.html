@@ -26,6 +26,12 @@
     --green-600: #2e7d32;
     --green-100: #c8e6c9;
     --green-50: #e8f5e9;
+    --blue-600: #1e88e5;
+    --blue-100: #bbdefb;
+    --blue-50: #e3f2fd;
+    --purple-600: #7b1fa2;
+    --purple-100: #e1bee7;
+    --purple-50: #f3e5f5;
     --gray-50: #fafafa;
     --gray-100: #f5f5f5;
     --gray-200: #eeeeee;
@@ -244,7 +250,7 @@
     color: var(--gray-600);
   }
 
-  /* Öffnungszeiten-Info */
+  /* Oeffnungszeiten-Info */
   .hours-card {
     background: white;
     border-radius: var(--radius);
@@ -303,19 +309,267 @@
     color: var(--teal-700);
     border: 2px solid var(--teal-100);
   }
+  .action-btn.warning {
+    background: linear-gradient(135deg, var(--orange-600), #f57c00);
+    color: white;
+    box-shadow: var(--shadow-md);
+  }
+  .action-btn.danger {
+    background: linear-gradient(135deg, var(--red-600), #c62828);
+    color: white;
+    box-shadow: var(--shadow-md);
+  }
 
-  /* Nachrichten-Bereich */
-  .messages-section {
+  /* Sections mit Animation */
+  .animated-section {
     display: none;
     animation: slideUp 0.3s ease;
   }
-  .messages-section.visible { display: block; }
+  .animated-section.visible { display: block; }
 
   @keyframes slideUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* Prozess-Schritte */
+  .process-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 12px;
+  }
+  .process-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .process-step.active {
+    color: var(--teal-700);
+  }
+  .process-step.done {
+    color: var(--green-600);
+  }
+  .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    background: var(--gray-200);
+    color: var(--gray-600);
+  }
+  .process-step.active .step-num {
+    background: var(--teal-600);
+    color: white;
+  }
+  .process-step.done .step-num {
+    background: var(--green-600);
+    color: white;
+  }
+  .step-arrow {
+    color: var(--gray-400);
+    font-size: 16px;
+  }
+
+  /* Vertretungs-Karten */
+  .sub-card {
+    background: white;
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: 2px solid var(--blue-100);
+  }
+  .sub-card.warning {
+    border-color: var(--orange-100);
+  }
+  .sub-card-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--blue-50);
+  }
+  .sub-card.warning .sub-card-header {
+    background: var(--orange-50);
+  }
+  .sub-card-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: white;
+    flex-shrink: 0;
+  }
+  .sub-card-avatar.fk { background: var(--teal-700); }
+  .sub-card-avatar.ek { background: var(--teal-400); }
+  .sub-card-info { flex: 1; }
+  .sub-card-name {
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sub-card-detail {
+    font-size: 13px;
+    color: var(--gray-600);
+    margin-top: 2px;
+  }
+  .sub-card-priority {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .sub-card-priority.high {
+    background: var(--blue-100);
+    color: var(--blue-600);
+  }
+  .sub-card-priority.medium {
+    background: var(--orange-100);
+    color: var(--orange-600);
+  }
+
+  .sub-card-body {
+    padding: 12px 16px;
+  }
+
+  /* Constraint-Chips */
+  .constraint-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .constraint-chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .constraint-chip.ok {
+    background: var(--green-50);
+    color: var(--green-600);
+    border: 1px solid var(--green-100);
+  }
+  .constraint-chip.warn {
+    background: var(--orange-50);
+    color: var(--orange-600);
+    border: 1px solid var(--orange-100);
+  }
+  .constraint-chip.fail {
+    background: var(--red-50);
+    color: var(--red-600);
+    border: 1px solid var(--red-100);
+  }
+
+  /* Anfrage-Status */
+  .anfrage-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .anfrage-status.warten {
+    background: var(--blue-50);
+    color: var(--blue-600);
+  }
+  .anfrage-status.ja {
+    background: var(--green-50);
+    color: var(--green-600);
+  }
+  .anfrage-status.nein {
+    background: var(--red-50);
+    color: var(--red-600);
+  }
+
+  /* WhatsApp-Nachricht in Vertretungs-Karte */
+  .wa-preview {
+    background: var(--gray-50);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--gray-800);
+    white-space: pre-wrap;
+    margin-bottom: 10px;
+    max-height: 120px;
+    overflow-y: auto;
+  }
+
+  .sub-card-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .sub-card-actions button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .sub-card-actions button:active { transform: scale(0.97); }
+  .btn-copy-wa {
+    background: var(--teal-50);
+    color: var(--teal-700);
+  }
+  .btn-antwort-ja {
+    background: var(--green-50);
+    color: var(--green-600);
+  }
+  .btn-antwort-nein {
+    background: var(--red-50);
+    color: var(--red-600);
+  }
+  .btn-skip {
+    background: var(--gray-100);
+    color: var(--gray-600);
+  }
+
+  /* Gestufter Prozess Hinweis */
+  .stufig-hinweis {
+    background: var(--purple-50);
+    border: 2px solid var(--purple-100);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--gray-800);
+  }
+  .stufig-hinweis strong {
+    color: var(--purple-600);
+  }
+
+  /* Nachrichten-Bereich */
   .message-card {
     background: white;
     border-radius: var(--radius);
@@ -420,6 +674,13 @@
     font-size: 13px;
     padding: 8px 0 4px;
   }
+
+  /* Divider */
+  .section-divider {
+    border: none;
+    border-top: 2px dashed var(--gray-200);
+    margin: 20px 0 16px;
+  }
 </style>
 </head>
 <body>
@@ -435,68 +696,113 @@
 
   <!-- Ampel -->
   <div class="ampel-banner green" id="ampelBanner">
-    <div class="ampel-dot">✓</div>
+    <div class="ampel-dot">&#10003;</div>
     <div class="ampel-text">
       <div class="label" id="ampelLabel">Alles OK</div>
       <div class="detail" id="ampelDetail">3 FK, 5 EK anwesend</div>
     </div>
   </div>
 
-  <!-- Öffnungszeiten -->
+  <!-- Oeffnungszeiten -->
   <div class="hours-card" id="hoursCard">
-    <h3>Öffnungszeiten</h3>
+    <h3>Oeffnungszeiten</h3>
     <div id="hoursContent"></div>
   </div>
 
   <!-- Personal -->
-  <div class="section-header">Pädagoginnen — Tap zum Krankmelden</div>
+  <div class="section-header">Paedagoginnen — Tap zum Krankmelden</div>
   <div id="staffList"></div>
   <div class="hint" id="staffHint">Tippe auf eine Person, um sie als KRANK zu markieren</div>
 
-  <!-- Nachrichten generieren -->
-  <button class="action-btn primary" id="generateBtn" disabled onclick="generateMessages()">
-    Nachrichten generieren
+  <!-- SCHRITT 1: Vertretung suchen -->
+  <button class="action-btn primary" id="searchSubBtn" disabled onclick="searchSubstitutes()">
+    Erst jemanden als KRANK markieren
   </button>
 
-  <!-- Nachrichten -->
-  <div class="messages-section" id="messagesSection">
-    <div class="section-header">Fertige WhatsApp-Nachrichten</div>
+  <!-- Prozess-Schritte Anzeige -->
+  <div class="process-steps" id="processSteps" style="display:none;">
+    <div class="process-step" id="step1">
+      <span class="step-num">1</span>
+      <span>Krank</span>
+    </div>
+    <span class="step-arrow">&#x2192;</span>
+    <div class="process-step" id="step2">
+      <span class="step-num">2</span>
+      <span>Vertretung</span>
+    </div>
+    <span class="step-arrow">&#x2192;</span>
+    <div class="process-step" id="step3">
+      <span class="step-num">3</span>
+      <span>Eltern</span>
+    </div>
+  </div>
+
+  <!-- SCHRITT 2: Erzieherinnen-Anfrage -->
+  <div class="animated-section" id="subSection">
+    <div class="section-header">Schritt 1 — Vertretung suchen</div>
+
+    <div class="stufig-hinweis">
+      <strong>Gestufter Prozess:</strong> Frage erst die beste Option. Bei Absage -> naechste Person fragen. So vermeidest du unnoetige Anfragen.
+    </div>
+
+    <div id="subList"></div>
+
+    <div id="noSubAvailable" style="display:none;">
+      <div class="ampel-banner red" style="margin-top:8px;">
+        <div class="ampel-dot">&#10007;</div>
+        <div class="ampel-text">
+          <div class="label">Keine Vertretung verfuegbar</div>
+          <div class="detail">Niemand kann an diesem Tag einspringen</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <button class="action-btn warning" id="noSubBtn" onclick="showParentMessages()">
+      Keine Vertretung moeglich &#x2192; Eltern benachrichtigen
+    </button>
+  </div>
+
+  <!-- SCHRITT 3: Eltern-Nachrichten -->
+  <div class="animated-section" id="messagesSection">
+    <div class="section-header">Schritt 2 — Eltern benachrichtigen</div>
 
     <div class="message-card">
-      <div class="message-header info">🆘 Nachricht 1 — Erste Info</div>
+      <div class="message-header info">Nachricht 1 — Erste Info</div>
       <div class="message-body" id="msg1"></div>
       <div class="message-footer">
         <button class="copy-btn" onclick="copyMessage(1, this)">
-          <span>📤</span> Kopieren / Teilen
+          <span>&#x1F4E4;</span> Kopieren / Teilen
         </button>
       </div>
     </div>
 
     <div class="message-card">
-      <div class="message-header urgent">🔴 Nachricht 2 — Dringende Nachfrage</div>
+      <div class="message-header urgent">Nachricht 2 — Dringende Nachfrage</div>
       <div class="message-body" id="msg2"></div>
       <div class="message-footer">
         <button class="copy-btn" onclick="copyMessage(2, this)">
-          <span>📤</span> Kopieren / Teilen
+          <span>&#x1F4E4;</span> Kopieren / Teilen
         </button>
       </div>
     </div>
 
     <div class="message-card">
-      <div class="message-header closed">🚫 Nachricht 3 — Kita-Schließung</div>
+      <div class="message-header closed">Nachricht 3 — Kita-Schliessung</div>
       <div class="message-body" id="msg3"></div>
       <div class="message-footer">
         <button class="copy-btn" onclick="copyMessage(3, this)">
-          <span>📤</span> Kopieren / Teilen
+          <span>&#x1F4E4;</span> Kopieren / Teilen
         </button>
       </div>
     </div>
 
-    <a href="#" class="reset-link" onclick="resetAll(); return false;">↩ Zurücksetzen</a>
+    <a href="#" class="reset-link" onclick="resetAll(); return false;">&#x21A9; Zuruecksetzen</a>
   </div>
 </div>
 
-<div class="toast" id="toast">✓ Kopiert!</div>
+<div class="toast" id="toast">Kopiert!</div>
 
 <script>
 // ==========================================
@@ -504,14 +810,14 @@
 // ==========================================
 
 const STAFF = [
-  { name: 'Hannah',  type: 'FK', shifts: ['07:30-16:30','07:30-16:30','07:30-14:30','07:30-16:30','07:30-14:30'] },
-  { name: 'Lioba',   type: 'FK', shifts: ['07:45-16:00','07:45-16:00','07:45-16:00','07:45-16:00','07:45-16:00'] },
-  { name: 'Dilsad',  type: 'FK', shifts: ['08:00-14:30','08:00-14:30','08:00-16:30','FREI','08:00-14:30'] },
-  { name: 'Lidija',  type: 'EK', shifts: ['07:30-12:30','07:30-12:30','07:30-12:30','07:30-12:30','07:30-12:30'] },
-  { name: 'Hurguel', type: 'EK', shifts: ['10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30'] },
-  { name: 'Niels',   type: 'EK', shifts: ['09:00-14:00','FREI','09:00-14:00','09:00-14:00','FREI'] },
-  { name: 'Steffi',  type: 'EK', shifts: ['FREI','10:15-16:15','FREI','10:15-16:15','FREI'] },
-  { name: 'Gul',     type: 'EK', shifts: ['12:00-16:30','12:00-16:30','FREI','12:00-16:30','12:00-16:30'] },
+  { name: 'Hannah',  type: 'FK', hours: 38, shifts: ['07:30-16:30','07:30-16:30','07:30-14:30','07:30-16:30','07:30-14:30'] },
+  { name: 'Lioba',   type: 'FK', hours: 39, shifts: ['07:45-16:00','07:45-16:00','07:45-16:00','07:45-16:00','07:45-16:00'] },
+  { name: 'Dilsad',  type: 'FK', hours: 30, shifts: ['08:00-14:30','08:00-14:30','08:00-16:30','FREI','08:00-14:30'] },
+  { name: 'Lidija',  type: 'EK', hours: 25, shifts: ['07:30-12:30','07:30-12:30','07:30-12:30','07:30-12:30','07:30-12:30'] },
+  { name: 'Hurguel', type: 'EK', hours: 30, shifts: ['10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30'] },
+  { name: 'Niels',   type: 'EK', hours: 15, shifts: ['09:00-14:00','FREI','09:00-14:00','09:00-14:00','FREI'] },
+  { name: 'Steffi',  type: 'EK', hours: 12, shifts: ['FREI','10:15-16:15','FREI','10:15-16:15','FREI'] },
+  { name: 'Gul',     type: 'EK', hours: 15.5, shifts: ['12:00-16:30','12:00-16:30','FREI','12:00-16:30','12:00-16:30'] },
 ];
 
 const DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
@@ -520,20 +826,20 @@ const DAYS_FULL = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
 // KW11 2026: 09.03 - 13.03
 const KW = 11;
 const DATES = ['09.03.', '10.03.', '11.03.', '12.03.', '13.03.'];
-const NORMAL_HOURS = '07:30 – 16:30';
+const NORMAL_HOURS = '07:30 - 16:30';
 
-let selectedDay = 0; // Montag default
-let sickStaff = {}; // { "Hannah-0": true, "Lioba-2": true, ... }
+let selectedDay = 0;
+let sickStaff = {};
+let subResponses = {}; // { "Hannah-0": "ja"|"nein"|"warten" }
 
 // ==========================================
 // INIT
 // ==========================================
 
 function init() {
-  document.getElementById('kwInfo').textContent = `KW ${KW} · ${DATES[0]} – ${DATES[4]} März 2026`;
+  document.getElementById('kwInfo').textContent = 'KW ' + KW + ' \u00B7 ' + DATES[0] + ' \u2013 ' + DATES[4] + ' Maerz 2026';
 
-  // Aktuellen Wochentag vorselektieren (falls Mo-Fr)
-  const today = new Date().getDay(); // 0=So, 1=Mo
+  const today = new Date().getDay();
   if (today >= 1 && today <= 5) {
     selectedDay = today - 1;
   }
@@ -545,11 +851,11 @@ function init() {
 function renderDayTabs() {
   const container = document.getElementById('dayTabs');
   container.innerHTML = '';
-  DAYS.forEach((day, i) => {
+  DAYS.forEach(function(day, i) {
     const tab = document.createElement('div');
     tab.className = 'day-tab' + (i === selectedDay ? ' active' : '');
-    tab.innerHTML = `<span class="day-name">${day}</span><span class="day-date">${DATES[i]}</span>`;
-    tab.onclick = () => { selectedDay = i; renderDayTabs(); renderDay(); };
+    tab.innerHTML = '<span class="day-name">' + day + '</span><span class="day-date">' + DATES[i] + '</span>';
+    tab.onclick = function() { selectedDay = i; renderDayTabs(); renderDay(); };
     container.appendChild(tab);
   });
 }
@@ -558,10 +864,13 @@ function renderDay() {
   renderStaff();
   updateAmpel();
   updateHours();
-  updateGenerateBtn();
+  updateSearchBtn();
 
-  // Nachrichten-Bereich ausblenden bei Tag-Wechsel
+  // Beide Bereiche ausblenden bei Tag-Wechsel
+  document.getElementById('subSection').classList.remove('visible');
   document.getElementById('messagesSection').classList.remove('visible');
+  document.getElementById('processSteps').style.display = 'none';
+  subResponses = {};
 }
 
 // ==========================================
@@ -572,9 +881,9 @@ function renderStaff() {
   const container = document.getElementById('staffList');
   container.innerHTML = '';
 
-  STAFF.forEach((person, idx) => {
+  STAFF.forEach(function(person) {
     const shift = person.shifts[selectedDay];
-    const key = `${person.name}-${selectedDay}`;
+    const key = person.name + '-' + selectedDay;
     const isSick = sickStaff[key] === true;
     const isFrei = shift === 'FREI';
 
@@ -583,27 +892,26 @@ function renderStaff() {
 
     const initials = person.name.substring(0, 2).toUpperCase();
 
-    let statusHtml = '';
+    var statusHtml = '';
     if (isSick) {
       statusHtml = '<div class="staff-status krank">KRANK</div>';
     } else if (isFrei) {
       statusHtml = '<div class="staff-status frei">FREI</div>';
     }
 
-    card.innerHTML = `
-      <div class="staff-avatar ${person.type.toLowerCase()}">${initials}</div>
-      <div class="staff-info">
-        <div class="staff-name">
-          ${person.name}
-          <span class="staff-badge ${person.type.toLowerCase()}">${person.type}</span>
-        </div>
-        <div class="staff-shift">${isFrei ? 'Frei' : shift}</div>
-      </div>
-      ${statusHtml}
-    `;
+    card.innerHTML =
+      '<div class="staff-avatar ' + person.type.toLowerCase() + '">' + initials + '</div>' +
+      '<div class="staff-info">' +
+        '<div class="staff-name">' +
+          person.name +
+          ' <span class="staff-badge ' + person.type.toLowerCase() + '">' + person.type + '</span>' +
+        '</div>' +
+        '<div class="staff-shift">' + (isFrei ? 'Frei' : shift) + '</div>' +
+      '</div>' +
+      statusHtml;
 
     if (!isFrei || isSick) {
-      card.onclick = () => toggleSick(person.name);
+      card.onclick = function() { toggleSick(person.name); };
     }
 
     container.appendChild(card);
@@ -611,7 +919,7 @@ function renderStaff() {
 }
 
 function toggleSick(name) {
-  const key = `${name}-${selectedDay}`;
+  const key = name + '-' + selectedDay;
   if (sickStaff[key]) {
     delete sickStaff[key];
   } else {
@@ -621,25 +929,25 @@ function toggleSick(name) {
 }
 
 // ==========================================
-// AMPEL + ÖFFNUNGSZEITEN BERECHNEN
+// AMPEL + OEFFNUNGSZEITEN
 // ==========================================
 
 function getActiveStaff(dayIndex) {
   const active = [];
-  STAFF.forEach(person => {
+  STAFF.forEach(function(person) {
     const shift = person.shifts[dayIndex];
-    const key = `${person.name}-${dayIndex}`;
+    const key = person.name + '-' + dayIndex;
     if (shift !== 'FREI' && !sickStaff[key]) {
-      const [startStr, endStr] = shift.split('-');
-      const start = parseTime(startStr);
-      const end = parseTime(endStr);
+      const parts = shift.split('-');
+      const start = parseTime(parts[0]);
+      const end = parseTime(parts[1]);
       active.push({
         name: person.name,
         type: person.type,
         isFK: person.type === 'FK',
         isEK: person.type === 'EK',
-        start,
-        end
+        start: start,
+        end: end
       });
     }
   });
@@ -647,14 +955,14 @@ function getActiveStaff(dayIndex) {
 }
 
 function parseTime(str) {
-  const [h, m] = str.split(':').map(Number);
-  return h * 60 + m;
+  const parts = str.split(':').map(Number);
+  return parts[0] * 60 + parts[1];
 }
 
 function formatTime(minutes) {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
-  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+  return h.toString().padStart(2,'0') + ':' + m.toString().padStart(2,'0');
 }
 
 function computeOpeningWindow(active) {
@@ -665,12 +973,12 @@ function computeOpeningWindow(active) {
   const rasterStart = 7 * 60;
   const rasterEnd = 17 * 60;
 
-  let fkStart = null, fkEnd = null;
-  let notStart = null, notEnd = null;
+  var fkStart = null, fkEnd = null;
+  var notStart = null, notEnd = null;
 
-  for (let t = rasterStart; t <= rasterEnd; t += 5) {
-    let fkCount = 0, total = 0;
-    active.forEach(s => {
+  for (var t = rasterStart; t <= rasterEnd; t += 5) {
+    var fkCount = 0, total = 0;
+    active.forEach(function(s) {
       if (t >= s.start && t < s.end) {
         total++;
         if (s.isFK) fkCount++;
@@ -688,15 +996,15 @@ function computeOpeningWindow(active) {
   }
 
   if (fkStart !== null) {
-    let oStart = fkStart;
-    let oEnd = fkEnd;
+    var oStart = fkStart;
+    var oEnd = fkEnd;
     if (notStart !== null && notStart < fkStart) {
       oStart = Math.max(notStart, fkStart - 30);
     }
     if (notEnd !== null && notEnd > fkEnd) {
       oEnd = Math.min(notEnd, fkEnd + 30);
     }
-    return { start: oStart, end: oEnd, status: 'OK', fkStart, fkEnd };
+    return { start: oStart, end: oEnd, status: 'OK', fkStart: fkStart, fkEnd: fkEnd };
   }
 
   if (notStart !== null) {
@@ -708,9 +1016,9 @@ function computeOpeningWindow(active) {
 
 function updateAmpel() {
   const active = getActiveStaff(selectedDay);
-  const fkCount = active.filter(s => s.isFK).length;
-  const ekCount = active.filter(s => s.isEK).length;
-  const window = computeOpeningWindow(active);
+  const fkCount = active.filter(function(s) { return s.isFK; }).length;
+  const ekCount = active.filter(function(s) { return s.isEK; }).length;
+  const win = computeOpeningWindow(active);
 
   const banner = document.getElementById('ampelBanner');
   const label = document.getElementById('ampelLabel');
@@ -718,229 +1026,537 @@ function updateAmpel() {
 
   banner.className = 'ampel-banner';
 
-  if (window.status === 'OK' && fkCount >= 2) {
+  if (win.status === 'OK' && fkCount >= 2) {
     banner.classList.add('green');
-    banner.querySelector('.ampel-dot').textContent = '✓';
+    banner.querySelector('.ampel-dot').textContent = '\u2713';
     label.textContent = 'Personaldecke OK';
-    detail.textContent = `${fkCount} FK, ${ekCount} EK anwesend`;
-  } else if (window.status === 'NOTBETRIEB' || (window.status === 'OK' && fkCount < 3)) {
+    detail.textContent = fkCount + ' FK, ' + ekCount + ' EK anwesend';
+  } else if (win.status === 'NOTBETRIEB' || (win.status === 'OK' && fkCount < 3)) {
     banner.classList.add('orange');
-    banner.querySelector('.ampel-dot').textContent = '⚠';
-    label.textContent = 'Eingeschränkter Betrieb';
-    detail.textContent = `Nur ${fkCount} FK — reduzierte Öffnungszeiten`;
+    banner.querySelector('.ampel-dot').textContent = '\u26A0';
+    label.textContent = 'Eingeschraenkter Betrieb';
+    detail.textContent = 'Nur ' + fkCount + ' FK \u2014 reduzierte Oeffnungszeiten';
   }
 
-  if (window.status === 'GESCHLOSSEN') {
+  if (win.status === 'GESCHLOSSEN') {
     banner.classList.add('red');
-    banner.querySelector('.ampel-dot').textContent = '✕';
+    banner.querySelector('.ampel-dot').textContent = '\u2717';
     label.textContent = 'Kita geschlossen';
-    detail.textContent = `Weniger als 2 Fachkräfte (KiBiz)`;
+    detail.textContent = 'Weniger als 2 Fachkraefte (KiBiz)';
   }
 }
 
 function updateHours() {
   const active = getActiveStaff(selectedDay);
-  const window = computeOpeningWindow(active);
+  const win = computeOpeningWindow(active);
   const content = document.getElementById('hoursContent');
 
-  if (window.status === 'GESCHLOSSEN') {
-    content.innerHTML = `
-      <div class="hours-row">
-        <span class="hours-label">Regulär</span>
-        <span class="hours-value normal">${NORMAL_HOURS}</span>
-      </div>
-      <div class="hours-row">
-        <span class="hours-label">${DAYS_FULL[selectedDay]}</span>
-        <span class="hours-value closed">GESCHLOSSEN</span>
-      </div>
-    `;
+  if (win.status === 'GESCHLOSSEN') {
+    content.innerHTML =
+      '<div class="hours-row">' +
+        '<span class="hours-label">Regulaer</span>' +
+        '<span class="hours-value normal">' + NORMAL_HOURS + '</span>' +
+      '</div>' +
+      '<div class="hours-row">' +
+        '<span class="hours-label">' + DAYS_FULL[selectedDay] + '</span>' +
+        '<span class="hours-value closed">GESCHLOSSEN</span>' +
+      '</div>';
   } else {
-    const reduced = `${formatTime(window.start)} – ${formatTime(window.end)}`;
-    const isReduced = window.start > parseTime('07:30') || window.end < parseTime('16:30');
-    content.innerHTML = `
-      <div class="hours-row">
-        <span class="hours-label">Regulär</span>
-        <span class="hours-value normal">${NORMAL_HOURS}</span>
-      </div>
-      <div class="hours-row">
-        <span class="hours-label">${DAYS_FULL[selectedDay]}</span>
-        <span class="hours-value ${isReduced ? 'reduced' : 'normal'}">${reduced}</span>
-      </div>
-    `;
+    const reduced = formatTime(win.start) + ' \u2013 ' + formatTime(win.end);
+    const isReduced = win.start > parseTime('07:30') || win.end < parseTime('16:30');
+    content.innerHTML =
+      '<div class="hours-row">' +
+        '<span class="hours-label">Regulaer</span>' +
+        '<span class="hours-value normal">' + NORMAL_HOURS + '</span>' +
+      '</div>' +
+      '<div class="hours-row">' +
+        '<span class="hours-label">' + DAYS_FULL[selectedDay] + '</span>' +
+        '<span class="hours-value ' + (isReduced ? 'reduced' : 'normal') + '">' + reduced + '</span>' +
+      '</div>';
   }
 }
 
-function updateGenerateBtn() {
-  const hasSick = Object.keys(sickStaff).some(k => k.endsWith(`-${selectedDay}`));
-  const btn = document.getElementById('generateBtn');
+function updateSearchBtn() {
+  const hasSick = Object.keys(sickStaff).some(function(k) { return k.endsWith('-' + selectedDay); });
+  const btn = document.getElementById('searchSubBtn');
   btn.disabled = !hasSick;
-  btn.textContent = hasSick ? '💬 Nachrichten generieren' : 'Erst jemanden als KRANK markieren';
+  btn.textContent = hasSick ? '\uD83D\uDD0D Vertretung suchen' : 'Erst jemanden als KRANK markieren';
 }
 
 // ==========================================
-// NACHRICHTEN GENERIEREN
+// SCHRITT 2: VERTRETUNG SUCHEN
 // ==========================================
 
-function generateMessages() {
+function searchSubstitutes() {
   const dayName = DAYS_FULL[selectedDay];
   const dayDate = DATES[selectedDay];
-  const kwTitel = `KW ${KW}`;
 
   // Wer ist krank?
-  const sickToday = STAFF.filter(p => sickStaff[`${p.name}-${selectedDay}`]);
-  const sickNames = sickToday.map(p => p.name).join(', ');
-  const sickFK = sickToday.filter(p => p.type === 'FK');
+  const sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
+  const sickNames = sickToday.map(function(p) { return p.name; });
 
-  // Aktive
+  // Aktive nach Krankheit
   const active = getActiveStaff(selectedDay);
-  const window = computeOpeningWindow(active);
-  const fkCount = active.filter(s => s.isFK).length;
+  const fkCount = active.filter(function(s) { return s.isFK; }).length;
 
-  let zeitInfo = '';
-  if (window.status === 'GESCHLOSSEN') {
-    zeitInfo = `Die Kita muss am ${dayName} (${dayDate}) leider GESCHLOSSEN bleiben.`;
-  } else {
-    const reduced = `${formatTime(window.start)} – ${formatTime(window.end)}`;
-    zeitInfo = `Reduzierte Öffnungszeiten am ${dayName} (${dayDate}): ${reduced}`;
+  // Wer hat FREI an diesem Tag und koennte einspringen?
+  const freeToday = STAFF.filter(function(p) {
+    return p.shifts[selectedDay] === 'FREI' && !sickStaff[p.name + '-' + selectedDay];
+  });
+
+  // Wer arbeitet, koennte aber Schicht verschieben/verlaengern?
+  const shiftable = STAFF.filter(function(p) {
+    const shift = p.shifts[selectedDay];
+    return shift !== 'FREI' && !sickStaff[p.name + '-' + selectedDay];
+  });
+
+  // Berechne was gebraucht wird
+  const win = computeOpeningWindow(active);
+  var needEarly = false, needLate = false, needFK = fkCount < 2;
+
+  // Zeitfenster-Analyse: Wo fehlt Personal?
+  var gapStart = null, gapEnd = null;
+  if (win.status !== 'GESCHLOSSEN') {
+    // Pruefen ob frueh oder spaet Personal fehlt
+    const earlyFK = active.filter(function(s) { return s.isFK && s.start <= parseTime('08:00'); }).length;
+    const lateFK = active.filter(function(s) { return s.isFK && s.end >= parseTime('16:00'); }).length;
+    if (earlyFK < 2) needEarly = true;
+    if (lateFK < 2) needLate = true;
   }
 
-  const kritischerTag = `${dayName} ${dayDate} — ${sickNames} krank → nur ${fkCount} FK`;
+  // Kranke Personen Schichten fuer Gap-Berechnung
+  sickToday.forEach(function(p) {
+    const shift = p.shifts[selectedDay];
+    if (shift !== 'FREI') {
+      const parts = shift.split('-');
+      const s = parseTime(parts[0]);
+      const e = parseTime(parts[1]);
+      if (gapStart === null || s < gapStart) gapStart = s;
+      if (gapEnd === null || e > gapEnd) gapEnd = e;
+    }
+  });
 
-  // Nachricht 1: Erste Info
-  const msg1 = `🆘 BETREUUNGSHILFE GESUCHT
+  // Vertretungs-Optionen generieren
+  var options = [];
+  var priority = 1;
 
-Liebe Eltern,
+  // Option A: Freie Personen (beste Option)
+  freeToday.forEach(function(person) {
+    var suggestedShift = formatTime(gapStart || parseTime('08:00')) + '-' + formatTime(gapEnd || parseTime('14:30'));
+    var shiftDuration = ((gapEnd || parseTime('14:30')) - (gapStart || parseTime('08:00'))) / 60;
 
-wir brauchen eure Hilfe! Aufgrund von Krankheitsausfällen haben wir in ${kwTitel} an folgendem Tag zu wenig Fachkräfte:
+    // Constraint: >6h braucht Pause
+    var constraints = [];
+    if (shiftDuration > 6) {
+      constraints.push({ type: 'warn', text: '>' + Math.round(shiftDuration) + 'h = Pause noetig' });
+      // Kuerzere Schicht vorschlagen
+      var maxEnd = (gapStart || parseTime('08:00')) + 360; // 6h
+      suggestedShift = formatTime(gapStart || parseTime('08:00')) + '-' + formatTime(Math.min(maxEnd, gapEnd || parseTime('14:30')));
+      shiftDuration = Math.min(6, shiftDuration);
+    }
 
-⚠️ ${kritischerTag}
+    if (shiftDuration <= 6) {
+      constraints.push({ type: 'ok', text: shiftDuration.toFixed(1) + 'h ohne Pause OK' });
+    }
 
-${zeitInfo}
+    if (person.type === 'FK') {
+      constraints.push({ type: 'ok', text: 'Fachkraft \u2192 FK-Schluessel' });
+    }
 
-Können Eltern an diesem Tag bei der Betreuung helfen?
+    options.push({
+      person: person,
+      type: 'frei',
+      priority: person.type === 'FK' ? 'high' : 'medium',
+      priorityNum: priority++,
+      suggestedShift: suggestedShift,
+      constraints: constraints,
+      reason: 'Hat ' + dayName + ' frei'
+    });
+  });
 
-Bitte meldet euch schnell, damit wir planen können.
+  // Option B: Schicht verschieben/verlaengern
+  shiftable.forEach(function(person) {
+    const shift = person.shifts[selectedDay];
+    const parts = shift.split('-');
+    const pStart = parseTime(parts[0]);
+    const pEnd = parseTime(parts[1]);
+    const currentDuration = (pEnd - pStart) / 60;
 
-Danke! 🙏`;
+    var suggestion = null;
+    var constraints = [];
 
-  // Nachricht 2: Dringende Nachfrage
-  const msg2 = `🔴 DRINGENDE BETREUUNGSHILFE!
+    // Kann frueher kommen?
+    if (needEarly && pStart > parseTime('08:00')) {
+      var newStart = Math.max(parseTime('07:30'), pStart - 60);
+      var newDuration = (pEnd - newStart) / 60;
 
-Liebe Eltern,
+      if (newDuration > 6) {
+        // Muss frueher gehen oder Pause einplanen
+        var newEnd = newStart + 360;
+        constraints.push({ type: 'warn', text: 'Nur bis ' + formatTime(newEnd) + ' (6h-Regel)' });
+        suggestion = formatTime(newStart) + '-' + formatTime(newEnd);
+      } else {
+        constraints.push({ type: 'ok', text: newDuration.toFixed(1) + 'h ohne Pause OK' });
+        suggestion = formatTime(newStart) + '-' + formatTime(pEnd);
+      }
+    }
+    // Kann laenger bleiben?
+    else if (needLate && pEnd < parseTime('16:00')) {
+      var newEnd2 = Math.min(parseTime('16:30'), pEnd + 60);
+      var newDuration2 = (newEnd2 - pStart) / 60;
 
-wir haben noch KEINE Rückmeldungen für den kritischen Tag in ${kwTitel}:
+      if (newDuration2 > 6) {
+        constraints.push({ type: 'warn', text: 'Nur bis ' + formatTime(pStart + 360) + ' (6h-Regel)' });
+        suggestion = formatTime(pStart) + '-' + formatTime(pStart + 360);
+      } else {
+        constraints.push({ type: 'ok', text: newDuration2.toFixed(1) + 'h ohne Pause OK' });
+        suggestion = formatTime(pStart) + '-' + formatTime(newEnd2);
+      }
+    }
 
-🆘 ${kritischerTag}
+    if (suggestion && suggestion !== shift) {
+      if (person.type === 'FK') {
+        constraints.push({ type: 'ok', text: 'Fachkraft' });
+      }
 
-Ohne Eltern-Unterstützung müssen wir die Kita an diesem Tag SCHLIEẞEN! 🚫
+      options.push({
+        person: person,
+        type: 'verschieben',
+        priority: person.type === 'FK' ? 'high' : 'medium',
+        priorityNum: priority++,
+        suggestedShift: suggestion,
+        currentShift: shift,
+        constraints: constraints,
+        reason: 'Aktuell ' + shift + ' \u2192 verschieben'
+      });
+    }
+  });
 
-Bitte meldet euch JETZT, wenn ihr helfen könnt.
+  // Rendern
+  renderSubstitutes(options, sickNames, dayName, dayDate);
 
-Zeit läuft! ⏰`;
+  // Prozess-Schritte anzeigen
+  var steps = document.getElementById('processSteps');
+  steps.style.display = 'flex';
+  document.getElementById('step1').className = 'process-step done';
+  document.getElementById('step2').className = 'process-step active';
+  document.getElementById('step3').className = 'process-step';
 
-  // Nachricht 3: Kita geschlossen
-  const msg3 = `🚫 KITA GESCHLOSSEN
-
-Liebe Eltern,
-
-da sich keine Eltern für die Betreuung gemeldet haben, müssen wir die Kita am folgenden Tag SCHLIEẞEN:
-
-🚫 ${dayName}, ${dayDate} März 2026
-
-Grund: Weniger als 2 Fachkräfte anwesend (KiBiz-Vorschrift)
-
-Bitte organisiert alternative Betreuung für eure Kinder.
-
-Entschuldigt die kurzfristige Absage.`;
-
-  document.getElementById('msg1').textContent = msg1;
-  document.getElementById('msg2').textContent = msg2;
-  document.getElementById('msg3').textContent = msg3;
-
-  const section = document.getElementById('messagesSection');
+  var section = document.getElementById('subSection');
   section.classList.add('visible');
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+function renderSubstitutes(options, sickNames, dayName, dayDate) {
+  const container = document.getElementById('subList');
+  container.innerHTML = '';
+
+  if (options.length === 0) {
+    document.getElementById('noSubAvailable').style.display = 'block';
+    return;
+  }
+  document.getElementById('noSubAvailable').style.display = 'none';
+
+  // Sortieren: FK zuerst, dann freie vor verschieben
+  options.sort(function(a, b) {
+    if (a.person.type !== b.person.type) return a.person.type === 'FK' ? -1 : 1;
+    if (a.type !== b.type) return a.type === 'frei' ? -1 : 1;
+    return 0;
+  });
+
+  // Prioritaet neu nummerieren nach Sortierung
+  options.forEach(function(opt, i) { opt.priorityNum = i + 1; });
+
+  options.forEach(function(opt, idx) {
+    var card = document.createElement('div');
+    card.className = 'sub-card' + (opt.constraints.some(function(c) { return c.type === 'warn'; }) ? ' warning' : '');
+    card.id = 'sub-' + opt.person.name + '-' + selectedDay;
+
+    var initials = opt.person.name.substring(0, 2).toUpperCase();
+    var typeLabel = opt.type === 'frei' ? 'Hat frei \u2192 einspringen' : 'Schicht verschieben';
+
+    // WhatsApp-Nachricht generieren
+    var waMsg = '';
+    if (opt.type === 'frei') {
+      waMsg = 'Hey ' + opt.person.name + ',\n\n' +
+        sickNames.join(' und ') + (sickNames.length > 1 ? ' sind' : ' ist') + ' am ' + dayName + ' (' + dayDate + ') krank.\n\n' +
+        'Koenntest du einspringen? Wir bräuchten dich von ' + opt.suggestedShift + '.\n\n' +
+        'Waere das moeglich? Gib kurz Bescheid!';
+    } else {
+      waMsg = 'Hey ' + opt.person.name + ',\n\n' +
+        sickNames.join(' und ') + (sickNames.length > 1 ? ' sind' : ' ist') + ' am ' + dayName + ' (' + dayDate + ') krank.\n\n' +
+        'Koenntest du deine Schicht von ' + opt.currentShift + ' auf ' + opt.suggestedShift + ' verschieben?\n\n' +
+        'Waere das moeglich? Gib kurz Bescheid!';
+    }
+
+    // Constraints HTML
+    var constraintsHtml = '<div class="constraint-chips">';
+    opt.constraints.forEach(function(c) {
+      constraintsHtml += '<span class="constraint-chip ' + c.type + '">' + (c.type === 'ok' ? '\u2713 ' : '\u26A0 ') + c.text + '</span>';
+    });
+    constraintsHtml += '</div>';
+
+    var key = opt.person.name + '-' + selectedDay;
+    var response = subResponses[key];
+
+    var statusHtml = '';
+    if (response === 'ja') {
+      statusHtml = '<div class="anfrage-status ja">\u2713 Hat zugesagt!</div>';
+    } else if (response === 'nein') {
+      statusHtml = '<div class="anfrage-status nein">\u2717 Kann nicht</div>';
+    } else if (response === 'warten') {
+      statusHtml = '<div class="anfrage-status warten">\u23F3 Wartet auf Antwort...</div>';
+    }
+
+    var actionsHtml = '';
+    if (!response) {
+      actionsHtml =
+        '<div class="sub-card-actions">' +
+          '<button class="btn-copy-wa" onclick="copySubMessage(\'' + opt.person.name + '\', ' + idx + ', this)">' +
+            '\uD83D\uDCE4 Nachricht kopieren' +
+          '</button>' +
+        '</div>' +
+        '<div class="sub-card-actions" style="margin-top:6px;">' +
+          '<button class="btn-antwort-ja" onclick="markResponse(\'' + opt.person.name + '\', \'ja\')">' +
+            '\u2713 Zugesagt' +
+          '</button>' +
+          '<button class="btn-antwort-nein" onclick="markResponse(\'' + opt.person.name + '\', \'nein\')">' +
+            '\u2717 Absage' +
+          '</button>' +
+          '<button class="btn-skip" onclick="markResponse(\'' + opt.person.name + '\', \'warten\')">' +
+            '\u23F3 Warten' +
+          '</button>' +
+        '</div>';
+    } else if (response === 'warten') {
+      actionsHtml =
+        '<div class="sub-card-actions">' +
+          '<button class="btn-antwort-ja" onclick="markResponse(\'' + opt.person.name + '\', \'ja\')">' +
+            '\u2713 Zugesagt' +
+          '</button>' +
+          '<button class="btn-antwort-nein" onclick="markResponse(\'' + opt.person.name + '\', \'nein\')">' +
+            '\u2717 Absage' +
+          '</button>' +
+        '</div>';
+    }
+
+    card.innerHTML =
+      '<div class="sub-card-header">' +
+        '<div class="sub-card-avatar ' + opt.person.type.toLowerCase() + '">' + initials + '</div>' +
+        '<div class="sub-card-info">' +
+          '<div class="sub-card-name">' +
+            opt.person.name +
+            ' <span class="staff-badge ' + opt.person.type.toLowerCase() + '">' + opt.person.type + '</span>' +
+          '</div>' +
+          '<div class="sub-card-detail">' + typeLabel + ' \u2192 ' + opt.suggestedShift + '</div>' +
+        '</div>' +
+        '<div class="sub-card-priority ' + opt.priority + '">#' + opt.priorityNum + '</div>' +
+      '</div>' +
+      '<div class="sub-card-body">' +
+        statusHtml +
+        constraintsHtml +
+        '<div class="wa-preview" id="wa-' + opt.person.name + '-' + idx + '">' + waMsg + '</div>' +
+        actionsHtml +
+      '</div>';
+
+    // Wenn jemand zugesagt hat, andere Karten abdunkeln
+    if (response === 'ja') {
+      card.style.borderColor = '#c8e6c9';
+      card.querySelector('.sub-card-header').style.background = '#e8f5e9';
+    } else if (response === 'nein') {
+      card.style.opacity = '0.5';
+    }
+
+    container.appendChild(card);
+  });
+}
+
+// Letzte Optionen merken fuer re-render
+var lastOptions = [];
+var lastSickNames = [];
+var lastDayName = '';
+var lastDayDate = '';
+
+// searchSubstitutes ueberschreiben um Daten zu cachen
+var _origSearch = searchSubstitutes;
+searchSubstitutes = function() {
+  _origSearch();
+  // Cache wird in renderSubstitutes implizit gesetzt
+};
+
+function markResponse(name, response) {
+  var key = name + '-' + selectedDay;
+  subResponses[key] = response;
+
+  if (response === 'ja') {
+    showToast('\u2713 ' + name + ' hat zugesagt!');
+  }
+
+  // Einfach den Suchen-Button nochmal triggern um neu zu rendern
+  searchSubstitutes();
+}
+
+async function copySubMessage(name, idx, btn) {
+  var el = document.getElementById('wa-' + name + '-' + idx);
+  if (!el) return;
+  var text = el.textContent;
+
+  var copied = await doCopy(text);
+
+  if (copied) {
+    btn.innerHTML = '\u2713 Kopiert!';
+    btn.style.background = '#c8e6c9';
+    btn.style.color = '#2e7d32';
+    showToast('\u2713 Nachricht kopiert \u2014 in WhatsApp an ' + name + ' senden');
+    setTimeout(function() {
+      btn.innerHTML = '\uD83D\uDCE4 Nachricht kopieren';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 3000);
+  }
+}
+
 // ==========================================
-// KOPIEREN
+// SCHRITT 3: ELTERN-NACHRICHTEN
 // ==========================================
 
-async function copyMessage(num, btn) {
-  const text = document.getElementById(`msg${num}`).textContent;
-  let copied = false;
+function showParentMessages() {
+  generateMessages();
 
-  // Methode 1: Web Share API (iOS native Teilen-Dialog mit WhatsApp)
+  document.getElementById('step2').className = 'process-step done';
+  document.getElementById('step3').className = 'process-step active';
+
+  var section = document.getElementById('messagesSection');
+  section.classList.add('visible');
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function generateMessages() {
+  const dayName = DAYS_FULL[selectedDay];
+  const dayDate = DATES[selectedDay];
+  const kwTitel = 'KW ' + KW;
+
+  const sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
+  const sickNames = sickToday.map(function(p) { return p.name; }).join(', ');
+
+  const active = getActiveStaff(selectedDay);
+  const win = computeOpeningWindow(active);
+  const fkCount = active.filter(function(s) { return s.isFK; }).length;
+
+  var zeitInfo = '';
+  if (win.status === 'GESCHLOSSEN') {
+    zeitInfo = 'Die Kita muss am ' + dayName + ' (' + dayDate + ') leider GESCHLOSSEN bleiben.';
+  } else {
+    var reduced = formatTime(win.start) + ' \u2013 ' + formatTime(win.end);
+    zeitInfo = 'Reduzierte Oeffnungszeiten am ' + dayName + ' (' + dayDate + '): ' + reduced;
+  }
+
+  var kritischerTag = dayName + ' ' + dayDate + ' \u2014 ' + sickNames + ' krank \u2192 nur ' + fkCount + ' FK';
+
+  var msg1 = 'BETREUUNGSHILFE GESUCHT\n\n' +
+    'Liebe Eltern,\n\n' +
+    'wir brauchen eure Hilfe! Aufgrund von Krankheitsausfaellen haben wir in ' + kwTitel + ' an folgendem Tag zu wenig Fachkraefte:\n\n' +
+    kritischerTag + '\n\n' +
+    zeitInfo + '\n\n' +
+    'Koennen Eltern an diesem Tag bei der Betreuung helfen?\n\n' +
+    'Bitte meldet euch schnell, damit wir planen koennen.\n\n' +
+    'Danke!';
+
+  var msg2 = 'DRINGENDE BETREUUNGSHILFE!\n\n' +
+    'Liebe Eltern,\n\n' +
+    'wir haben noch KEINE Rueckmeldungen fuer den kritischen Tag in ' + kwTitel + ':\n\n' +
+    kritischerTag + '\n\n' +
+    'Ohne Eltern-Unterstuetzung muessen wir die Kita an diesem Tag SCHLIESSEN!\n\n' +
+    'Bitte meldet euch JETZT, wenn ihr helfen koennt.\n\n' +
+    'Zeit laeuft!';
+
+  var msg3 = 'KITA GESCHLOSSEN\n\n' +
+    'Liebe Eltern,\n\n' +
+    'da sich keine Eltern fuer die Betreuung gemeldet haben, muessen wir die Kita am folgenden Tag SCHLIESSEN:\n\n' +
+    dayName + ', ' + dayDate + ' Maerz 2026\n\n' +
+    'Grund: Weniger als 2 Fachkraefte anwesend (KiBiz-Vorschrift)\n\n' +
+    'Bitte organisiert alternative Betreuung fuer eure Kinder.\n\n' +
+    'Entschuldigt die kurzfristige Absage.';
+
+  document.getElementById('msg1').textContent = msg1;
+  document.getElementById('msg2').textContent = msg2;
+  document.getElementById('msg3').textContent = msg3;
+}
+
+// ==========================================
+// KOPIEREN (Shared)
+// ==========================================
+
+async function doCopy(text) {
+  // Methode 1: Web Share API
   if (navigator.share) {
     try {
       await navigator.share({ text: text });
-      copied = true;
-    } catch(e) {
-      // User hat abgebrochen — weiter zu Fallback
-    }
+      return true;
+    } catch(e) {}
   }
 
-  // Methode 2: Clipboard API (braucht HTTPS)
-  if (!copied && navigator.clipboard && window.isSecureContext) {
+  // Methode 2: Clipboard API
+  if (navigator.clipboard && window.isSecureContext) {
     try {
       await navigator.clipboard.writeText(text);
-      copied = true;
+      return true;
     } catch(e) {}
   }
 
-  // Methode 3: iOS-kompatibler Textarea-Trick
-  if (!copied) {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.setAttribute('readonly', '');
-    ta.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100%;opacity:0.01;z-index:99999;font-size:16px;';
-    document.body.appendChild(ta);
+  // Methode 3: Textarea-Trick
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100%;opacity:0.01;z-index:99999;font-size:16px;';
+  document.body.appendChild(ta);
 
-    if (navigator.userAgent.match(/ipad|iphone/i)) {
-      // iOS: Range-basierte Selektion
-      const range = document.createRange();
-      range.selectNodeContents(ta);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-      ta.setSelectionRange(0, text.length);
-    } else {
-      ta.select();
-    }
-
-    try {
-      copied = document.execCommand('copy');
-    } catch(e) {}
-    document.body.removeChild(ta);
+  if (navigator.userAgent.match(/ipad|iphone/i)) {
+    var range = document.createRange();
+    range.selectNodeContents(ta);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    ta.setSelectionRange(0, text.length);
+  } else {
+    ta.select();
   }
+
+  var copied = false;
+  try { copied = document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+  return copied;
+}
+
+async function copyMessage(num, btn) {
+  var text = document.getElementById('msg' + num).textContent;
+  var copied = await doCopy(text);
 
   if (copied) {
     btn.classList.add('copied');
-    btn.innerHTML = '<span>✓</span> Kopiert!';
-    showToast('✓ Nachricht kopiert — jetzt in WhatsApp einfügen');
+    btn.innerHTML = '<span>\u2713</span> Kopiert!';
+    showToast('\u2713 Nachricht kopiert \u2014 jetzt in WhatsApp einfuegen');
   } else {
-    // Letzter Fallback: Text sichtbar markieren zum manuellen Kopieren
-    const msgEl = document.getElementById(`msg${num}`);
-    const range = document.createRange();
+    var msgEl = document.getElementById('msg' + num);
+    var range = document.createRange();
     range.selectNodeContents(msgEl);
-    const sel = window.getSelection();
+    var sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
-    showToast('Text markiert — jetzt lange drücken → Kopieren');
-    btn.innerHTML = '<span>👆</span> Text markiert — kopiere manuell';
+    showToast('Text markiert \u2014 jetzt lange druecken \u2192 Kopieren');
+    btn.innerHTML = '<span>\uD83D\uDC46</span> Text markiert \u2014 kopiere manuell';
   }
 
-  setTimeout(() => {
+  setTimeout(function() {
     btn.classList.remove('copied');
-    btn.innerHTML = '<span>📤</span> Kopieren / Teilen';
+    btn.innerHTML = '<span>\uD83D\uDCE4</span> Kopieren / Teilen';
   }, 3000);
 }
 
 function showToast(text) {
-  const toast = document.getElementById('toast');
+  var toast = document.getElementById('toast');
   toast.textContent = text;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2500);
+  setTimeout(function() { toast.classList.remove('show'); }, 2500);
 }
 
 // ==========================================
@@ -949,7 +1565,10 @@ function showToast(text) {
 
 function resetAll() {
   sickStaff = {};
+  subResponses = {};
+  document.getElementById('subSection').classList.remove('visible');
   document.getElementById('messagesSection').classList.remove('visible');
+  document.getElementById('processSteps').style.display = 'none';
   renderDay();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
