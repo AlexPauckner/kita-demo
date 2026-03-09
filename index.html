@@ -1362,13 +1362,18 @@ function searchSubstitutes() {
   var win = computeOpeningWindow(active);
   var needEarly = false, needLate = false, needFK = fkCount < 2;
 
-  // Zeitfenster-Analyse: Wo fehlt Personal?
+  // Zeitfenster-Analyse: Ziel ist 07:30-16:30 volle Abdeckung
   var gapStart = null, gapEnd = null;
+  var TARGET_START = parseTime('07:30');
+  var TARGET_END = parseTime('16:30');
   if (win.status !== 'GESCHLOSSEN') {
-    var earlyFK = active.filter(function(s) { return s.isFK && s.start <= parseTime('08:00'); }).length;
-    var lateFK = active.filter(function(s) { return s.isFK && s.end >= parseTime('16:00'); }).length;
-    if (earlyFK < 2) needEarly = true;
-    if (lateFK < 2) needLate = true;
+    // Prüfe ob Öffnungszeiten das Ziel 07:30-16:30 nicht erreichen
+    if (win.start > TARGET_START) needEarly = true;
+    if (win.end < TARGET_END) needLate = true;
+  } else {
+    // Geschlossen = beides nötig
+    needEarly = true;
+    needLate = true;
   }
 
   // Kranke Personen Schichten für Gap-Berechnung
@@ -1441,9 +1446,9 @@ function searchSubstitutes() {
     var suggestion = null;
     var constraints = [];
 
-    // Kann früher kommen?
-    if (needEarly && pStart > parseTime('08:00')) {
-      var newStart = Math.max(parseTime('07:30'), pStart - 60);
+    // Kann früher kommen? (Ziel: 07:30 Öffnung)
+    if (needEarly && pStart > TARGET_START) {
+      var newStart = Math.max(TARGET_START, pStart - 90);
       var newDuration = (pEnd - newStart) / 60;
 
       if (newDuration > 6) {
@@ -1455,9 +1460,9 @@ function searchSubstitutes() {
         suggestion = formatTime(newStart) + '-' + formatTime(pEnd);
       }
     }
-    // Kann länger bleiben?
-    else if (needLate && pEnd < parseTime('16:00')) {
-      var newEnd2 = Math.min(parseTime('16:30'), pEnd + 60);
+    // Kann länger bleiben? (Ziel: 16:30 Schließung)
+    else if (needLate && pEnd < TARGET_END) {
+      var newEnd2 = Math.min(TARGET_END, pEnd + 90);
       var newDuration2 = (newEnd2 - pStart) / 60;
 
       if (newDuration2 > 6) {
@@ -1487,8 +1492,11 @@ function searchSubstitutes() {
     }
   });
 
-  // Optionen cachen für markResponse
+  // Optionen cachen für markResponse + reRender
   lastOptions = options;
+  lastSickNames = sickNames;
+  lastDayName = dayName;
+  lastDayDate = dayDate;
 
   // Rendern
   renderSubstitutes(options, sickNames, dayName, dayDate);
@@ -1665,6 +1673,11 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
         constraintsHtml +
         timeFieldHtml +
         '<textarea class="wa-preview" id="wa-' + opt.person.name + '-' + idx + '" oninput="autoResize(this); updateSubWaLink(\'' + opt.person.name + '\', ' + idx + ')">' + waMsg + '</textarea>' +
+        '<div class="sub-card-actions" style="margin-bottom:8px;">' +
+          '<button class="btn-save-tpl" onclick="saveSubTemplate(\'' + opt.person.name + '\', ' + idx + ', \'' + opt.type + '\', this)">' +
+            '\uD83D\uDCBE Template speichern' +
+          '</button>' +
+        '</div>' +
         actionsHtml +
       '</div>';
 
@@ -1683,8 +1696,16 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
   setTimeout(autoResizeAll, 10);
 }
 
-// Letzte Optionen merken für re-render und markResponse
+// Letzte Optionen + Kontext merken für re-render
 var lastOptions = [];
+var lastSickNames = [];
+var lastDayName = '';
+var lastDayDate = '';
+
+function reRenderSubstitutes() {
+  // Optionen beibehalten, nur UI neu rendern (keine Neuberechnung)
+  renderSubstitutes(lastOptions, lastSickNames, lastDayName, lastDayDate);
+}
 
 function markResponse(name, response) {
   var key = name + '-' + selectedDay;
@@ -1716,7 +1737,9 @@ function markResponse(name, response) {
   updateAmpel();
   updateHours();
   updateSearchBtn();
-  searchSubstitutes();
+
+  // Vertretungs-Bereich neu rendern — aber Optionen beibehalten
+  reRenderSubstitutes();
 }
 
 function updateShiftTime(name, idx) {
@@ -1967,6 +1990,36 @@ function showTemplateHints() {
       hint.style.display = 'none';
       reset.style.display = 'none';
     }
+  }
+}
+
+// ==========================================
+// ERZIEHERINNEN-TEMPLATES (localStorage)
+// ==========================================
+
+function saveSubTemplate(name, idx, type, btn) {
+  var el = document.getElementById('wa-' + name + '-' + idx);
+  if (!el) return;
+  var text = el.value;
+  // Personennamen und konkrete Daten durch Platzhalter ersetzen für Wiederverwendung
+  var tplKey = 'kita_sub_tpl_' + type; // 'frei' oder 'verschieben'
+  try {
+    localStorage.setItem(tplKey, text);
+  } catch(e) {}
+  btn.classList.add('saved');
+  btn.innerHTML = '\u2713 Gespeichert!';
+  showToast('\u2713 Erzieherinnen-Template gespeichert');
+  setTimeout(function() {
+    btn.classList.remove('saved');
+    btn.innerHTML = '\uD83D\uDCBE Template speichern';
+  }, 2500);
+}
+
+function loadSubTemplate(type) {
+  try {
+    return localStorage.getItem('kita_sub_tpl_' + type) || null;
+  } catch(e) {
+    return null;
   }
 }
 
