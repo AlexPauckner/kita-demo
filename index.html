@@ -75,10 +75,10 @@
     box-shadow: var(--shadow-sm); overflow: hidden;
   }
   .day-gantt .gantt-day-body { padding: 10px 14px 14px; }
-  .day-gantt .gantt-row { height: 28px; margin-bottom: 4px; }
+  .day-gantt .gantt-row { height: 32px; margin-bottom: 5px; }
   .day-gantt .gantt-row-name { width: 64px; font-size: 12px; }
-  .day-gantt .gantt-row-bar-container { height: 22px; }
-  .day-gantt .gantt-bar { font-size: 10px; }
+  .day-gantt .gantt-row-bar-container { height: 26px; }
+  .day-gantt .gantt-bar { font-size: 11px; }
   .day-gantt .gantt-row-badge { font-size: 10px; padding: 2px 5px; }
   .day-gantt .gantt-capacity { height: 24px; margin-bottom: 10px; }
   .day-gantt .gantt-time-label { font-size: 11px; }
@@ -487,8 +487,9 @@
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0;
   }
   .gantt-row-bar-container {
-    flex: 1; height: 16px; position: relative;
-    background: var(--gray-100); border-radius: 3px;
+    flex: 1; height: 18px; position: relative;
+    background: var(--gray-200); border-radius: 4px;
+    border: 1px solid var(--gray-300, #e0e0e0);
   }
   .gantt-bar {
     position: absolute; height: 100%; border-radius: 3px;
@@ -498,10 +499,29 @@
   }
   .gantt-bar.fk { background: var(--teal-700); }
   .gantt-bar.ek { background: var(--teal-400); }
-  .gantt-bar.sick { background: var(--red-100); border: 1px dashed var(--red-600); }
-  .gantt-bar.verspaetet { background: var(--orange-100); border: 1px dashed var(--orange-600); }
+  .gantt-bar.sick { background: var(--red-100); border: 1.5px dashed var(--red-600); color: var(--red-600); }
+  .gantt-bar.verspaetet { background: var(--orange-100); border: 1.5px dashed var(--orange-600); color: var(--orange-600); }
   .gantt-bar.override { background: var(--green-600); }
-  .gantt-bar.proposal { background: var(--blue-200); border: 1px dashed var(--blue-600); opacity: 0.7; }
+  .gantt-bar.proposal { background: var(--teal-700); opacity: 1; }
+  .gantt-bar.proposal.ek-bar { background: var(--teal-400); }
+
+  /* Ghost-Balken: zeigt Originalschicht wenn verschoben */
+  .gantt-ghost {
+    position: absolute; height: 100%; border-radius: 3px;
+    border: 1.5px dashed var(--blue-600); background: var(--blue-50);
+    opacity: 0.5; pointer-events: none; z-index: 0;
+  }
+
+  /* Pausenanzeige */
+  .gantt-pause {
+    position: absolute; height: 100%; border-radius: 2px;
+    background: #ffd54f; border: 1px solid #ffc107;
+    z-index: 3; cursor: grab; touch-action: none;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; font-weight: 700; color: #795548;
+  }
+  .gantt-pause:hover { background: #ffca28; box-shadow: 0 0 0 2px rgba(255,193,7,0.4); }
+  .gantt-pause.dragging { cursor: grabbing; opacity: 0.8; z-index: 11; }
 
   .gantt-row-badge {
     font-size: 9px; font-weight: 700; padding: 1px 4px; border-radius: 3px;
@@ -550,14 +570,13 @@
     background: rgba(255,255,255,0.3);
   }
 
-  /* Pulsierender Vorschlag */
+  /* Pulsierender Vorschlag (solid gefüllt, pulst) */
   .gantt-bar.proposal {
-    background: var(--blue-200); border: 1.5px dashed var(--blue-600);
-    opacity: 1; animation: ganttPulse 2s ease-in-out infinite;
+    animation: ganttPulse 2s ease-in-out infinite;
   }
   @keyframes ganttPulse {
-    0%, 100% { opacity: 0.7; box-shadow: 0 0 0 0 rgba(30,136,229,0.3); }
-    50% { opacity: 1; box-shadow: 0 0 0 3px rgba(30,136,229,0.15); }
+    0%, 100% { opacity: 0.75; box-shadow: 0 0 0 0 rgba(0,77,64,0.3); }
+    50% { opacity: 1; box-shadow: 0 0 0 3px rgba(0,77,64,0.15); }
   }
 
   /* Drag-Tooltip (Uhrzeit während Drag) */
@@ -705,9 +724,10 @@
       <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--teal-700);"></div> FK arbeitet</div>
       <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--teal-400);"></div> EK arbeitet</div>
       <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--green-600);"></div> Zugesagt</div>
-      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--blue-200);border:1.5px dashed var(--blue-600);"></div> Vorschlag</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--blue-50);border:1.5px dashed var(--blue-600);"></div> Originalschicht</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:#ffd54f;border:1px solid #ffc107;"></div> Pause (30 Min)</div>
       <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--red-100);border:1.5px dashed var(--red-600);"></div> Krank/Abwesend</div>
-      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--gray-200);border:1.5px dashed var(--gray-400);"></div> Frei (nicht eingeplant)</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--gray-200);border:1.5px dashed var(--gray-400);"></div> Frei</div>
     </div>
     <p style="text-align:center;font-size:11px;color:var(--gray-400);margin-bottom:8px;">Balken verschieben = Zeiten ändern · Enden ziehen = verkürzen/verlängern</p>
     <div id="ganttContent"></div>
@@ -752,6 +772,7 @@ var staffLateStart = {};    // key → 'HH:MM' (nur bei Verspätung)
 var subResponses = {};
 var shiftOverrides = {};    // Bestätigte Schichtänderungen
 var proposedShifts = {};    // Geplante Vorschläge (noch nicht bestätigt)
+var staffPause = {};        // key → { start: minutes, end: minutes } (Pausen-Position)
 var statusMenuTarget = null; // Aktuell geöffnetes Menü für Person
 
 // Absence-Typen Konfiguration
@@ -1693,7 +1714,7 @@ function resetAll() {
   // Neue Session starten
   currentSessionId = null;
 
-  staffAbsence = {}; staffLateStart = {}; subResponses = {}; shiftOverrides = {}; proposedShifts = {};
+  staffAbsence = {}; staffLateStart = {}; subResponses = {}; shiftOverrides = {}; proposedShifts = {}; staffPause = {};
   document.getElementById('messagesSection').classList.remove('visible');
   renderDay();
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1827,6 +1848,31 @@ function toggleWeeklyHours() {
 // ==========================================
 // TAGES-GANTT (Hauptansicht — Balken des gewählten Tags)
 // ==========================================
+function getOriginalShift(person, dayIndex) {
+  return person.shifts[dayIndex];
+}
+
+function getDefaultPause(shiftStart, shiftEnd) {
+  // Pause in die Mitte der Schicht, 30 Min
+  var mid = Math.round((shiftStart + shiftEnd) / 2 / 15) * 15;
+  return { start: mid - 15, end: mid + 15 };
+}
+
+function getEffectivePause(name, dayIndex, shiftStart, shiftEnd) {
+  var key = name + '-' + dayIndex;
+  var duration = (shiftEnd - shiftStart) / 60;
+  if (duration <= 6) return null; // Keine Pause nötig unter 6h
+
+  if (staffPause[key]) {
+    // Pause innerhalb der Schicht halten
+    var p = staffPause[key];
+    if (p.start < shiftStart) p = { start: shiftStart, end: shiftStart + 30 };
+    if (p.end > shiftEnd) p = { start: shiftEnd - 30, end: shiftEnd };
+    return p;
+  }
+  return getDefaultPause(shiftStart, shiftEnd);
+}
+
 function renderDayGantt() {
   var container = document.getElementById('dayGantt');
   var d = selectedDay;
@@ -1852,13 +1898,33 @@ function renderDayGantt() {
     html += '<span class="gantt-row-name">' + s.name + '</span>';
     html += '<div class="gantt-row-bar-container">';
 
+    // === GHOST-BAR: Originalschicht wenn verschoben ===
+    var person = STAFF.find(function(p) { return p.name === s.name; });
+    var origShift = person ? person.shifts[d] : null;
+    var hasChange = false;
+
+    if (origShift && origShift !== 'FREI' && !s.isSick && !s.isFrei) {
+      var origParts = origShift.split('-');
+      var origStart = parseTime(origParts[0]);
+      var origEnd = parseTime(origParts[1]);
+
+      // Prüfen ob sich die Schicht geändert hat
+      if (origStart !== s.start || origEnd !== s.end) {
+        hasChange = true;
+        var ghostLeft = ganttPercent(origStart);
+        var ghostWidth = ganttPercent(origEnd) - ghostLeft;
+        html += '<div class="gantt-ghost" style="left:' + ghostLeft + '%;width:' + ghostWidth + '%;" title="Original: ' + origShift + '"></div>';
+      }
+    }
+
+    // === HAUPTBALKEN ===
     var barClass = 'gantt-bar';
     var draggable = true;
     if (s.isFrei) { barClass += ' frei-bar'; draggable = false; }
     else if (s.isSick) { barClass += ' sick'; draggable = false; }
     else if (s.isOverride) barClass += ' override';
-    else if (s.isAngefragt) barClass += ' angefragt';
-    else if (s.isProposal) barClass += ' proposal';
+    else if (s.isAngefragt) { barClass += ' proposal'; if (s.isEK) barClass += ' ek-bar'; }
+    else if (s.isProposal) { barClass += ' proposal'; if (s.isEK) barClass += ' ek-bar'; }
     else if (s.isVerspaetet) barClass += ' verspaetet';
     else barClass += ' ' + s.type.toLowerCase();
 
@@ -1866,7 +1932,7 @@ function renderDayGantt() {
     var width = ganttPercent(s.end) - left;
     var timeLabel = formatTime(s.start) + '–' + formatTime(s.end);
 
-    html += '<div class="' + barClass + '" style="left:' + left + '%;width:' + width + '%;"';
+    html += '<div class="' + barClass + '" style="left:' + left + '%;width:' + width + '%;z-index:2;"';
     html += ' data-name="' + s.name + '" data-day="' + d + '"';
     html += ' data-start="' + s.start + '" data-end="' + s.end + '"';
     if (draggable) html += ' data-draggable="1"';
@@ -1878,6 +1944,21 @@ function renderDayGantt() {
     }
     html += '</div>';
 
+    // === PAUSE (gelb, bei >6h) ===
+    if (!s.isFrei && !s.isSick) {
+      var pause = getEffectivePause(s.name, d, s.start, s.end);
+      if (pause) {
+        var pauseLeft = ganttPercent(pause.start);
+        var pauseWidth = ganttPercent(pause.end) - pauseLeft;
+        html += '<div class="gantt-pause" style="left:' + pauseLeft + '%;width:' + pauseWidth + '%;"';
+        html += ' data-name="' + s.name + '" data-day="' + d + '"';
+        html += ' data-start="' + pause.start + '" data-end="' + pause.end + '"';
+        html += ' title="Pause: ' + formatTime(pause.start) + '–' + formatTime(pause.end) + '">';
+        html += 'P';
+        html += '</div>';
+      }
+    }
+
     html += '</div>';
     html += '<span class="gantt-row-badge ' + s.type.toLowerCase() + '">' + s.type + '</span>';
     html += '</div>';
@@ -1886,8 +1967,8 @@ function renderDayGantt() {
   html += '</div>';
 
   // Kompakte Legende
-  html += '<div style="display:flex;flex-wrap:wrap;gap:6px;padding:6px 14px 10px;justify-content:center;">';
-  html += '<span style="font-size:10px;color:var(--gray-400);">Balken ziehen = Zeiten ändern</span>';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:8px;padding:6px 14px 10px;justify-content:center;">';
+  html += '<span style="font-size:10px;color:var(--gray-400);">Balken ziehen = Zeiten ändern · Gelb = Pause (verschiebbar)</span>';
   html += '</div>';
 
   container.innerHTML = html;
@@ -1899,6 +1980,13 @@ function initDayGanttDrag() {
   bars.forEach(function(bar) {
     bar.addEventListener('mousedown', ganttDragStart);
     bar.addEventListener('touchstart', ganttDragStart, { passive: false });
+  });
+
+  // Pausen draggable machen
+  var pauses = document.querySelectorAll('#dayGantt .gantt-pause');
+  pauses.forEach(function(p) {
+    p.addEventListener('mousedown', pauseDragStart);
+    p.addEventListener('touchstart', pauseDragStart, { passive: false });
   });
 
   // FREI-Balken: Klick → Vorschlag erstellen
@@ -1916,6 +2004,107 @@ function initDayGanttDrag() {
       showToast('💡 Vorschlag für ' + name + ' erstellt');
     });
   });
+}
+
+// Pausen-Drag
+var pauseDrag = null;
+
+function pauseDragStart(e) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  var el = e.currentTarget;
+  var container = el.parentElement;
+  var rect = container.getBoundingClientRect();
+  var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+  var name = el.getAttribute('data-name');
+  var day = parseInt(el.getAttribute('data-day'));
+  var startMin = parseInt(el.getAttribute('data-start'));
+  var endMin = parseInt(el.getAttribute('data-end'));
+
+  pauseDrag = {
+    el: el, container: container, containerRect: rect,
+    name: name, day: day,
+    origStart: startMin, origEnd: endMin,
+    startX: clientX
+  };
+
+  el.classList.add('dragging');
+
+  // Tooltip
+  ganttTooltip = document.createElement('div');
+  ganttTooltip.className = 'gantt-drag-tooltip';
+  ganttTooltip.textContent = 'Pause: ' + formatTime(startMin) + ' – ' + formatTime(endMin);
+  ganttTooltip.style.left = clientX + 'px';
+  ganttTooltip.style.top = (el.getBoundingClientRect().top - 10) + 'px';
+  document.body.appendChild(ganttTooltip);
+
+  document.addEventListener('mousemove', pauseDragMove);
+  document.addEventListener('mouseup', pauseDragEnd);
+  document.addEventListener('touchmove', pauseDragMove, { passive: false });
+  document.addEventListener('touchend', pauseDragEnd);
+}
+
+function pauseDragMove(e) {
+  if (!pauseDrag) return;
+  e.preventDefault();
+  var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  var dx = clientX - pauseDrag.startX;
+  var rect = pauseDrag.containerRect;
+  var pxPerMin = rect.width / GANTT_RANGE;
+  var deltaMin = dx / pxPerMin;
+  var SNAP = 15;
+  var duration = pauseDrag.origEnd - pauseDrag.origStart;
+
+  var newStart = Math.round((pauseDrag.origStart + deltaMin) / SNAP) * SNAP;
+  var newEnd = newStart + duration;
+
+  // Schichtgrenzen einhalten
+  var person = STAFF.find(function(p) { return p.name === pauseDrag.name; });
+  if (person) {
+    var key = pauseDrag.name + '-' + pauseDrag.day;
+    var shift = shiftOverrides[key] || proposedShifts[key] || getEffectiveShift(person, pauseDrag.day);
+    if (shift && shift !== 'FREI') {
+      var sp = shift.split('-');
+      var sStart = parseTime(sp[0]);
+      var sEnd = parseTime(sp[1]);
+      if (newStart < sStart) { newStart = sStart; newEnd = newStart + duration; }
+      if (newEnd > sEnd) { newEnd = sEnd; newStart = newEnd - duration; }
+    }
+  }
+
+  // Visuell aktualisieren
+  var left = ganttPercent(newStart);
+  var width = ganttPercent(newEnd) - left;
+  pauseDrag.el.style.left = left + '%';
+  pauseDrag.el.style.width = width + '%';
+
+  if (ganttTooltip) {
+    ganttTooltip.textContent = 'Pause: ' + formatTime(newStart) + ' – ' + formatTime(newEnd);
+    ganttTooltip.style.left = clientX + 'px';
+  }
+
+  pauseDrag.currentStart = newStart;
+  pauseDrag.currentEnd = newEnd;
+}
+
+function pauseDragEnd() {
+  if (!pauseDrag) return;
+  pauseDrag.el.classList.remove('dragging');
+  if (ganttTooltip) { ganttTooltip.remove(); ganttTooltip = null; }
+
+  if (pauseDrag.currentStart !== undefined) {
+    var key = pauseDrag.name + '-' + pauseDrag.day;
+    staffPause[key] = { start: pauseDrag.currentStart, end: pauseDrag.currentEnd };
+    showToast('Pause: ' + formatTime(pauseDrag.currentStart) + '–' + formatTime(pauseDrag.currentEnd));
+  }
+
+  document.removeEventListener('mousemove', pauseDragMove);
+  document.removeEventListener('mouseup', pauseDragEnd);
+  document.removeEventListener('touchmove', pauseDragMove);
+  document.removeEventListener('touchend', pauseDragEnd);
+  pauseDrag = null;
 }
 
 // ==========================================
@@ -1975,7 +2164,7 @@ function renderGanttView() {
     // Kapazitäts-Heatmap
     html += renderCapacityBar(dayActive, d);
 
-    // Personen-Balken
+    // Personen-Balken (mit Ghost + Pause)
     dayActive.forEach(function(s) {
       var rowClass = 'gantt-row';
       if (s.isFrei) rowClass += ' frei-row';
@@ -1983,13 +2172,27 @@ function renderGanttView() {
       html += '<span class="gantt-row-name">' + s.name + '</span>';
       html += '<div class="gantt-row-bar-container">';
 
+      // Ghost-Bar
+      var person = STAFF.find(function(p) { return p.name === s.name; });
+      var origShift = person ? person.shifts[d] : null;
+      if (origShift && origShift !== 'FREI' && !s.isSick && !s.isFrei) {
+        var origParts = origShift.split('-');
+        var origStart = parseTime(origParts[0]);
+        var origEnd = parseTime(origParts[1]);
+        if (origStart !== s.start || origEnd !== s.end) {
+          var ghostLeft = ganttPercent(origStart);
+          var ghostWidth = ganttPercent(origEnd) - ghostLeft;
+          html += '<div class="gantt-ghost" style="left:' + ghostLeft + '%;width:' + ghostWidth + '%;"></div>';
+        }
+      }
+
       var barClass = 'gantt-bar';
       var draggable = true;
       if (s.isFrei) { barClass += ' frei-bar'; draggable = false; }
       else if (s.isSick) { barClass += ' sick'; draggable = false; }
       else if (s.isOverride) barClass += ' override';
-      else if (s.isAngefragt) barClass += ' angefragt';
-      else if (s.isProposal) barClass += ' proposal';
+      else if (s.isAngefragt) { barClass += ' proposal'; if (s.isEK) barClass += ' ek-bar'; }
+      else if (s.isProposal) { barClass += ' proposal'; if (s.isEK) barClass += ' ek-bar'; }
       else if (s.isVerspaetet) barClass += ' verspaetet';
       else barClass += ' ' + s.type.toLowerCase();
 
@@ -1997,7 +2200,7 @@ function renderGanttView() {
       var width = ganttPercent(s.end) - left;
       var timeLabel = formatTime(s.start) + '–' + formatTime(s.end);
 
-      html += '<div class="' + barClass + '" style="left:' + left + '%;width:' + width + '%;"';
+      html += '<div class="' + barClass + '" style="left:' + left + '%;width:' + width + '%;z-index:2;"';
       html += ' data-name="' + s.name + '" data-day="' + d + '"';
       html += ' data-start="' + s.start + '" data-end="' + s.end + '"';
       if (draggable) html += ' data-draggable="1"';
@@ -2008,6 +2211,19 @@ function renderGanttView() {
         html += timeLabel;
       }
       html += '</div>';
+
+      // Pause
+      if (!s.isFrei && !s.isSick) {
+        var pause = getEffectivePause(s.name, d, s.start, s.end);
+        if (pause) {
+          var pauseLeft = ganttPercent(pause.start);
+          var pauseWidth = ganttPercent(pause.end) - pauseLeft;
+          html += '<div class="gantt-pause" style="left:' + pauseLeft + '%;width:' + pauseWidth + '%;"';
+          html += ' data-name="' + s.name + '" data-day="' + d + '"';
+          html += ' data-start="' + pause.start + '" data-end="' + pause.end + '">';
+          html += 'P</div>';
+        }
+      }
 
       html += '</div>';
       html += '<span class="gantt-row-badge ' + s.type.toLowerCase() + '">' + s.type + '</span>';
