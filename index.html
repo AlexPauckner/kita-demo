@@ -364,6 +364,98 @@
     z-index: 200; opacity: 0; transition: all 0.3s; box-shadow: var(--shadow-lg);
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* View-Toggle */
+  .view-toggle {
+    display: flex; gap: 4px; margin-bottom: 16px;
+    background: var(--gray-200); border-radius: 10px; padding: 3px;
+  }
+  .view-toggle-btn {
+    flex: 1; padding: 8px 12px; border-radius: 8px; border: none;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    background: transparent; color: var(--gray-600);
+    -webkit-tap-highlight-color: transparent; transition: all 0.2s;
+  }
+  .view-toggle-btn.active { background: white; color: var(--teal-800); box-shadow: var(--shadow-sm); }
+
+  /* Gantt-Übersicht */
+  .gantt-view { display: none; }
+  .gantt-view.visible { display: block; }
+
+  .gantt-day {
+    background: white; border-radius: var(--radius); margin-bottom: 12px;
+    box-shadow: var(--shadow-sm); overflow: hidden;
+  }
+  .gantt-day-header {
+    padding: 10px 14px; font-weight: 700; font-size: 14px;
+    background: var(--teal-50); color: var(--teal-800);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .gantt-day-header .gantt-hours {
+    font-size: 12px; font-weight: 600; color: var(--gray-600);
+  }
+  .gantt-day-body { padding: 8px 14px 12px; }
+
+  .gantt-time-axis {
+    display: flex; justify-content: space-between; padding: 0 0 4px;
+    border-bottom: 1px solid var(--gray-200); margin-bottom: 6px;
+  }
+  .gantt-time-label { font-size: 10px; color: var(--gray-400); font-weight: 600; }
+
+  .gantt-capacity {
+    height: 20px; border-radius: 4px; margin-bottom: 8px;
+    display: flex; overflow: hidden; position: relative;
+  }
+  .gantt-cap-segment {
+    height: 100%; transition: width 0.3s;
+  }
+
+  .gantt-row {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 3px;
+    height: 22px;
+  }
+  .gantt-row-name {
+    width: 60px; font-size: 11px; font-weight: 600; color: var(--gray-600);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0;
+  }
+  .gantt-row-bar-container {
+    flex: 1; height: 16px; position: relative;
+    background: var(--gray-100); border-radius: 3px;
+  }
+  .gantt-bar {
+    position: absolute; height: 100%; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; color: white; overflow: hidden;
+    white-space: nowrap; min-width: 2px;
+  }
+  .gantt-bar.fk { background: var(--teal-700); }
+  .gantt-bar.ek { background: var(--teal-400); }
+  .gantt-bar.sick { background: var(--red-100); border: 1px dashed var(--red-600); }
+  .gantt-bar.verspaetet { background: var(--orange-100); border: 1px dashed var(--orange-600); }
+  .gantt-bar.override { background: var(--green-600); }
+  .gantt-bar.proposal { background: var(--blue-200); border: 1px dashed var(--blue-600); opacity: 0.7; }
+
+  .gantt-row-badge {
+    font-size: 9px; font-weight: 700; padding: 1px 4px; border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .gantt-row-badge.fk { background: var(--teal-100); color: var(--teal-800); }
+  .gantt-row-badge.ek { background: var(--gray-200); color: var(--gray-600); }
+
+  .gantt-legend {
+    display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 0;
+    justify-content: center;
+  }
+  .gantt-legend-item {
+    display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--gray-600);
+  }
+  .gantt-legend-dot {
+    width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0;
+  }
+
+  .gantt-capacity-label {
+    font-size: 11px; font-weight: 600; color: var(--gray-600); margin-bottom: 2px;
+  }
 </style>
 </head>
 <body>
@@ -389,6 +481,12 @@
     <div id="hoursContent"></div>
   </div>
 
+  <div class="view-toggle">
+    <button class="view-toggle-btn active" id="btnViewPlan" onclick="switchView('plan')">Planung</button>
+    <button class="view-toggle-btn" id="btnViewGantt" onclick="switchView('gantt')">Wochenübersicht</button>
+  </div>
+
+  <div id="planView">
   <div class="section-header">Pädagoginnen</div>
   <div id="staffList"></div>
 
@@ -453,6 +551,18 @@
     </div>
 
     <a href="#" class="reset-link" onclick="resetAll(); return false;">&#x21A9; Zurücksetzen</a>
+  </div>
+  </div><!-- /planView -->
+
+  <div class="gantt-view" id="ganttView">
+    <div class="gantt-legend">
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--teal-700);"></div> FK</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--teal-400);"></div> EK</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--green-600);"></div> Zugesagt</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--blue-200);border:1px dashed var(--blue-600);"></div> Vorschlag</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--red-100);border:1px dashed var(--red-600);"></div> Krank</div>
+    </div>
+    <div id="ganttContent"></div>
   </div>
 </div>
 
@@ -899,6 +1009,7 @@ function refreshAll() {
   updateHours();
   renderDetailCards();
   updateElternBtn();
+  if (currentView === 'gantt') renderGanttView();
 }
 
 // ==========================================
@@ -1415,6 +1526,206 @@ function resetAll() {
   document.getElementById('messagesSection').classList.remove('visible');
   renderDay();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ==========================================
+// VIEW-TOGGLE (Planung / Wochenübersicht)
+// ==========================================
+var currentView = 'plan';
+
+function switchView(view) {
+  currentView = view;
+  document.getElementById('btnViewPlan').className = 'view-toggle-btn' + (view === 'plan' ? ' active' : '');
+  document.getElementById('btnViewGantt').className = 'view-toggle-btn' + (view === 'gantt' ? ' active' : '');
+  document.getElementById('planView').style.display = view === 'plan' ? 'block' : 'none';
+  document.getElementById('ganttView').className = 'gantt-view' + (view === 'gantt' ? ' visible' : '');
+  if (view === 'gantt') renderGanttView();
+}
+
+// ==========================================
+// GANTT-WOCHENÜBERSICHT
+// ==========================================
+var GANTT_START = 7 * 60;   // 07:00
+var GANTT_END = 17 * 60;    // 17:00
+var GANTT_RANGE = GANTT_END - GANTT_START;
+
+function ganttPercent(minutes) {
+  return Math.max(0, Math.min(100, ((minutes - GANTT_START) / GANTT_RANGE) * 100));
+}
+
+function renderGanttView() {
+  var container = document.getElementById('ganttContent');
+  var html = '';
+
+  for (var d = 0; d < 5; d++) {
+    var dayActive = getActiveStaffForGantt(d);
+    var win = computeOpeningWindow(dayActive.filter(function(s) { return !s.isSick && !s.isProposal; }));
+    var fkCount = dayActive.filter(function(s) { return s.isFK && !s.isSick; }).length;
+    var totalActive = dayActive.filter(function(s) { return !s.isSick; }).length;
+
+    var hoursText = '';
+    if (win.status === 'GESCHLOSSEN') hoursText = 'GESCHLOSSEN';
+    else hoursText = formatTime(win.start) + '–' + formatTime(win.end);
+
+    var dayClass = d === selectedDay ? ' style="border:2px solid var(--teal-600);"' : '';
+
+    html += '<div class="gantt-day"' + dayClass + ' onclick="selectedDay=' + d + ';renderDayTabs();renderDay();switchView(\'plan\');">';
+    html += '<div class="gantt-day-header"><span>' + DAYS_FULL[d] + ' ' + DATES[d] + '</span>';
+    html += '<span class="gantt-hours">' + hoursText + ' · ' + fkCount + 'FK/' + totalActive + ' Pers.</span></div>';
+    html += '<div class="gantt-day-body">';
+
+    // Zeitachse
+    html += '<div class="gantt-time-axis">';
+    for (var h = 7; h <= 17; h++) {
+      html += '<span class="gantt-time-label">' + h + '</span>';
+    }
+    html += '</div>';
+
+    // Kapazitäts-Heatmap
+    html += renderCapacityBar(dayActive, d);
+
+    // Personen-Balken
+    dayActive.forEach(function(s) {
+      html += '<div class="gantt-row">';
+      html += '<span class="gantt-row-name">' + s.name + '</span>';
+      html += '<div class="gantt-row-bar-container">';
+
+      var barClass = 'gantt-bar';
+      if (s.isSick) barClass += ' sick';
+      else if (s.isOverride) barClass += ' override';
+      else if (s.isProposal) barClass += ' proposal';
+      else if (s.isVerspaetet) barClass += ' verspaetet';
+      else barClass += ' ' + s.type.toLowerCase();
+
+      var left = ganttPercent(s.start);
+      var width = ganttPercent(s.end) - left;
+      var timeLabel = formatTime(s.start) + '–' + formatTime(s.end);
+
+      html += '<div class="' + barClass + '" style="left:' + left + '%;width:' + width + '%;" title="' + s.name + ': ' + timeLabel + '">';
+      if (width > 12) html += timeLabel;
+      html += '</div>';
+
+      html += '</div>';
+      html += '<span class="gantt-row-badge ' + s.type.toLowerCase() + '">' + s.type + '</span>';
+      html += '</div>';
+    });
+
+    html += '</div></div>';
+  }
+
+  container.innerHTML = html;
+}
+
+function getActiveStaffForGantt(dayIndex) {
+  var result = [];
+  STAFF.forEach(function(p) {
+    var key = p.name + '-' + dayIndex;
+    var origShift = p.shifts[dayIndex];
+    var absence = staffAbsence[key];
+    var override = shiftOverrides[key];
+    var proposal = proposedShifts[key];
+
+    if (origShift === 'FREI' && !override && !proposal) return;
+
+    var entry = {
+      name: p.name, type: p.type,
+      isFK: p.type === 'FK', isEK: p.type === 'EK',
+      isSick: isAbsent(key),
+      isVerspaetet: absence === 'verspaetung',
+      isOverride: !!override,
+      isProposal: !!proposal && !override,
+      start: 0, end: 0
+    };
+
+    // Welche Schicht anzeigen?
+    var shift;
+    if (override) shift = override;
+    else if (proposal && !isAbsent(key)) shift = proposal;
+    else if (absence === 'verspaetung' && staffLateStart[key]) {
+      var parts = origShift.split('-');
+      shift = staffLateStart[key] + '-' + parts[1];
+    } else {
+      shift = origShift;
+    }
+
+    if (shift === 'FREI') return;
+    var sp = shift.split('-');
+    entry.start = parseTime(sp[0]);
+    entry.end = parseTime(sp[1]);
+
+    // Bei Krank: Originalschicht zeigen (durchgestrichen)
+    if (isAbsent(key) && origShift !== 'FREI') {
+      var op = origShift.split('-');
+      entry.start = parseTime(op[0]);
+      entry.end = parseTime(op[1]);
+    }
+
+    result.push(entry);
+  });
+
+  // Sortieren: FK zuerst, dann nach Startzeit
+  result.sort(function(a, b) {
+    if (a.isFK !== b.isFK) return a.isFK ? -1 : 1;
+    return a.start - b.start;
+  });
+
+  return result;
+}
+
+function renderCapacityBar(staffList, dayIndex) {
+  // 5-Minuten-Auflösung: wie viele aktive Personen zu jedem Zeitpunkt?
+  var slots = [];
+  var maxCount = 0;
+  for (var t = GANTT_START; t < GANTT_END; t += 5) {
+    var fk = 0, ek = 0;
+    staffList.forEach(function(s) {
+      if (s.isSick) return;
+      if (t >= s.start && t < s.end) {
+        if (s.isFK) fk++;
+        else ek++;
+      }
+    });
+    var total = fk + ek;
+    if (total > maxCount) maxCount = total;
+    slots.push({ time: t, fk: fk, ek: ek, total: total });
+  }
+
+  // In Segmente gleicher Farbe zusammenfassen
+  var segments = [];
+  var currentColor = null;
+  var currentWidth = 0;
+
+  slots.forEach(function(slot) {
+    var color;
+    if (slot.total === 0) color = '#ef9a9a';           // Rot: niemand da
+    else if (slot.fk < 2) color = '#ffcc80';            // Orange: <2 FK
+    else if (slot.total <= 3) color = '#fff59d';        // Gelb: knapp
+    else if (slot.total <= 4) color = '#c8e6c9';        // Hellgrün: OK
+    else color = '#81c784';                              // Grün: viel Personal
+
+    if (color === currentColor) {
+      currentWidth++;
+    } else {
+      if (currentColor !== null) {
+        segments.push({ color: currentColor, width: currentWidth });
+      }
+      currentColor = color;
+      currentWidth = 1;
+    }
+  });
+  if (currentColor !== null) {
+    segments.push({ color: currentColor, width: currentWidth });
+  }
+
+  var totalSlots = slots.length;
+  var html = '<div class="gantt-capacity-label">Abdeckung (grün = Aktionen möglich)</div>';
+  html += '<div class="gantt-capacity">';
+  segments.forEach(function(seg) {
+    var pct = (seg.width / totalSlots * 100).toFixed(2);
+    html += '<div class="gantt-cap-segment" style="width:' + pct + '%;background:' + seg.color + ';"></div>';
+  });
+  html += '</div>';
+  return html;
 }
 
 init();
