@@ -2170,8 +2170,10 @@ function ganttDragEnd(e) {
       logDecision('DRAG_PROPOSAL', name, { from: origShift, to: newShift });
     }
 
-    // Alles neu rendern
+    // Alles neu rendern — staffList ZUERST leeren damit renderStaff()
+    // nicht die alten Input-Werte ausliest und den Drag überschreibt
     if (day === selectedDay) {
+      document.getElementById('staffList').innerHTML = '';
       renderDayGantt();
       renderStaff();
       updateStatusLine();
