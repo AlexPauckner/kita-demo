@@ -475,6 +475,69 @@
   .gantt-capacity-label {
     font-size: 11px; font-weight: 600; color: var(--gray-600); margin-bottom: 2px;
   }
+
+  /* Draggable Gantt-Balken */
+  .gantt-bar {
+    cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
+    transition: box-shadow 0.15s, opacity 0.15s;
+  }
+  .gantt-bar:hover:not(.sick):not(.frei-bar) { box-shadow: 0 0 0 2px rgba(0,0,0,0.2); }
+  .gantt-bar.dragging {
+    cursor: grabbing; opacity: 0.9; z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+  }
+  .gantt-bar.resize-left, .gantt-bar.resize-right { cursor: col-resize; }
+
+  /* Drag-Handles (unsichtbar, an den Enden) */
+  .gantt-bar:not(.sick):not(.frei-bar)::before,
+  .gantt-bar:not(.sick):not(.frei-bar)::after {
+    content: ''; position: absolute; top: 0; width: 10px; height: 100%;
+    z-index: 2; cursor: col-resize;
+  }
+  .gantt-bar:not(.sick):not(.frei-bar)::before { left: 0; border-radius: 3px 0 0 3px; }
+  .gantt-bar:not(.sick):not(.frei-bar)::after { right: 0; border-radius: 0 3px 3px 0; }
+  .gantt-bar:not(.sick):not(.frei-bar):hover::before,
+  .gantt-bar:not(.sick):not(.frei-bar):hover::after {
+    background: rgba(255,255,255,0.3);
+  }
+
+  /* Pulsierender Vorschlag */
+  .gantt-bar.proposal {
+    background: var(--blue-200); border: 1.5px dashed var(--blue-600);
+    opacity: 1; animation: ganttPulse 2s ease-in-out infinite;
+  }
+  @keyframes ganttPulse {
+    0%, 100% { opacity: 0.7; box-shadow: 0 0 0 0 rgba(30,136,229,0.3); }
+    50% { opacity: 1; box-shadow: 0 0 0 3px rgba(30,136,229,0.15); }
+  }
+
+  /* Drag-Tooltip (Uhrzeit während Drag) */
+  .gantt-drag-tooltip {
+    position: fixed; background: var(--gray-800); color: white;
+    padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 700;
+    z-index: 500; pointer-events: none; box-shadow: var(--shadow-lg);
+    transform: translate(-50%, -120%); white-space: nowrap;
+  }
+
+  /* FREI-Personen im Gantt (nicht eingeplant) */
+  .gantt-row.frei-row { opacity: 0.4; }
+  .gantt-bar.frei-bar {
+    background: var(--gray-200); border: 1.5px dashed var(--gray-400);
+    cursor: pointer; height: 100%;
+  }
+  .gantt-bar.frei-bar:hover { opacity: 0.8; background: var(--blue-50); border-color: var(--blue-400); }
+
+  /* Angefragt-Status im Gantt */
+  .gantt-bar.angefragt {
+    background: repeating-linear-gradient(
+      -45deg, var(--blue-200), var(--blue-200) 4px,
+      var(--blue-100) 4px, var(--blue-100) 8px
+    );
+    border: 1.5px solid var(--blue-600);
+  }
+
+  /* Gantt-Legende erweitert */
+  .gantt-legend-dot.dashed { border: 1.5px dashed var(--gray-600); background: transparent !important; }
 </style>
 </head>
 <body>
@@ -577,12 +640,14 @@
 
   <div class="gantt-view" id="ganttView">
     <div class="gantt-legend">
-      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--teal-700);"></div> FK</div>
-      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--teal-400);"></div> EK</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--teal-700);"></div> FK arbeitet</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--teal-400);"></div> EK arbeitet</div>
       <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--green-600);"></div> Zugesagt</div>
-      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--blue-200);border:1px dashed var(--blue-600);"></div> Vorschlag</div>
-      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--red-100);border:1px dashed var(--red-600);"></div> Krank</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--blue-200);border:1.5px dashed var(--blue-600);"></div> Vorschlag</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--red-100);border:1.5px dashed var(--red-600);"></div> Krank/Abwesend</div>
+      <div class="gantt-legend-item"><div class="gantt-legend-dot" style="background:var(--gray-200);border:1.5px dashed var(--gray-400);"></div> Frei (nicht eingeplant)</div>
     </div>
+    <p style="text-align:center;font-size:11px;color:var(--gray-400);margin-bottom:8px;">Balken verschieben = Zeiten ändern · Enden ziehen = verkürzen/verlängern</p>
     <div id="ganttContent"></div>
   </div>
 </div>
@@ -1638,9 +1703,10 @@ function renderGanttView() {
 
   for (var d = 0; d < 5; d++) {
     var dayActive = getActiveStaffForGantt(d);
-    var win = computeOpeningWindow(dayActive.filter(function(s) { return !s.isSick && !s.isProposal; }));
-    var fkCount = dayActive.filter(function(s) { return s.isFK && !s.isSick; }).length;
-    var totalActive = dayActive.filter(function(s) { return !s.isSick; }).length;
+    var workingStaff = dayActive.filter(function(s) { return !s.isSick && !s.isProposal && !s.isFrei; });
+    var win = computeOpeningWindow(workingStaff);
+    var fkCount = workingStaff.filter(function(s) { return s.isFK; }).length;
+    var totalActive = workingStaff.length;
 
     var hoursText = '';
     if (win.status === 'GESCHLOSSEN') hoursText = 'GESCHLOSSEN';
@@ -1648,8 +1714,8 @@ function renderGanttView() {
 
     var dayClass = d === selectedDay ? ' style="border:2px solid var(--teal-600);"' : '';
 
-    html += '<div class="gantt-day"' + dayClass + ' onclick="selectedDay=' + d + ';renderDayTabs();renderDay();switchView(\'plan\');">';
-    html += '<div class="gantt-day-header"><span>' + DAYS_FULL[d] + ' ' + DATES[d] + '</span>';
+    html += '<div class="gantt-day"' + dayClass + '>';
+    html += '<div class="gantt-day-header" onclick="selectedDay=' + d + ';renderDayTabs();renderDay();switchView(\'plan\');"><span>' + DAYS_FULL[d] + ' ' + DATES[d] + '</span>';
     html += '<span class="gantt-hours">' + hoursText + ' · ' + fkCount + 'FK/' + totalActive + ' Pers.</span></div>';
     html += '<div class="gantt-day-body">';
 
@@ -1665,13 +1731,18 @@ function renderGanttView() {
 
     // Personen-Balken
     dayActive.forEach(function(s) {
-      html += '<div class="gantt-row">';
+      var rowClass = 'gantt-row';
+      if (s.isFrei) rowClass += ' frei-row';
+      html += '<div class="' + rowClass + '">';
       html += '<span class="gantt-row-name">' + s.name + '</span>';
       html += '<div class="gantt-row-bar-container">';
 
       var barClass = 'gantt-bar';
-      if (s.isSick) barClass += ' sick';
+      var draggable = true;
+      if (s.isFrei) { barClass += ' frei-bar'; draggable = false; }
+      else if (s.isSick) { barClass += ' sick'; draggable = false; }
       else if (s.isOverride) barClass += ' override';
+      else if (s.isAngefragt) barClass += ' angefragt';
       else if (s.isProposal) barClass += ' proposal';
       else if (s.isVerspaetet) barClass += ' verspaetet';
       else barClass += ' ' + s.type.toLowerCase();
@@ -1680,8 +1751,16 @@ function renderGanttView() {
       var width = ganttPercent(s.end) - left;
       var timeLabel = formatTime(s.start) + '–' + formatTime(s.end);
 
-      html += '<div class="' + barClass + '" style="left:' + left + '%;width:' + width + '%;" title="' + s.name + ': ' + timeLabel + '">';
-      if (width > 12) html += timeLabel;
+      html += '<div class="' + barClass + '" style="left:' + left + '%;width:' + width + '%;"';
+      html += ' data-name="' + s.name + '" data-day="' + d + '"';
+      html += ' data-start="' + s.start + '" data-end="' + s.end + '"';
+      if (draggable) html += ' data-draggable="1"';
+      html += ' title="' + s.name + ': ' + timeLabel + '">';
+      if (s.isFrei) {
+        html += 'FREI';
+      } else if (width > 12) {
+        html += timeLabel;
+      }
       html += '</div>';
 
       html += '</div>';
@@ -1693,6 +1772,7 @@ function renderGanttView() {
   }
 
   container.innerHTML = html;
+  initGanttDrag();
 }
 
 function getActiveStaffForGantt(dayIndex) {
@@ -1703,8 +1783,10 @@ function getActiveStaffForGantt(dayIndex) {
     var absence = staffAbsence[key];
     var override = shiftOverrides[key];
     var proposal = proposedShifts[key];
+    var response = subResponses[key];
 
-    if (origShift === 'FREI' && !override && !proposal) return;
+    // FREI-Personen zeigen (als "nicht eingeplant")
+    var isFrei = origShift === 'FREI' && !override && !proposal;
 
     var entry = {
       name: p.name, type: p.type,
@@ -1713,8 +1795,18 @@ function getActiveStaffForGantt(dayIndex) {
       isVerspaetet: absence === 'verspaetung',
       isOverride: !!override,
       isProposal: !!proposal && !override,
+      isAngefragt: response === 'warten' && !override,
+      isFrei: isFrei,
       start: 0, end: 0
     };
+
+    if (isFrei) {
+      // FREI: dünner Platzhalter-Balken über die Kernzeit
+      entry.start = TARGET_START;
+      entry.end = TARGET_END;
+      result.push(entry);
+      return;
+    }
 
     // Welche Schicht anzeigen?
     var shift;
@@ -1742,9 +1834,15 @@ function getActiveStaffForGantt(dayIndex) {
     result.push(entry);
   });
 
-  // Sortieren: FK zuerst, dann nach Startzeit
+  // Sortieren: Arbeitende zuerst (FK>EK>Proposal), dann Frei
   result.sort(function(a, b) {
+    // Frei immer unten
+    if (a.isFrei !== b.isFrei) return a.isFrei ? 1 : -1;
+    // Krank unten (aber über Frei)
+    if (a.isSick !== b.isSick) return a.isSick ? 1 : -1;
+    // FK über EK
     if (a.isFK !== b.isFK) return a.isFK ? -1 : 1;
+    // Nach Startzeit
     return a.start - b.start;
   });
 
@@ -1805,6 +1903,223 @@ function renderCapacityBar(staffList, dayIndex) {
   });
   html += '</div>';
   return html;
+}
+
+// ==========================================
+// GANTT DRAG & DROP
+// ==========================================
+var ganttDrag = null; // Aktiver Drag-State
+var ganttTooltip = null; // Tooltip-Element
+
+function initGanttDrag() {
+  var bars = document.querySelectorAll('.gantt-bar[data-draggable="1"]');
+  bars.forEach(function(bar) {
+    bar.addEventListener('mousedown', ganttDragStart);
+    bar.addEventListener('touchstart', ganttDragStart, { passive: false });
+  });
+
+  // FREI-Balken: Klick → Vorschlag erstellen und zur Planung wechseln
+  var freiBars = document.querySelectorAll('.gantt-bar.frei-bar');
+  freiBars.forEach(function(bar) {
+    bar.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var name = bar.getAttribute('data-name');
+      var day = parseInt(bar.getAttribute('data-day'));
+      var key = name + '-' + day;
+      if (!proposedShifts[key]) {
+        proposedShifts[key] = formatTime(TARGET_START) + '-' + formatTime(TARGET_END);
+      }
+      selectedDay = day;
+      renderDayTabs();
+      renderDay();
+      switchView('plan');
+      showToast('💡 Vorschlag für ' + name + ' erstellt');
+    });
+  });
+}
+
+function ganttDragStart(e) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  var bar = e.currentTarget;
+  var container = bar.parentElement; // .gantt-row-bar-container
+  var rect = container.getBoundingClientRect();
+  var barRect = bar.getBoundingClientRect();
+
+  var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  // Modus bestimmen: Enden (resize) oder Mitte (move)
+  var edgeThreshold = Math.min(14, barRect.width * 0.2);
+  var relX = clientX - barRect.left;
+  var mode = 'move';
+  if (relX <= edgeThreshold) mode = 'resize-left';
+  else if (relX >= barRect.width - edgeThreshold) mode = 'resize-right';
+
+  var name = bar.getAttribute('data-name');
+  var day = parseInt(bar.getAttribute('data-day'));
+  var startMin = parseInt(bar.getAttribute('data-start'));
+  var endMin = parseInt(bar.getAttribute('data-end'));
+
+  ganttDrag = {
+    bar: bar,
+    container: container,
+    containerRect: rect,
+    mode: mode,
+    name: name,
+    day: day,
+    origStart: startMin,
+    origEnd: endMin,
+    currentStart: startMin,
+    currentEnd: endMin,
+    startX: clientX,
+    startY: clientY,
+    moved: false
+  };
+
+  bar.classList.add('dragging');
+  if (mode === 'resize-left') bar.classList.add('resize-left');
+  else if (mode === 'resize-right') bar.classList.add('resize-right');
+
+  // Tooltip erstellen
+  ganttTooltip = document.createElement('div');
+  ganttTooltip.className = 'gantt-drag-tooltip';
+  ganttTooltip.textContent = formatTime(startMin) + ' – ' + formatTime(endMin);
+  ganttTooltip.style.left = clientX + 'px';
+  ganttTooltip.style.top = (clientY - 10) + 'px';
+  document.body.appendChild(ganttTooltip);
+
+  document.addEventListener('mousemove', ganttDragMove);
+  document.addEventListener('mouseup', ganttDragEnd);
+  document.addEventListener('touchmove', ganttDragMove, { passive: false });
+  document.addEventListener('touchend', ganttDragEnd);
+}
+
+function ganttDragMove(e) {
+  if (!ganttDrag) return;
+  e.preventDefault();
+
+  var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  var dx = clientX - ganttDrag.startX;
+  if (Math.abs(dx) > 3) ganttDrag.moved = true;
+
+  var rect = ganttDrag.containerRect;
+  var pxPerMin = rect.width / GANTT_RANGE;
+  var deltaMin = dx / pxPerMin;
+
+  // 15-Minuten-Raster
+  var SNAP = 15;
+  var newStart = ganttDrag.origStart;
+  var newEnd = ganttDrag.origEnd;
+  var duration = ganttDrag.origEnd - ganttDrag.origStart;
+
+  if (ganttDrag.mode === 'move') {
+    newStart = Math.round((ganttDrag.origStart + deltaMin) / SNAP) * SNAP;
+    newEnd = newStart + duration;
+    // Grenzen
+    if (newStart < GANTT_START) { newStart = GANTT_START; newEnd = newStart + duration; }
+    if (newEnd > GANTT_END) { newEnd = GANTT_END; newStart = newEnd - duration; }
+  } else if (ganttDrag.mode === 'resize-left') {
+    newStart = Math.round((ganttDrag.origStart + deltaMin) / SNAP) * SNAP;
+    if (newStart < GANTT_START) newStart = GANTT_START;
+    if (newStart > newEnd - 30) newStart = newEnd - 30; // Min 30 Min
+  } else if (ganttDrag.mode === 'resize-right') {
+    newEnd = Math.round((ganttDrag.origEnd + deltaMin) / SNAP) * SNAP;
+    if (newEnd > GANTT_END) newEnd = GANTT_END;
+    if (newEnd < newStart + 30) newEnd = newStart + 30; // Min 30 Min
+  }
+
+  ganttDrag.currentStart = newStart;
+  ganttDrag.currentEnd = newEnd;
+
+  // Bar visuell updaten
+  var left = ganttPercent(newStart);
+  var width = ganttPercent(newEnd) - left;
+  ganttDrag.bar.style.left = left + '%';
+  ganttDrag.bar.style.width = width + '%';
+
+  var timeText = formatTime(newStart) + ' – ' + formatTime(newEnd);
+  if (width > 12) ganttDrag.bar.textContent = formatTime(newStart) + '–' + formatTime(newEnd);
+  else ganttDrag.bar.textContent = '';
+
+  // Tooltip updaten
+  if (ganttTooltip) {
+    ganttTooltip.textContent = timeText;
+    ganttTooltip.style.left = clientX + 'px';
+    ganttTooltip.style.top = (clientY - 10) + 'px';
+  }
+}
+
+function ganttDragEnd(e) {
+  if (!ganttDrag) return;
+
+  document.removeEventListener('mousemove', ganttDragMove);
+  document.removeEventListener('mouseup', ganttDragEnd);
+  document.removeEventListener('touchmove', ganttDragMove);
+  document.removeEventListener('touchend', ganttDragEnd);
+
+  ganttDrag.bar.classList.remove('dragging', 'resize-left', 'resize-right');
+
+  // Tooltip entfernen
+  if (ganttTooltip) {
+    ganttTooltip.remove();
+    ganttTooltip = null;
+  }
+
+  if (!ganttDrag.moved) {
+    // Kein Drag → Klick → zur Planung wechseln
+    selectedDay = ganttDrag.day;
+    renderDayTabs();
+    renderDay();
+    switchView('plan');
+    ganttDrag = null;
+    return;
+  }
+
+  var name = ganttDrag.name;
+  var day = ganttDrag.day;
+  var key = name + '-' + day;
+  var newShift = formatTime(ganttDrag.currentStart) + '-' + formatTime(ganttDrag.currentEnd);
+  var person = STAFF.find(function(p) { return p.name === name; });
+  var origShift = person ? person.shifts[day] : '';
+
+  // Hat sich was geändert?
+  var changed = ganttDrag.currentStart !== ganttDrag.origStart || ganttDrag.currentEnd !== ganttDrag.origEnd;
+
+  if (changed) {
+    // Wenn Override existiert → Override aktualisieren
+    if (shiftOverrides[key]) {
+      shiftOverrides[key] = newShift;
+      showToast('✓ ' + name + ': Schicht geändert auf ' + newShift);
+      logDecision('DRAG_OVERRIDE', name, { from: formatTime(ganttDrag.origStart) + '-' + formatTime(ganttDrag.origEnd), to: newShift });
+    }
+    // Sonst → Vorschlag erstellen/aktualisieren
+    else {
+      // Prüfe ob die neue Schicht = Originalschicht (dann kein Vorschlag nötig)
+      if (newShift === origShift) {
+        delete proposedShifts[key];
+      } else {
+        proposedShifts[key] = newShift;
+      }
+      showToast('💡 Vorschlag: ' + name + ' → ' + newShift);
+      logDecision('DRAG_PROPOSAL', name, { from: origShift, to: newShift });
+    }
+
+    // Alles neu rendern
+    if (day === selectedDay) {
+      renderStaff();
+      updateAmpel();
+      updateHours();
+      renderDetailCards();
+      updateElternBtn();
+    }
+    renderGanttView();
+  }
+
+  ganttDrag = null;
 }
 
 init();
