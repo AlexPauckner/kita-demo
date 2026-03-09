@@ -9,113 +9,53 @@
 <title>Kinderladen — Betreuungsabfrage</title>
 <style>
   :root {
-    --teal-900: #004d40;
-    --teal-800: #00695c;
-    --teal-700: #00897b;
-    --teal-600: #009688;
-    --teal-500: #26a69a;
-    --teal-400: #4db6ac;
-    --teal-100: #b2dfdb;
-    --teal-50: #e0f2f1;
-    --red-600: #e53935;
-    --red-100: #ffcdd2;
-    --red-50: #ffebee;
-    --orange-600: #ef6c00;
-    --orange-100: #ffe0b2;
-    --orange-50: #fff3e0;
-    --green-600: #2e7d32;
-    --green-100: #c8e6c9;
-    --green-50: #e8f5e9;
-    --blue-600: #1e88e5;
-    --blue-100: #bbdefb;
-    --blue-50: #e3f2fd;
-    --purple-600: #7b1fa2;
-    --purple-100: #e1bee7;
-    --purple-50: #f3e5f5;
-    --gray-50: #fafafa;
-    --gray-100: #f5f5f5;
-    --gray-200: #eeeeee;
-    --gray-400: #bdbdbd;
-    --gray-600: #757575;
-    --gray-800: #424242;
+    --teal-900: #004d40; --teal-800: #00695c; --teal-700: #00897b;
+    --teal-600: #009688; --teal-500: #26a69a; --teal-400: #4db6ac;
+    --teal-100: #b2dfdb; --teal-50: #e0f2f1;
+    --red-600: #e53935; --red-100: #ffcdd2; --red-50: #ffebee;
+    --orange-600: #ef6c00; --orange-100: #ffe0b2; --orange-50: #fff3e0;
+    --green-600: #2e7d32; --green-100: #c8e6c9; --green-50: #e8f5e9;
+    --blue-600: #1e88e5; --blue-100: #bbdefb; --blue-50: #e3f2fd;
+    --purple-600: #7b1fa2; --purple-100: #e1bee7; --purple-50: #f3e5f5;
+    --gray-50: #fafafa; --gray-100: #f5f5f5; --gray-200: #eeeeee;
+    --gray-400: #bdbdbd; --gray-600: #757575; --gray-800: #424242;
     --shadow-sm: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.06);
     --shadow-md: 0 4px 6px rgba(0,0,0,.1), 0 2px 4px rgba(0,0,0,.06);
     --shadow-lg: 0 10px 25px rgba(0,0,0,.15);
     --radius: 12px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', Roboto, sans-serif;
-    background: var(--gray-100);
-    color: var(--gray-800);
+    background: var(--gray-100); color: var(--gray-800);
     -webkit-font-smoothing: antialiased;
     padding-bottom: env(safe-area-inset-bottom, 20px);
     min-height: 100dvh;
   }
 
-  /* Header */
   .header {
     background: linear-gradient(135deg, var(--teal-800), var(--teal-600));
-    color: white;
-    padding: 16px 20px;
+    color: white; padding: 16px 20px;
     padding-top: calc(env(safe-area-inset-top, 12px) + 12px);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: var(--shadow-md);
+    position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-md);
   }
-  .header h1 {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-  .header .subtitle {
-    font-size: 13px;
-    opacity: 0.85;
-    margin-top: 2px;
-  }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header .subtitle { font-size: 13px; opacity: 0.85; margin-top: 2px; }
 
-  /* Container */
-  .container {
-    padding: 16px;
-    max-width: 500px;
-    margin: 0 auto;
-  }
+  .container { padding: 16px; max-width: 500px; margin: 0 auto; }
 
-  /* Ampel-Banner */
+  /* Ampel */
   .ampel-banner {
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
+    border-radius: var(--radius); padding: 14px 16px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: var(--shadow-sm); transition: all 0.3s ease;
   }
-  .ampel-banner.green {
-    background: var(--green-50);
-    border: 2px solid var(--green-100);
-  }
-  .ampel-banner.orange {
-    background: var(--orange-50);
-    border: 2px solid var(--orange-100);
-  }
-  .ampel-banner.red {
-    background: var(--red-50);
-    border: 2px solid var(--red-100);
-  }
+  .ampel-banner.green { background: var(--green-50); border: 2px solid var(--green-100); }
+  .ampel-banner.orange { background: var(--orange-50); border: 2px solid var(--orange-100); }
+  .ampel-banner.red { background: var(--red-50); border: 2px solid var(--red-100); }
   .ampel-dot {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
   }
   .ampel-banner.green .ampel-dot { background: var(--green-600); }
   .ampel-banner.orange .ampel-dot { background: var(--orange-600); }
@@ -124,698 +64,240 @@
   .ampel-text .label { font-weight: 700; font-size: 15px; }
   .ampel-text .detail { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
 
-  /* Tag-Auswahl */
-  .day-tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 16px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
-  }
+  /* Tag-Tabs */
+  .day-tabs { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
   .day-tab {
-    flex: 1;
-    min-width: 60px;
-    padding: 10px 8px;
-    border-radius: 10px;
-    border: 2px solid var(--gray-200);
-    background: white;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gray-600);
-    cursor: pointer;
-    transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
+    flex: 1; min-width: 60px; padding: 10px 8px; border-radius: 10px;
+    border: 2px solid var(--gray-200); background: white; text-align: center;
+    font-size: 13px; font-weight: 600; color: var(--gray-600);
+    cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent;
   }
-  .day-tab.active {
-    border-color: var(--teal-600);
-    background: var(--teal-50);
-    color: var(--teal-800);
-  }
+  .day-tab.active { border-color: var(--teal-600); background: var(--teal-50); color: var(--teal-800); }
   .day-tab .day-name { display: block; font-size: 12px; font-weight: 500; }
   .day-tab .day-date { display: block; font-size: 15px; margin-top: 2px; }
 
-  /* Personal-Karten */
-  .staff-card {
-    background: white;
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: var(--shadow-sm);
-    cursor: pointer;
-    transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
-    border: 2px solid transparent;
-    position: relative;
-    overflow: hidden;
-  }
-  .staff-card:active {
-    transform: scale(0.98);
-  }
-  .staff-card.sick {
-    border-color: var(--red-100);
-    background: var(--red-50);
-  }
-  .staff-card.sick .staff-shift {
-    text-decoration: line-through;
-    color: var(--gray-400);
-  }
-  .staff-card.absent {
-    border-color: var(--gray-200);
-    background: var(--gray-50);
-    opacity: 0.6;
-  }
-
-  .staff-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
-    color: white;
-    flex-shrink: 0;
-  }
-  .staff-avatar.fk { background: var(--teal-700); }
-  .staff-avatar.ek { background: var(--teal-400); }
-
-  .staff-info { flex: 1; }
-  .staff-name {
-    font-weight: 600;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .staff-badge {
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-  }
-  .staff-badge.fk {
-    background: var(--teal-100);
-    color: var(--teal-800);
-  }
-  .staff-badge.ek {
-    background: var(--gray-200);
-    color: var(--gray-600);
-  }
-  .staff-shift {
-    font-size: 14px;
-    color: var(--gray-600);
-    margin-top: 2px;
-  }
-
-  .staff-status {
-    font-size: 13px;
-    font-weight: 700;
-    padding: 6px 12px;
-    border-radius: 8px;
-    flex-shrink: 0;
-  }
-  .staff-status.krank {
-    background: var(--red-600);
-    color: white;
-  }
-  .staff-status.frei {
-    background: var(--gray-200);
-    color: var(--gray-600);
-  }
-
-  /* Öffnungszeiten-Info */
+  /* Öffnungszeiten */
   .hours-card {
-    background: white;
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 16px;
-    box-shadow: var(--shadow-sm);
+    background: white; border-radius: var(--radius); padding: 16px;
+    margin-bottom: 16px; box-shadow: var(--shadow-sm);
   }
-  .hours-card h3 {
-    font-size: 14px;
-    color: var(--gray-600);
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .hours-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 0;
-  }
+  .hours-card h3 { font-size: 14px; color: var(--gray-600); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .hours-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
   .hours-row + .hours-row { border-top: 1px solid var(--gray-100); }
   .hours-label { font-size: 14px; color: var(--gray-600); }
   .hours-value { font-size: 16px; font-weight: 700; }
   .hours-value.normal { color: var(--green-600); }
   .hours-value.reduced { color: var(--orange-600); }
   .hours-value.closed { color: var(--red-600); }
+  .hours-value.projected { color: var(--blue-600); }
 
-  /* Action Button */
-  .action-btn {
-    display: block;
-    width: 100%;
-    padding: 16px;
-    border-radius: var(--radius);
-    border: none;
-    font-size: 17px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
+  /* Staff-Karten */
+  .staff-card {
+    background: white; border-radius: var(--radius); margin-bottom: 10px;
+    box-shadow: var(--shadow-sm); border: 2px solid transparent;
+    overflow: hidden; transition: all 0.2s;
+  }
+  .staff-card.sick { border-color: var(--red-100); background: var(--red-50); }
+  .staff-card.absent { border-color: var(--gray-200); background: var(--gray-50); opacity: 0.6; }
+  .staff-card.has-override { border-color: var(--green-100); background: var(--green-50); }
+  .staff-card.has-proposal { border-color: var(--blue-100); }
+
+  .staff-main {
+    padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .staff-main:active { opacity: 0.8; }
+  .staff-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; color: white; flex-shrink: 0;
+  }
+  .staff-avatar.fk { background: var(--teal-700); }
+  .staff-avatar.ek { background: var(--teal-400); }
+  .staff-info { flex: 1; }
+  .staff-name { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 6px; }
+  .staff-badge {
+    font-size: 10px; padding: 2px 6px; border-radius: 4px;
+    font-weight: 700; letter-spacing: 0.5px;
+  }
+  .staff-badge.fk { background: var(--teal-100); color: var(--teal-800); }
+  .staff-badge.ek { background: var(--gray-200); color: var(--gray-600); }
+  .staff-shift { font-size: 14px; color: var(--gray-600); margin-top: 2px; }
+  .staff-card.sick .staff-shift { text-decoration: line-through; color: var(--gray-400); }
+
+  .staff-status {
+    font-size: 13px; font-weight: 700; padding: 6px 12px;
+    border-radius: 8px; flex-shrink: 0;
+  }
+  .staff-status.krank { background: var(--red-600); color: white; }
+  .staff-status.frei { background: var(--gray-200); color: var(--gray-600); }
+  .staff-status.override { background: var(--green-100); color: var(--green-600); }
+
+  /* Vorschlag-Zeile in Staff-Karte */
+  .staff-proposal {
+    padding: 10px 16px 12px; border-top: 1px solid var(--gray-100);
+    background: var(--blue-50);
+  }
+  .proposal-row {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .proposal-label { font-size: 12px; font-weight: 600; color: var(--blue-600); white-space: nowrap; }
+  .proposal-input {
+    width: 110px; font-size: 15px; font-weight: 700; color: var(--teal-900);
+    background: white; border: 2px solid var(--blue-100); border-radius: 6px;
+    padding: 5px 8px; text-align: center; outline: none;
+  }
+  .proposal-input:focus { border-color: var(--teal-600); }
+  .proposal-clear {
+    background: none; border: none; color: var(--gray-400); font-size: 18px;
+    cursor: pointer; padding: 0 4px; line-height: 1;
+  }
+  .btn-anfragen {
+    background: #25D366; color: white; border: none; border-radius: 8px;
+    padding: 6px 12px; font-size: 13px; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; gap: 4px; white-space: nowrap;
+    -webkit-tap-highlight-color: transparent; margin-left: auto;
+  }
+  .btn-anfragen:active { transform: scale(0.96); }
+  .proposal-chips {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;
+  }
+  .proposal-chip {
+    font-size: 11px; font-weight: 600; padding: 3px 6px; border-radius: 4px;
+  }
+  .proposal-chip.info { background: var(--blue-50); color: var(--blue-600); border: 1px solid var(--blue-100); }
+  .proposal-chip.warn { background: var(--orange-50); color: var(--orange-600); border: 1px solid var(--orange-100); }
+  .proposal-chip.ok { background: var(--green-50); color: var(--green-600); border: 1px solid var(--green-100); }
+
+  /* Zugesagt-Zeile */
+  .staff-accepted {
+    padding: 8px 16px 10px; border-top: 1px solid var(--green-100);
+    background: var(--green-50); display: flex; align-items: center; gap: 8px;
+  }
+  .accepted-text { font-size: 13px; font-weight: 600; color: var(--green-600); flex: 1; }
+  .btn-undo {
+    background: var(--orange-50); color: var(--orange-600);
+    border: 1px solid var(--orange-100); border-radius: 6px;
+    padding: 5px 10px; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+
+  /* Detail-Bereich (Nachrichten) */
+  .detail-section { margin-top: 20px; }
+  .section-header {
+    font-size: 13px; font-weight: 700; color: var(--gray-600);
+    text-transform: uppercase; letter-spacing: 0.8px; padding: 8px 4px;
+  }
+
+  .detail-card {
+    background: white; border-radius: var(--radius); margin-bottom: 12px;
+    box-shadow: var(--shadow-sm); overflow: hidden; border: 2px solid var(--blue-100);
+  }
+  .detail-card-header {
+    padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+    background: var(--blue-50);
+  }
+  .detail-card-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: white; flex-shrink: 0;
+  }
+  .detail-card-avatar.fk { background: var(--teal-700); }
+  .detail-card-avatar.ek { background: var(--teal-400); }
+  .detail-card-info { flex: 1; }
+  .detail-card-name { font-weight: 700; font-size: 15px; }
+  .detail-card-shift { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+
+  .detail-card-body { padding: 12px 16px; }
+
+  .wa-preview {
+    width: 100%; background: var(--gray-50); border-radius: 8px;
+    padding: 10px 12px; font-family: inherit; font-size: 13px;
+    line-height: 1.5; color: var(--gray-800); margin-bottom: 10px;
+    border: 1px solid var(--gray-200); resize: none; outline: none; overflow: hidden;
+  }
+  .wa-preview:focus { border-color: var(--teal-500); background: white; }
+
+  .detail-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .detail-actions button, .detail-actions a {
+    flex: 1; padding: 10px; border-radius: 8px; border: none;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    text-decoration: none; text-align: center; min-width: 100px;
     -webkit-tap-highlight-color: transparent;
-    margin-bottom: 12px;
-    letter-spacing: -0.2px;
   }
-  .action-btn:active { transform: scale(0.98); }
-  .action-btn.primary {
-    background: linear-gradient(135deg, var(--teal-700), var(--teal-600));
-    color: white;
-    box-shadow: var(--shadow-md);
-  }
-  .action-btn.primary:disabled {
-    background: var(--gray-400);
-    box-shadow: none;
-    cursor: not-allowed;
-  }
-  .action-btn.secondary {
-    background: white;
-    color: var(--teal-700);
-    border: 2px solid var(--teal-100);
-  }
-  .action-btn.warning {
-    background: linear-gradient(135deg, var(--orange-600), #f57c00);
-    color: white;
-    box-shadow: var(--shadow-md);
-  }
-  .action-btn.danger {
-    background: linear-gradient(135deg, var(--red-600), #c62828);
-    color: white;
-    box-shadow: var(--shadow-md);
-  }
+  .detail-actions button:active, .detail-actions a:active { transform: scale(0.97); }
+  .btn-wa-send { background: #25D366; color: white; }
+  .btn-save-tpl { background: var(--blue-50); color: var(--blue-600); border: 2px solid var(--blue-100); }
+  .btn-save-tpl.saved { background: var(--green-100); color: var(--green-600); border-color: var(--green-100); }
+  .btn-antwort-ja { background: var(--green-50); color: var(--green-600); }
+  .btn-antwort-nein { background: var(--red-50); color: var(--red-600); }
+  .btn-skip { background: var(--gray-100); color: var(--gray-600); }
 
-  /* Sections mit Animation */
-  .animated-section {
-    display: none;
-    animation: slideUp 0.3s ease;
+  .anfrage-status {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; margin-bottom: 10px;
   }
+  .anfrage-status.warten { background: var(--blue-50); color: var(--blue-600); }
+  .anfrage-status.ja { background: var(--green-50); color: var(--green-600); }
+  .anfrage-status.nein { background: var(--red-50); color: var(--red-600); }
+
+  /* Eltern-Bereich */
+  .animated-section { display: none; animation: slideUp 0.3s ease; }
   .animated-section.visible { display: block; }
-
   @keyframes slideUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Prozess-Schritte */
-  .process-steps {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 16px;
-    padding: 12px;
-  }
-  .process-step {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--gray-400);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .process-step.active {
-    color: var(--teal-700);
-  }
-  .process-step.done {
-    color: var(--green-600);
-  }
-  .step-num {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    background: var(--gray-200);
-    color: var(--gray-600);
-  }
-  .process-step.active .step-num {
-    background: var(--teal-600);
-    color: white;
-  }
-  .process-step.done .step-num {
-    background: var(--green-600);
-    color: white;
-  }
-  .step-arrow {
-    color: var(--gray-400);
-    font-size: 16px;
-  }
-
-  /* Vertretungs-Karten */
-  .sub-card {
-    background: white;
-    border-radius: var(--radius);
-    margin-bottom: 12px;
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-    border: 2px solid var(--blue-100);
-  }
-  .sub-card.warning {
-    border-color: var(--orange-100);
-  }
-  .sub-card-header {
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--blue-50);
-  }
-  .sub-card.warning .sub-card-header {
-    background: var(--orange-50);
-  }
-  .sub-card-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
-    color: white;
-    flex-shrink: 0;
-  }
-  .sub-card-avatar.fk { background: var(--teal-700); }
-  .sub-card-avatar.ek { background: var(--teal-400); }
-  .sub-card-info { flex: 1; }
-  .sub-card-name {
-    font-weight: 700;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .sub-card-detail {
-    font-size: 13px;
-    color: var(--gray-600);
-    margin-top: 2px;
-  }
-  .sub-card-priority {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 6px;
-    flex-shrink: 0;
-  }
-  .sub-card-priority.high {
-    background: var(--blue-100);
-    color: var(--blue-600);
-  }
-  .sub-card-priority.medium {
-    background: var(--orange-100);
-    color: var(--orange-600);
-  }
-
-  .sub-card-body {
-    padding: 12px 16px;
-  }
-
-  /* Constraint-Chips */
-  .constraint-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-  .constraint-chip {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 8px;
-    border-radius: 6px;
-  }
-  .constraint-chip.ok {
-    background: var(--green-50);
-    color: var(--green-600);
-    border: 1px solid var(--green-100);
-  }
-  .constraint-chip.warn {
-    background: var(--orange-50);
-    color: var(--orange-600);
-    border: 1px solid var(--orange-100);
-  }
-  .constraint-chip.fail {
-    background: var(--red-50);
-    color: var(--red-600);
-    border: 1px solid var(--red-100);
-  }
-
-  /* Anfrage-Status */
-  .anfrage-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-  .anfrage-status.warten {
-    background: var(--blue-50);
-    color: var(--blue-600);
-  }
-  .anfrage-status.ja {
-    background: var(--green-50);
-    color: var(--green-600);
-  }
-  .anfrage-status.nein {
-    background: var(--red-50);
-    color: var(--red-600);
-  }
-
-  /* WhatsApp-Nachricht in Vertretungs-Karte */
-  .wa-preview {
-    width: 100%;
-    background: var(--gray-50);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-family: inherit;
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--gray-800);
-    margin-bottom: 10px;
-    border: 1px solid var(--gray-200);
-    resize: none;
-    outline: none;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .wa-preview:focus {
-    border-color: var(--teal-500);
-    background: white;
-  }
-
-  .sub-card-actions {
-    display: flex;
-    gap: 8px;
-  }
-  .sub-card-actions button, .sub-card-actions a {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    text-decoration: none;
-    text-align: center;
-  }
-  .sub-card-actions button:active, .sub-card-actions a:active { transform: scale(0.97); }
-  .btn-copy-wa {
-    background: var(--teal-50);
-    color: var(--teal-700);
-  }
-  .btn-antwort-ja {
-    background: var(--green-50);
-    color: var(--green-600);
-  }
-  .btn-antwort-nein {
-    background: var(--red-50);
-    color: var(--red-600);
-  }
-  .btn-skip {
-    background: var(--gray-100);
-    color: var(--gray-600);
-  }
-  .btn-undo {
-    background: var(--orange-50);
-    color: var(--orange-600);
-    border: 1px solid var(--orange-100);
-  }
-
-  /* Schichtzeit-Eingabe */
-  .shift-time-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-    padding: 8px 12px;
-    background: var(--teal-50);
-    border-radius: 8px;
-    border: 1px solid var(--teal-100);
-  }
-  .shift-time-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--teal-800);
-    white-space: nowrap;
-  }
-  .shift-time-input {
-    flex: 1;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--teal-900);
-    background: white;
-    border: 2px solid var(--teal-200, #80cbc4);
-    border-radius: 6px;
-    padding: 6px 10px;
-    text-align: center;
-    outline: none;
-    max-width: 140px;
-  }
-  .shift-time-input:focus {
-    border-color: var(--teal-600);
-  }
-
-  /* Gestufter Prozess Hinweis */
-  .stufig-hinweis {
-    background: var(--purple-50);
-    border: 2px solid var(--purple-100);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--gray-800);
-  }
-  .stufig-hinweis strong {
-    color: var(--purple-600);
-  }
-
-  /* Editierbare Nachrichten */
-  .msg-textarea {
-    width: 100%;
-    padding: 12px 16px;
-    font-family: inherit;
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--gray-800);
-    border: none;
-    border-bottom: 2px solid var(--teal-100);
-    background: var(--gray-50);
-    resize: none;
-    overflow: hidden;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .msg-textarea:focus {
-    border-color: var(--teal-500);
-    background: white;
-  }
-  .msg-actions {
-    display: flex;
-    gap: 8px;
-    padding: 10px 16px;
-    border-top: 1px solid var(--gray-100);
-  }
-  .msg-actions a, .msg-actions button {
-    flex: 1;
-    padding: 12px;
-    border-radius: 8px;
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .msg-actions a:active, .msg-actions button:active { transform: scale(0.97); }
-  .btn-wa-send {
-    background: #25D366;
-    color: white;
-  }
-  .btn-save-tpl {
-    background: var(--blue-50);
-    color: var(--blue-600);
-    border: 2px solid var(--blue-100);
-    font-weight: 700;
-  }
-  .btn-save-tpl.saved {
-    background: var(--green-100);
-    color: var(--green-600);
-    border-color: var(--green-100);
-  }
-
-  /* Template-Hinweis */
-  .tpl-hint {
-    padding: 6px 16px 2px;
-    font-size: 11px;
-    color: var(--teal-600);
-    font-weight: 600;
-  }
-  .tpl-reset {
-    font-size: 11px;
-    color: var(--gray-400);
-    cursor: pointer;
-    padding: 2px 16px 8px;
-    display: block;
-  }
-
-  /* Poll-Helfer */
-  .poll-card {
-    background: white;
-    border-radius: var(--radius);
-    margin-bottom: 14px;
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-    border: 2px solid var(--green-100);
-  }
-  .poll-header {
-    padding: 12px 16px;
-    font-weight: 700;
-    font-size: 14px;
-    background: var(--green-50);
-    color: var(--green-600);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .poll-body {
-    padding: 12px 16px;
-  }
-  .poll-option {
-    background: var(--gray-50);
-    border: 1px solid var(--gray-200);
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-bottom: 6px;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .poll-option .poll-circle {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 2px solid var(--gray-400);
-    flex-shrink: 0;
-  }
-  .poll-hint {
-    font-size: 12px;
-    color: var(--gray-600);
-    padding: 8px 0 4px;
-    line-height: 1.5;
-  }
-
-  /* Nachrichten-Bereich */
-  .message-card {
-    background: white;
-    border-radius: var(--radius);
-    margin-bottom: 14px;
-    box-shadow: var(--shadow-sm);
-  }
+  .message-card { background: white; border-radius: var(--radius); margin-bottom: 14px; box-shadow: var(--shadow-sm); }
   .message-header {
-    padding: 12px 16px;
-    font-weight: 700;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    padding: 12px 16px; font-weight: 700; font-size: 14px;
+    display: flex; align-items: center; gap: 8px;
   }
   .message-header.info { background: var(--orange-50); color: var(--orange-600); }
   .message-header.urgent { background: var(--red-50); color: var(--red-600); }
   .message-header.closed { background: var(--gray-100); color: var(--gray-800); }
 
-  /* Reset-Link */
-  .reset-link {
-    display: block;
-    text-align: center;
-    padding: 12px;
-    color: var(--gray-400);
-    font-size: 14px;
-    text-decoration: none;
-    margin-top: 8px;
+  .msg-textarea {
+    width: 100%; padding: 12px 16px; font-family: inherit; font-size: 14px;
+    line-height: 1.5; color: var(--gray-800); border: none;
+    border-bottom: 2px solid var(--teal-100); background: var(--gray-50);
+    resize: none; overflow: hidden; outline: none;
+  }
+  .msg-textarea:focus { border-color: var(--teal-500); background: white; }
+  .msg-actions {
+    display: flex; gap: 8px; padding: 10px 16px; border-top: 1px solid var(--gray-100);
+  }
+  .msg-actions a, .msg-actions button {
+    flex: 1; padding: 12px; border-radius: 8px; border: none;
+    font-size: 14px; font-weight: 600; cursor: pointer; text-align: center;
+    text-decoration: none; display: flex; align-items: center;
+    justify-content: center; gap: 6px;
   }
 
-  /* Toast */
+  .tpl-hint { padding: 6px 16px 2px; font-size: 11px; color: var(--teal-600); font-weight: 600; }
+  .tpl-reset { font-size: 11px; color: var(--gray-400); cursor: pointer; padding: 2px 16px 8px; display: block; }
+
+  .poll-card { background: white; border-radius: var(--radius); margin-bottom: 14px; box-shadow: var(--shadow-sm); overflow: hidden; border: 2px solid var(--green-100); }
+  .poll-header { padding: 12px 16px; font-weight: 700; font-size: 14px; background: var(--green-50); color: var(--green-600); display: flex; align-items: center; gap: 8px; }
+  .poll-body { padding: 12px 16px; }
+  .poll-option { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .poll-option .poll-circle { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--gray-400); flex-shrink: 0; }
+  .poll-hint { font-size: 12px; color: var(--gray-600); padding: 8px 0 4px; line-height: 1.5; }
+
+  .section-divider { border: none; border-top: 2px dashed var(--gray-200); margin: 20px 0 16px; }
+  .reset-link { display: block; text-align: center; padding: 12px; color: var(--gray-400); font-size: 14px; text-decoration: none; margin-top: 8px; }
+  .hint { text-align: center; color: var(--gray-400); font-size: 13px; padding: 8px 0 4px; }
+
   .toast {
-    position: fixed;
-    bottom: calc(env(safe-area-inset-bottom, 20px) + 20px);
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: var(--gray-800);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    z-index: 200;
-    opacity: 0;
-    transition: all 0.3s;
-    box-shadow: var(--shadow-lg);
+    position: fixed; bottom: calc(env(safe-area-inset-bottom, 20px) + 20px);
+    left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--gray-800); color: white; padding: 12px 24px;
+    border-radius: 10px; font-size: 15px; font-weight: 600;
+    z-index: 200; opacity: 0; transition: all 0.3s; box-shadow: var(--shadow-lg);
   }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  /* Section Header */
-  .section-header {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--gray-600);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    padding: 8px 4px 8px;
-  }
-
-  /* Hint */
-  .hint {
-    text-align: center;
-    color: var(--gray-400);
-    font-size: 13px;
-    padding: 8px 0 4px;
-  }
-
-  /* Divider */
-  .section-divider {
-    border: none;
-    border-top: 2px dashed var(--gray-200);
-    margin: 20px 0 16px;
-  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -826,164 +308,95 @@
 </div>
 
 <div class="container">
-  <!-- Tag-Auswahl -->
   <div class="day-tabs" id="dayTabs"></div>
 
-  <!-- Ampel -->
   <div class="ampel-banner green" id="ampelBanner">
     <div class="ampel-dot">&#10003;</div>
     <div class="ampel-text">
       <div class="label" id="ampelLabel">Alles OK</div>
-      <div class="detail" id="ampelDetail">3 FK, 5 EK anwesend</div>
+      <div class="detail" id="ampelDetail"></div>
     </div>
   </div>
 
-  <!-- Öffnungszeiten -->
-  <div class="hours-card" id="hoursCard">
+  <div class="hours-card">
     <h3>Öffnungszeiten</h3>
     <div id="hoursContent"></div>
   </div>
 
-  <!-- Personal -->
   <div class="section-header">Pädagoginnen — Tap zum Krankmelden</div>
   <div id="staffList"></div>
   <div class="hint" id="staffHint">Tippe auf eine Person, um sie als KRANK zu markieren</div>
 
-  <!-- Aktion: Vertretung suchen ODER Dienstplan optimieren -->
-  <button class="action-btn primary" id="searchSubBtn" onclick="searchSubstitutes()">
-    Erst jemanden als KRANK markieren
-  </button>
-
-  <!-- Prozess-Schritte Anzeige -->
-  <div class="process-steps" id="processSteps" style="display:none;">
-    <div class="process-step" id="step1">
-      <span class="step-num">1</span>
-      <span>Krank</span>
-    </div>
-    <span class="step-arrow">&#x2192;</span>
-    <div class="process-step" id="step2">
-      <span class="step-num">2</span>
-      <span>Vertretung</span>
-    </div>
-    <span class="step-arrow">&#x2192;</span>
-    <div class="process-step" id="step3">
-      <span class="step-num">3</span>
-      <span>Eltern</span>
-    </div>
+  <!-- Detail-Bereich: WA-Nachrichten für angefragte Personen -->
+  <div class="detail-section" id="detailSection" style="display:none;">
+    <hr class="section-divider">
+    <div class="section-header">Nachrichten an Erzieherinnen</div>
+    <div id="detailList"></div>
   </div>
 
-  <!-- SCHRITT 2: Erzieherinnen-Anfrage -->
-  <div class="animated-section" id="subSection">
-    <div class="section-header" id="subSectionHeader">Schritt 1 — Vertretung suchen</div>
-
-    <div class="stufig-hinweis" id="stufigHinweis">
-      <strong>Gestufter Prozess:</strong> Frage erst die beste Option. Bei Absage → nächste Person fragen. So vermeidest du unnötige Anfragen.
-    </div>
-
-    <div id="subList"></div>
-
-    <div id="noSubAvailable" style="display:none;">
-      <div class="ampel-banner red" style="margin-top:8px;">
-        <div class="ampel-dot">&#10007;</div>
-        <div class="ampel-text">
-          <div class="label">Keine Vertretung verfügbar</div>
-          <div class="detail">Niemand kann an diesem Tag einspringen</div>
-        </div>
-      </div>
-    </div>
-
+  <!-- Eltern-Bereich -->
+  <div id="elternBtnWrap" style="display:none;">
     <hr class="section-divider">
-
-    <button class="action-btn warning" id="noSubBtn" onclick="showParentMessages()">
+    <button class="action-btn warning" onclick="showParentMessages()" style="display:block;width:100%;padding:16px;border-radius:var(--radius);border:none;font-size:17px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--orange-600),#f57c00);color:white;box-shadow:var(--shadow-md);margin-bottom:12px;">
       Keine Vertretung möglich &#x2192; Eltern benachrichtigen
     </button>
   </div>
 
-  <!-- SCHRITT 3: Eltern-Nachrichten -->
   <div class="animated-section" id="messagesSection">
-    <div class="section-header">Schritt 2 — Eltern benachrichtigen</div>
+    <div class="section-header">Eltern benachrichtigen</div>
 
-    <!-- Nachricht 1: Wichtige Info -->
     <div class="message-card">
       <div class="message-header info">Wichtige Info — Betreuungszeiten</div>
       <div id="tplHint1" class="tpl-hint" style="display:none;"></div>
       <textarea class="msg-textarea" id="msg1" oninput="autoResize(this); updateWaLink(1)"></textarea>
       <div class="msg-actions">
-        <a class="btn-wa-send" id="waLink1" href="#" target="_blank">
-          &#x1F4F2; WhatsApp
-        </a>
-        <button class="btn-save-tpl" onclick="saveTemplate(1, this)">
-          &#x1F4BE; Template
-        </button>
+        <a class="btn-wa-send" id="waLink1" href="#" target="_blank">&#x1F4F2; WhatsApp</a>
+        <button class="btn-save-tpl" onclick="saveTemplate(1, this)">&#x1F4BE; Template</button>
       </div>
-      <span class="tpl-reset" id="tplReset1" style="display:none;" onclick="resetTemplate(1)">Gespeichertes Template löschen</span>
+      <span class="tpl-reset" id="tplReset1" style="display:none;" onclick="resetTemplate(1)">Template löschen</span>
     </div>
 
-    <!-- Poll-Helfer: Abfrage -->
     <div class="poll-card">
       <div class="poll-header">&#x1F4CA; WhatsApp-Umfrage erstellen</div>
       <div class="poll-body">
-        <div class="poll-hint">
-          Erstelle eine Umfrage direkt in WhatsApp mit diesen Optionen. Tippe in der Eltern-Gruppe auf <strong>+</strong> &#x2192; <strong>Umfrage</strong>.
-        </div>
+        <div class="poll-hint">Tippe in der Eltern-Gruppe auf <strong>+</strong> &#x2192; <strong>Umfrage</strong>.</div>
         <div id="pollTitle" style="font-weight:700;font-size:14px;margin:8px 0;"></div>
         <div id="pollOptions"></div>
-        <div class="poll-hint" style="margin-top:8px;">
-          Tipp: „Wähle mindestens eine Option aus" aktivieren.
-        </div>
       </div>
     </div>
 
-    <!-- Nachricht 2: Finale Info / Betreuungszeiten -->
     <div class="message-card">
       <div class="message-header urgent">Betreuungszeit — Finale Info</div>
       <div id="tplHint2" class="tpl-hint" style="display:none;"></div>
       <textarea class="msg-textarea" id="msg2" oninput="autoResize(this); updateWaLink(2)"></textarea>
       <div class="msg-actions">
-        <a class="btn-wa-send" id="waLink2" href="#" target="_blank">
-          &#x1F4F2; WhatsApp
-        </a>
-        <button class="btn-save-tpl" onclick="saveTemplate(2, this)">
-          &#x1F4BE; Template
-        </button>
+        <a class="btn-wa-send" id="waLink2" href="#" target="_blank">&#x1F4F2; WhatsApp</a>
+        <button class="btn-save-tpl" onclick="saveTemplate(2, this)">&#x1F4BE; Template</button>
       </div>
-      <span class="tpl-reset" id="tplReset2" style="display:none;" onclick="resetTemplate(2)">Gespeichertes Template löschen</span>
+      <span class="tpl-reset" id="tplReset2" style="display:none;" onclick="resetTemplate(2)">Template löschen</span>
     </div>
 
-    <!-- Nachricht 3: Kita geschlossen -->
     <div class="message-card">
       <div class="message-header closed">Kita-Schließung</div>
       <div id="tplHint3" class="tpl-hint" style="display:none;"></div>
       <textarea class="msg-textarea" id="msg3" oninput="autoResize(this); updateWaLink(3)"></textarea>
       <div class="msg-actions">
-        <a class="btn-wa-send" id="waLink3" href="#" target="_blank">
-          &#x1F4F2; WhatsApp
-        </a>
-        <button class="btn-save-tpl" onclick="saveTemplate(3, this)">
-          &#x1F4BE; Template
-        </button>
+        <a class="btn-wa-send" id="waLink3" href="#" target="_blank">&#x1F4F2; WhatsApp</a>
+        <button class="btn-save-tpl" onclick="saveTemplate(3, this)">&#x1F4BE; Template</button>
       </div>
-      <span class="tpl-reset" id="tplReset3" style="display:none;" onclick="resetTemplate(3)">Gespeichertes Template löschen</span>
+      <span class="tpl-reset" id="tplReset3" style="display:none;" onclick="resetTemplate(3)">Template löschen</span>
     </div>
 
     <a href="#" class="reset-link" onclick="resetAll(); return false;">&#x21A9; Zurücksetzen</a>
   </div>
 </div>
 
-<div class="toast" id="toast">Kopiert!</div>
+<div class="toast" id="toast"></div>
 
 <script>
 // ==========================================
-// DATEN — Echte Beispieldaten KW11 2026
+// DATEN
 // ==========================================
-
-// Telefonnummern: Internationales Format ohne + (z.B. '491711234567')
-// Wenn leer/'': WhatsApp öffnet Kontakt-Picker statt Direkt-Chat
-//
-// ECHTE DATEN aus dienstplan-grundschema.csv / _Erzieher-Tab
-// KW11 = UNGERADE Woche (09.03. - 13.03.2026)
-// Jenny: ausgeschieden → nicht im System
-// Steffi: Köchin → keine Betreuungskraft, nicht anfragbar
 var STAFF = [
   { name: 'Hannah',  type: 'FK', phone: '', shifts: ['07:30-16:00','08:00-16:30','08:00-16:30','07:30-15:00','07:30-10:30'] },
   { name: 'Lioba',   type: 'FK', phone: '', shifts: ['09:00-14:00','08:00-13:00','08:00-13:00','09:00-14:00','FREI'] },
@@ -996,131 +409,313 @@ var STAFF = [
 
 var DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
 var DAYS_FULL = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
-
-// KW11 2026: 09.03 - 13.03
 var KW = 11;
 var DATES = ['09.03.', '10.03.', '11.03.', '12.03.', '13.03.'];
 var NORMAL_HOURS = '07:30 - 16:30';
+var TARGET_START = 7 * 60 + 30;  // 07:30
+var TARGET_END = 16 * 60 + 30;   // 16:30
 
 var selectedDay = 0;
 var sickStaff = {};
-var subResponses = {}; // { "Hannah-0": "ja"|"nein"|"warten" }
-var shiftOverrides = {}; // { "Lioba-0": "08:00-14:00" } — akzeptierte Schichtänderungen
-var optimizeMode = false; // true wenn ohne Krankmeldung optimiert wird
+var subResponses = {};
+var shiftOverrides = {};   // Bestätigte Schichtänderungen
+var proposedShifts = {};   // Geplante Vorschläge (noch nicht bestätigt)
 
 // ==========================================
 // INIT
 // ==========================================
-
 function init() {
   document.getElementById('kwInfo').textContent = 'KW ' + KW + ' \u00B7 ' + DATES[0] + ' \u2013 ' + DATES[4] + ' März 2026';
-
   var today = new Date().getDay();
-  if (today >= 1 && today <= 5) {
-    selectedDay = today - 1;
-  }
-
+  if (today >= 1 && today <= 5) selectedDay = today - 1;
   renderDayTabs();
   renderDay();
 }
 
 function renderDayTabs() {
-  var container = document.getElementById('dayTabs');
-  container.innerHTML = '';
+  var c = document.getElementById('dayTabs');
+  c.innerHTML = '';
   DAYS.forEach(function(day, i) {
-    var tab = document.createElement('div');
-    tab.className = 'day-tab' + (i === selectedDay ? ' active' : '');
-    tab.innerHTML = '<span class="day-name">' + day + '</span><span class="day-date">' + DATES[i] + '</span>';
-    tab.onclick = function() { selectedDay = i; renderDayTabs(); renderDay(); };
-    container.appendChild(tab);
+    var t = document.createElement('div');
+    t.className = 'day-tab' + (i === selectedDay ? ' active' : '');
+    t.innerHTML = '<span class="day-name">' + day + '</span><span class="day-date">' + DATES[i] + '</span>';
+    t.onclick = function() { selectedDay = i; renderDayTabs(); renderDay(); };
+    c.appendChild(t);
   });
 }
 
 function renderDay() {
+  // Proposals für neuen Tag neu generieren, bestehende Responses/Overrides behalten
+  proposedShifts = {};
+  generateProposals();
   renderStaff();
   updateAmpel();
   updateHours();
-  updateSearchBtn();
-
-  // Bereiche bei Tag-Wechsel ausblenden
-  document.getElementById('subSection').classList.remove('visible');
+  renderDetailCards();
   document.getElementById('messagesSection').classList.remove('visible');
-  document.getElementById('processSteps').style.display = 'none';
-  subResponses = {};
-  optimizeMode = false;
+  updateElternBtn();
 }
 
 // ==========================================
-// TEXTAREA AUTO-RESIZE
+// HILFSFUNKTIONEN
 // ==========================================
+function parseTime(str) { var p = str.split(':').map(Number); return p[0] * 60 + p[1]; }
+function formatTime(m) { return Math.floor(m/60).toString().padStart(2,'0') + ':' + (m%60).toString().padStart(2,'0'); }
 
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = el.scrollHeight + 'px';
+function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+function autoResizeAll() { document.querySelectorAll('.wa-preview, .msg-textarea').forEach(autoResize); }
+
+function getEffectiveShift(person, dayIndex) {
+  var key = person.name + '-' + dayIndex;
+  if (shiftOverrides[key]) return shiftOverrides[key];
+  return person.shifts[dayIndex];
 }
 
-function autoResizeAll() {
-  document.querySelectorAll('.msg-textarea, .wa-preview').forEach(function(el) {
-    autoResize(el);
+function getActiveStaff(dayIndex) {
+  var active = [];
+  STAFF.forEach(function(p) {
+    var shift = getEffectiveShift(p, dayIndex);
+    var key = p.name + '-' + dayIndex;
+    if (shift !== 'FREI' && !sickStaff[key]) {
+      var parts = shift.split('-');
+      active.push({ name: p.name, type: p.type, isFK: p.type === 'FK', isEK: p.type === 'EK', start: parseTime(parts[0]), end: parseTime(parts[1]) });
+    }
   });
+  return active;
+}
+
+// Aktive MIT Vorschlägen (für Vorschau)
+function getProjectedActiveStaff(dayIndex) {
+  var active = [];
+  STAFF.forEach(function(p) {
+    var key = p.name + '-' + dayIndex;
+    if (sickStaff[key]) return;
+    var shift = shiftOverrides[key] || proposedShifts[key] || p.shifts[dayIndex];
+    if (!shift || shift === 'FREI') return;
+    var parts = shift.split('-');
+    active.push({ name: p.name, type: p.type, isFK: p.type === 'FK', isEK: p.type === 'EK', start: parseTime(parts[0]), end: parseTime(parts[1]) });
+  });
+  return active;
+}
+
+function computeOpeningWindow(active) {
+  if (active.length === 0) return { start: null, end: null, status: 'GESCHLOSSEN', fkStart: null, fkEnd: null };
+  var fkStart = null, fkEnd = null, notStart = null, notEnd = null;
+  for (var t = 420; t <= 1020; t += 5) {
+    var fk = 0, tot = 0;
+    active.forEach(function(s) { if (t >= s.start && t < s.end) { tot++; if (s.isFK) fk++; } });
+    if (fk >= 2) { if (fkStart === null) fkStart = t; fkEnd = t + 5; }
+    if (fk >= 1 && tot >= 2) { if (notStart === null) notStart = t; notEnd = t + 5; }
+  }
+  if (fkStart !== null) {
+    var oS = fkStart, oE = fkEnd;
+    if (notStart !== null && notStart < fkStart) oS = Math.max(notStart, fkStart - 30);
+    if (notEnd !== null && notEnd > fkEnd) oE = Math.min(notEnd, fkEnd + 30);
+    return { start: oS, end: oE, status: 'OK', fkStart: fkStart, fkEnd: fkEnd };
+  }
+  if (notStart !== null) return { start: notStart, end: Math.min(notEnd, notStart + 30), status: 'NOTBETRIEB', fkStart: null, fkEnd: null };
+  return { start: null, end: null, status: 'GESCHLOSSEN', fkStart: null, fkEnd: null };
+}
+
+// ==========================================
+// VORSCHLÄGE GENERIEREN
+// ==========================================
+function generateProposals() {
+  var active = getActiveStaff(selectedDay);
+  var win = computeOpeningWindow(active);
+
+  var needEarly = win.status === 'GESCHLOSSEN' || win.start > TARGET_START;
+  var needLate = win.status === 'GESCHLOSSEN' || win.end < TARGET_END;
+  if (!needEarly && !needLate) return;
+
+  STAFF.forEach(function(person) {
+    var key = person.name + '-' + selectedDay;
+    if (sickStaff[key] || shiftOverrides[key]) return;
+    if (proposedShifts[key] !== undefined) return; // Bereits gesetzt (auch null = gelöscht)
+
+    var orig = person.shifts[selectedDay];
+
+    if (orig === 'FREI') {
+      // Freie Person: Vorschlag für Lücke
+      var sS = needEarly ? TARGET_START : (win.end - 60);
+      var sE = needLate ? TARGET_END : (win.start + 60);
+      if (sE - sS > 480) sE = sS + 480; // Max 8h
+      if (sE <= sS) return;
+      proposedShifts[key] = formatTime(sS) + '-' + formatTime(sE);
+    } else {
+      // Arbeitende Person: Schicht ausweiten Richtung Ziel
+      var parts = orig.split('-');
+      var pS = parseTime(parts[0]);
+      var pE = parseTime(parts[1]);
+      var newS = pS, newE = pE;
+
+      if (needEarly && pS > TARGET_START) newS = TARGET_START;
+      if (needLate && pE < TARGET_END) newE = TARGET_END;
+
+      // Nie kürzer machen
+      if (newS > pS) newS = pS;
+      if (newE < pE) newE = pE;
+
+      // Nur vorschlagen wenn es sich ändert
+      if (newS !== pS || newE !== pE) {
+        proposedShifts[key] = formatTime(newS) + '-' + formatTime(newE);
+      }
+    }
+  });
+}
+
+// ==========================================
+// AMPEL
+// ==========================================
+function updateAmpel() {
+  var active = getActiveStaff(selectedDay);
+  var fk = active.filter(function(s) { return s.isFK; }).length;
+  var ek = active.filter(function(s) { return s.isEK; }).length;
+  var win = computeOpeningWindow(active);
+  var b = document.getElementById('ampelBanner');
+  var l = document.getElementById('ampelLabel');
+  var d = document.getElementById('ampelDetail');
+  b.className = 'ampel-banner';
+
+  if (win.status === 'GESCHLOSSEN') {
+    b.classList.add('red'); b.querySelector('.ampel-dot').textContent = '\u2717';
+    l.textContent = 'Kita geschlossen'; d.textContent = 'Weniger als 2 Fachkräfte (KiBiz)';
+  } else if (win.start > TARGET_START || win.end < TARGET_END) {
+    b.classList.add('orange'); b.querySelector('.ampel-dot').textContent = '\u26A0';
+    l.textContent = 'Eingeschränkter Betrieb'; d.textContent = fk + ' FK, ' + ek + ' EK — reduzierte Öffnungszeiten';
+  } else {
+    b.classList.add('green'); b.querySelector('.ampel-dot').textContent = '\u2713';
+    l.textContent = 'Personaldecke OK'; d.textContent = fk + ' FK, ' + ek + ' EK anwesend';
+  }
+}
+
+// ==========================================
+// ÖFFNUNGSZEITEN (aktuell + geplant)
+// ==========================================
+function updateHours() {
+  var active = getActiveStaff(selectedDay);
+  var win = computeOpeningWindow(active);
+  var projected = getProjectedActiveStaff(selectedDay);
+  var projWin = computeOpeningWindow(projected);
+  var c = document.getElementById('hoursContent');
+
+  var hasProposals = Object.keys(proposedShifts).some(function(k) {
+    return k.endsWith('-' + selectedDay) && proposedShifts[k];
+  });
+
+  var html = '<div class="hours-row"><span class="hours-label">Regulär</span><span class="hours-value normal">' + NORMAL_HOURS + '</span></div>';
+
+  // Aktuell
+  if (win.status === 'GESCHLOSSEN') {
+    html += '<div class="hours-row"><span class="hours-label">' + DAYS_FULL[selectedDay] + ' aktuell</span><span class="hours-value closed">GESCHLOSSEN</span></div>';
+  } else {
+    var cur = formatTime(win.start) + ' \u2013 ' + formatTime(win.end);
+    var isRed = win.start > TARGET_START || win.end < TARGET_END;
+    html += '<div class="hours-row"><span class="hours-label">' + DAYS_FULL[selectedDay] + ' aktuell</span><span class="hours-value ' + (isRed ? 'reduced' : 'normal') + '">' + cur + '</span></div>';
+  }
+
+  // Geplant (nur wenn Proposals existieren und sich was ändert)
+  if (hasProposals) {
+    if (projWin.status === 'GESCHLOSSEN') {
+      html += '<div class="hours-row"><span class="hours-label">Mit Anfragen</span><span class="hours-value closed">GESCHLOSSEN</span></div>';
+    } else {
+      var proj = formatTime(projWin.start) + ' \u2013 ' + formatTime(projWin.end);
+      var projOK = projWin.start <= TARGET_START && projWin.end >= TARGET_END;
+      html += '<div class="hours-row"><span class="hours-label">Mit Anfragen</span><span class="hours-value ' + (projOK ? 'projected' : 'reduced') + '">' + proj + (projOK ? ' \u2713' : '') + '</span></div>';
+    }
+  }
+
+  c.innerHTML = html;
 }
 
 // ==========================================
 // PERSONAL RENDERN
 // ==========================================
-
 function renderStaff() {
   var container = document.getElementById('staffList');
   container.innerHTML = '';
 
   STAFF.forEach(function(person) {
-    var shift = getEffectiveShift(person, selectedDay);
-    var originalShift = person.shifts[selectedDay];
     var key = person.name + '-' + selectedDay;
+    var origShift = person.shifts[selectedDay];
+    var effectiveShift = getEffectiveShift(person, selectedDay);
     var isSick = sickStaff[key] === true;
-    var isFrei = shift === 'FREI';
-    var hasOverride = shiftOverrides[key] && shiftOverrides[key] !== originalShift;
+    var isFrei = origShift === 'FREI' && !shiftOverrides[key];
+    var hasOverride = !!shiftOverrides[key];
+    var proposal = proposedShifts[key];
+    var hasProposal = proposal && !hasOverride;
+    var response = subResponses[key];
 
     var card = document.createElement('div');
-    card.className = 'staff-card' + (isSick ? ' sick' : '') + (isFrei && !isSick ? ' absent' : '');
-    if (hasOverride) {
-      card.style.borderColor = '#c8e6c9';
-      card.style.background = '#e8f5e9';
-    }
+    var cls = 'staff-card';
+    if (isSick) cls += ' sick';
+    else if (isFrei && !hasProposal) cls += ' absent';
+    if (hasOverride) cls += ' has-override';
+    else if (hasProposal) cls += ' has-proposal';
+    card.className = cls;
 
     var initials = person.name.substring(0, 2).toUpperCase();
 
+    // Status-Badge
     var statusHtml = '';
-    if (isSick) {
-      statusHtml = '<div class="staff-status krank">KRANK</div>';
-    } else if (isFrei && !hasOverride) {
-      statusHtml = '<div class="staff-status frei">FREI</div>';
-    } else if (hasOverride) {
-      statusHtml = '<div class="staff-status" style="background:#c8e6c9;color:#2e7d32;">EINSPRINGER</div>';
+    if (isSick) statusHtml = '<div class="staff-status krank">KRANK</div>';
+    else if (hasOverride) statusHtml = '<div class="staff-status override">\u2713 ZUGESAGT</div>';
+    else if (isFrei && !hasProposal) statusHtml = '<div class="staff-status frei">FREI</div>';
+
+    // Schicht-Anzeige
+    var shiftDisplay = isFrei ? 'Frei' : effectiveShift;
+    if (hasOverride && origShift !== 'FREI') {
+      shiftDisplay = '<s style="color:#bdbdbd;">' + origShift + '</s> \u2192 ' + effectiveShift;
+    } else if (hasOverride && origShift === 'FREI') {
+      shiftDisplay = effectiveShift + ' (springt ein)';
     }
 
-    var shiftDisplay = isFrei ? 'Frei' : shift;
-    if (hasOverride && originalShift !== 'FREI') {
-      shiftDisplay = '<s style="color:#bdbdbd;">' + originalShift + '</s> \u2192 ' + shift;
-    } else if (hasOverride && originalShift === 'FREI') {
-      shiftDisplay = shift + ' (springt ein)';
-    }
-
-    card.innerHTML =
+    // Hauptzeile (tappable für Krankmeldung)
+    var mainHtml = '<div class="staff-main" onclick="toggleSick(\'' + person.name + '\')">' +
       '<div class="staff-avatar ' + person.type.toLowerCase() + '">' + initials + '</div>' +
-      '<div class="staff-info">' +
-        '<div class="staff-name">' +
-          person.name +
-          ' <span class="staff-badge ' + person.type.toLowerCase() + '">' + person.type + '</span>' +
-        '</div>' +
-        '<div class="staff-shift">' + shiftDisplay + '</div>' +
-      '</div>' +
-      statusHtml;
+      '<div class="staff-info"><div class="staff-name">' + person.name +
+      ' <span class="staff-badge ' + person.type.toLowerCase() + '">' + person.type + '</span></div>' +
+      '<div class="staff-shift">' + shiftDisplay + '</div></div>' +
+      statusHtml + '</div>';
 
-    if (!hasOverride && (!isFrei || isSick)) {
-      card.onclick = function() { toggleSick(person.name); };
+    // Vorschlag-Zeile (wenn Vorschlag existiert und nicht bestätigt)
+    var proposalHtml = '';
+    if (hasProposal && !isSick) {
+      var dur = 0;
+      try {
+        var pp = proposal.split('-');
+        dur = (parseTime(pp[1]) - parseTime(pp[0])) / 60;
+      } catch(e) {}
+
+      var chips = '';
+      if (dur > 6) chips += '<span class="proposal-chip warn">\u26A0 ' + dur.toFixed(1) + 'h — Pause einplanen</span>';
+      else if (dur > 0) chips += '<span class="proposal-chip ok">\u2713 ' + dur.toFixed(1) + 'h</span>';
+      if (person.type === 'FK') chips += '<span class="proposal-chip ok">Fachkraft</span>';
+      if (origShift === 'FREI') chips += '<span class="proposal-chip info">Hat frei → einspringen</span>';
+      else chips += '<span class="proposal-chip info">Schicht verschieben</span>';
+
+      proposalHtml = '<div class="staff-proposal">' +
+        '<div class="proposal-row">' +
+        '<span class="proposal-label">Vorschlag:</span>' +
+        '<input type="text" class="proposal-input" id="prop-' + person.name + '" value="' + proposal + '" ' +
+        'onchange="updateProposal(\'' + person.name + '\')" onclick="event.stopPropagation()">' +
+        '<button class="proposal-clear" onclick="event.stopPropagation(); clearProposal(\'' + person.name + '\')" title="Vorschlag löschen">\u2715</button>' +
+        '<button class="btn-anfragen" onclick="event.stopPropagation(); scrollToDetail(\'' + person.name + '\')">\uD83D\uDCF2 Anfragen</button>' +
+        '</div>' +
+        (chips ? '<div class="proposal-chips">' + chips + '</div>' : '') +
+        '</div>';
     }
 
+    // Zugesagt-Zeile (bei Override)
+    var acceptedHtml = '';
+    if (hasOverride) {
+      acceptedHtml = '<div class="staff-accepted">' +
+        '<span class="accepted-text">\u2713 Schicht bestätigt: ' + effectiveShift + '</span>' +
+        '<button class="btn-undo" onclick="event.stopPropagation(); undoResponse(\'' + person.name + '\')">\u21A9 Zurück</button>' +
+        '</div>';
+    }
+
+    card.innerHTML = mainHtml + proposalHtml + acceptedHtml;
     container.appendChild(card);
   });
 }
@@ -1131,973 +726,356 @@ function toggleSick(name) {
     delete sickStaff[key];
   } else {
     sickStaff[key] = true;
+    delete proposedShifts[key]; // Kranke Person hat keinen Vorschlag
+    delete shiftOverrides[key];
+    delete subResponses[key];
   }
-  renderDay();
+  // Proposals neu generieren für geänderte Situation
+  var keepProposals = {};
+  Object.keys(proposedShifts).forEach(function(k) {
+    if (proposedShifts[k] !== undefined) keepProposals[k] = proposedShifts[k];
+  });
+  proposedShifts = keepProposals;
+  generateProposals();
+  renderStaff();
+  updateAmpel();
+  updateHours();
+  renderDetailCards();
+  updateElternBtn();
 }
 
 // ==========================================
-// AMPEL + ÖFFNUNGSZEITEN
+// VORSCHLAG BEARBEITEN
 // ==========================================
+function updateProposal(name) {
+  var input = document.getElementById('prop-' + name);
+  if (!input) return;
+  var val = input.value.trim();
+  var key = name + '-' + selectedDay;
 
-function getEffectiveShift(person, dayIndex) {
-  var key = person.name + '-' + dayIndex;
-  if (shiftOverrides[key]) return shiftOverrides[key];
-  return person.shifts[dayIndex];
-}
-
-function getActiveStaff(dayIndex) {
-  var active = [];
-  STAFF.forEach(function(person) {
-    var shift = getEffectiveShift(person, dayIndex);
-    var key = person.name + '-' + dayIndex;
-    if (shift !== 'FREI' && !sickStaff[key]) {
-      var parts = shift.split('-');
-      var start = parseTime(parts[0]);
-      var end = parseTime(parts[1]);
-      active.push({
-        name: person.name,
-        type: person.type,
-        isFK: person.type === 'FK',
-        isEK: person.type === 'EK',
-        start: start,
-        end: end
-      });
-    }
-  });
-  return active;
-}
-
-function parseTime(str) {
-  var parts = str.split(':').map(Number);
-  return parts[0] * 60 + parts[1];
-}
-
-function formatTime(minutes) {
-  var h = Math.floor(minutes / 60);
-  var m = minutes % 60;
-  return h.toString().padStart(2,'0') + ':' + m.toString().padStart(2,'0');
-}
-
-function computeOpeningWindow(active) {
-  if (active.length === 0) {
-    return { start: null, end: null, status: 'GESCHLOSSEN', fkStart: null, fkEnd: null };
-  }
-
-  var rasterStart = 7 * 60;
-  var rasterEnd = 17 * 60;
-
-  var fkStart = null, fkEnd = null;
-  var notStart = null, notEnd = null;
-
-  for (var t = rasterStart; t <= rasterEnd; t += 5) {
-    var fkCount = 0, total = 0;
-    active.forEach(function(s) {
-      if (t >= s.start && t < s.end) {
-        total++;
-        if (s.isFK) fkCount++;
-      }
-    });
-
-    if (fkCount >= 2) {
-      if (fkStart === null) fkStart = t;
-      fkEnd = t + 5;
-    }
-    if (fkCount >= 1 && total >= 2) {
-      if (notStart === null) notStart = t;
-      notEnd = t + 5;
-    }
-  }
-
-  if (fkStart !== null) {
-    var oStart = fkStart;
-    var oEnd = fkEnd;
-    if (notStart !== null && notStart < fkStart) {
-      oStart = Math.max(notStart, fkStart - 30);
-    }
-    if (notEnd !== null && notEnd > fkEnd) {
-      oEnd = Math.min(notEnd, fkEnd + 30);
-    }
-    return { start: oStart, end: oEnd, status: 'OK', fkStart: fkStart, fkEnd: fkEnd };
-  }
-
-  if (notStart !== null) {
-    return { start: notStart, end: Math.min(notEnd, notStart + 30), status: 'NOTBETRIEB', fkStart: null, fkEnd: null };
-  }
-
-  return { start: null, end: null, status: 'GESCHLOSSEN', fkStart: null, fkEnd: null };
-}
-
-function isHoursReduced() {
-  var active = getActiveStaff(selectedDay);
-  var win = computeOpeningWindow(active);
-  if (win.status === 'GESCHLOSSEN') return true;
-  if (win.start > parseTime('07:30') || win.end < parseTime('16:30')) return true;
-  return false;
-}
-
-function updateAmpel() {
-  var active = getActiveStaff(selectedDay);
-  var fkCount = active.filter(function(s) { return s.isFK; }).length;
-  var ekCount = active.filter(function(s) { return s.isEK; }).length;
-  var win = computeOpeningWindow(active);
-
-  var banner = document.getElementById('ampelBanner');
-  var label = document.getElementById('ampelLabel');
-  var detail = document.getElementById('ampelDetail');
-
-  banner.className = 'ampel-banner';
-
-  if (win.status === 'OK' && fkCount >= 2) {
-    banner.classList.add('green');
-    banner.querySelector('.ampel-dot').textContent = '\u2713';
-    label.textContent = 'Personaldecke OK';
-    detail.textContent = fkCount + ' FK, ' + ekCount + ' EK anwesend';
-  } else if (win.status === 'NOTBETRIEB' || (win.status === 'OK' && fkCount < 3)) {
-    banner.classList.add('orange');
-    banner.querySelector('.ampel-dot').textContent = '\u26A0';
-    label.textContent = 'Eingeschränkter Betrieb';
-    detail.textContent = 'Nur ' + fkCount + ' FK \u2014 reduzierte Öffnungszeiten';
-  }
-
-  if (win.status === 'GESCHLOSSEN') {
-    banner.classList.add('red');
-    banner.querySelector('.ampel-dot').textContent = '\u2717';
-    label.textContent = 'Kita geschlossen';
-    detail.textContent = 'Weniger als 2 Fachkräfte (KiBiz)';
-  }
-}
-
-function updateHours() {
-  var active = getActiveStaff(selectedDay);
-  var win = computeOpeningWindow(active);
-  var content = document.getElementById('hoursContent');
-
-  if (win.status === 'GESCHLOSSEN') {
-    content.innerHTML =
-      '<div class="hours-row">' +
-        '<span class="hours-label">Regulär</span>' +
-        '<span class="hours-value normal">' + NORMAL_HOURS + '</span>' +
-      '</div>' +
-      '<div class="hours-row">' +
-        '<span class="hours-label">' + DAYS_FULL[selectedDay] + '</span>' +
-        '<span class="hours-value closed">GESCHLOSSEN</span>' +
-      '</div>';
-  } else {
-    var reduced = formatTime(win.start) + ' \u2013 ' + formatTime(win.end);
-    var isReduced = win.start > parseTime('07:30') || win.end < parseTime('16:30');
-    content.innerHTML =
-      '<div class="hours-row">' +
-        '<span class="hours-label">Regulär</span>' +
-        '<span class="hours-value normal">' + NORMAL_HOURS + '</span>' +
-      '</div>' +
-      '<div class="hours-row">' +
-        '<span class="hours-label">' + DAYS_FULL[selectedDay] + '</span>' +
-        '<span class="hours-value ' + (isReduced ? 'reduced' : 'normal') + '">' + reduced + '</span>' +
-      '</div>';
-  }
-}
-
-function updateSearchBtn() {
-  var hasSick = Object.keys(sickStaff).some(function(k) { return k.endsWith('-' + selectedDay); });
-  var btn = document.getElementById('searchSubBtn');
-  var reduced = isHoursReduced();
-
-  if (hasSick) {
-    btn.disabled = false;
-    btn.textContent = '\uD83D\uDD0D Vertretung suchen';
-    btn.className = 'action-btn primary';
-  } else if (reduced) {
-    btn.disabled = false;
-    btn.textContent = '\uD83D\uDCCB Dienstplan optimieren — Erzieherinnen kontaktieren';
-    btn.className = 'action-btn secondary';
-  } else {
-    btn.disabled = true;
-    btn.textContent = 'Alles OK — volle Öffnungszeiten';
-    btn.className = 'action-btn primary';
-  }
-}
-
-// ==========================================
-// SCHRITT 2: VERTRETUNG SUCHEN / OPTIMIEREN
-// ==========================================
-
-function searchSubstitutes() {
-  var dayName = DAYS_FULL[selectedDay];
-  var dayDate = DATES[selectedDay];
-
-  // Wer ist krank?
-  var sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
-  var sickNames = sickToday.map(function(p) { return p.name; });
-
-  // Modus erkennen
-  optimizeMode = sickToday.length === 0;
-
-  // Header und Hinweis anpassen
-  var header = document.getElementById('subSectionHeader');
-  var hinweis = document.getElementById('stufigHinweis');
-  if (optimizeMode) {
-    header.textContent = 'Dienstplan optimieren — Erzieherinnen anfragen';
-    hinweis.innerHTML = '<strong>Öffnungszeiten verbessern:</strong> Die aktuellen Schichten ergeben reduzierte Öffnungszeiten. Frage Erzieherinnen, ob sie ihre Schicht anpassen können.';
-  } else {
-    header.textContent = 'Schritt 1 — Vertretung suchen';
-    hinweis.innerHTML = '<strong>Gestufter Prozess:</strong> Frage erst die beste Option. Bei Absage → nächste Person fragen. So vermeidest du unnötige Anfragen.';
-  }
-
-  // Aktive nach Krankheit/Overrides
-  var active = getActiveStaff(selectedDay);
-  var fkCount = active.filter(function(s) { return s.isFK; }).length;
-
-  // Wer hat FREI und könnte einspringen?
-  var freeToday = STAFF.filter(function(p) {
-    return p.shifts[selectedDay] === 'FREI' && !sickStaff[p.name + '-' + selectedDay];
-  });
-
-  // Wer arbeitet, könnte aber Schicht verschieben/verlängern?
-  var shiftable = STAFF.filter(function(p) {
-    var shift = p.shifts[selectedDay];
-    return shift !== 'FREI' && !sickStaff[p.name + '-' + selectedDay];
-  });
-
-  // Berechne was gebraucht wird
-  var win = computeOpeningWindow(active);
-  var needEarly = false, needLate = false, needFK = fkCount < 2;
-
-  // Zeitfenster-Analyse: Ziel ist 07:30-16:30 volle Abdeckung
-  var gapStart = null, gapEnd = null;
-  var TARGET_START = parseTime('07:30');
-  var TARGET_END = parseTime('16:30');
-  if (win.status !== 'GESCHLOSSEN') {
-    // Prüfe ob Öffnungszeiten das Ziel 07:30-16:30 nicht erreichen
-    if (win.start > TARGET_START) needEarly = true;
-    if (win.end < TARGET_END) needLate = true;
-  } else {
-    // Geschlossen = beides nötig
-    needEarly = true;
-    needLate = true;
-  }
-
-  // Kranke Personen Schichten für Gap-Berechnung
-  sickToday.forEach(function(p) {
-    var shift = p.shifts[selectedDay];
-    if (shift !== 'FREI') {
-      var parts = shift.split('-');
-      var s = parseTime(parts[0]);
-      var e = parseTime(parts[1]);
-      if (gapStart === null || s < gapStart) gapStart = s;
-      if (gapEnd === null || e > gapEnd) gapEnd = e;
-    }
-  });
-
-  // Im Optimier-Modus: Lücken aus reduzierten Öffnungszeiten ableiten
-  if (optimizeMode && win.status !== 'GESCHLOSSEN') {
-    if (win.start > parseTime('07:30')) {
-      gapStart = parseTime('07:30');
-      if (!gapEnd || gapEnd < win.start) gapEnd = win.start + 60;
-    }
-    if (win.end < parseTime('16:30')) {
-      if (!gapStart) gapStart = win.end - 60;
-      gapEnd = parseTime('16:30');
-    }
-  }
-
-  // Vertretungs-Optionen generieren
-  var options = [];
-  var priority = 1;
-
-  // Option A: Freie Personen (beste Option)
-  freeToday.forEach(function(person) {
-    var suggestedShift = formatTime(gapStart || parseTime('08:00')) + '-' + formatTime(gapEnd || parseTime('14:30'));
-    var shiftDuration = ((gapEnd || parseTime('14:30')) - (gapStart || parseTime('08:00'))) / 60;
-
-    var constraints = [];
-    if (shiftDuration > 6) {
-      constraints.push({ type: 'warn', text: '>' + Math.round(shiftDuration) + 'h = Pause nötig' });
-      var maxEnd = (gapStart || parseTime('08:00')) + 360;
-      suggestedShift = formatTime(gapStart || parseTime('08:00')) + '-' + formatTime(Math.min(maxEnd, gapEnd || parseTime('14:30')));
-      shiftDuration = Math.min(6, shiftDuration);
-    }
-
-    if (shiftDuration <= 6) {
-      constraints.push({ type: 'ok', text: shiftDuration.toFixed(1) + 'h ohne Pause OK' });
-    }
-
-    if (person.type === 'FK') {
-      constraints.push({ type: 'ok', text: 'Fachkraft \u2192 FK-Schlüssel' });
-    }
-
-    options.push({
-      person: person,
-      type: 'frei',
-      priority: person.type === 'FK' ? 'high' : 'medium',
-      priorityNum: priority++,
-      suggestedShift: suggestedShift,
-      constraints: constraints,
-      reason: 'Hat ' + dayName + ' frei'
-    });
-  });
-
-  // Option B: Schicht verschieben/verlängern
-  shiftable.forEach(function(person) {
-    var shift = person.shifts[selectedDay];
-    var parts = shift.split('-');
-    var pStart = parseTime(parts[0]);
-    var pEnd = parseTime(parts[1]);
-
-    var suggestion = null;
-    var constraints = [];
-
-    // Kann früher kommen? (Ziel: 07:30 Öffnung)
-    if (needEarly && pStart > TARGET_START) {
-      var newStart = Math.max(TARGET_START, pStart - 90);
-      var newDuration = (pEnd - newStart) / 60;
-
-      if (newDuration > 6) {
-        var newEnd = newStart + 360;
-        constraints.push({ type: 'warn', text: 'Nur bis ' + formatTime(newEnd) + ' (6h-Regel)' });
-        suggestion = formatTime(newStart) + '-' + formatTime(newEnd);
-      } else {
-        constraints.push({ type: 'ok', text: newDuration.toFixed(1) + 'h ohne Pause OK' });
-        suggestion = formatTime(newStart) + '-' + formatTime(pEnd);
-      }
-    }
-    // Kann länger bleiben? (Ziel: 16:30 Schließung)
-    else if (needLate && pEnd < TARGET_END) {
-      var newEnd2 = Math.min(TARGET_END, pEnd + 90);
-      var newDuration2 = (newEnd2 - pStart) / 60;
-
-      if (newDuration2 > 6) {
-        constraints.push({ type: 'warn', text: 'Nur bis ' + formatTime(pStart + 360) + ' (6h-Regel)' });
-        suggestion = formatTime(pStart) + '-' + formatTime(pStart + 360);
-      } else {
-        constraints.push({ type: 'ok', text: newDuration2.toFixed(1) + 'h ohne Pause OK' });
-        suggestion = formatTime(pStart) + '-' + formatTime(newEnd2);
-      }
-    }
-
-    if (suggestion && suggestion !== shift) {
-      if (person.type === 'FK') {
-        constraints.push({ type: 'ok', text: 'Fachkraft' });
-      }
-
-      options.push({
-        person: person,
-        type: 'verschieben',
-        priority: person.type === 'FK' ? 'high' : 'medium',
-        priorityNum: priority++,
-        suggestedShift: suggestion,
-        currentShift: shift,
-        constraints: constraints,
-        reason: 'Aktuell ' + shift + ' \u2192 verschieben'
-      });
-    }
-  });
-
-  // Optionen cachen für markResponse + reRender
-  lastOptions = options;
-  lastSickNames = sickNames;
-  lastDayName = dayName;
-  lastDayDate = dayDate;
-
-  // Rendern
-  renderSubstitutes(options, sickNames, dayName, dayDate);
-
-  // Prozess-Schritte
-  var steps = document.getElementById('processSteps');
-  if (optimizeMode) {
-    steps.style.display = 'none';
-  } else {
-    steps.style.display = 'flex';
-    document.getElementById('step1').className = 'process-step done';
-    document.getElementById('step2').className = 'process-step active';
-    document.getElementById('step3').className = 'process-step';
-  }
-
-  // Eltern-Button im Optimiermodus ausblenden
-  document.getElementById('noSubBtn').style.display = optimizeMode ? 'none' : 'block';
-
-  var section = document.getElementById('subSection');
-  section.classList.add('visible');
-  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function renderSubstitutes(options, sickNames, dayName, dayDate) {
-  var container = document.getElementById('subList');
-  container.innerHTML = '';
-
-  if (options.length === 0) {
-    document.getElementById('noSubAvailable').style.display = 'block';
+  if (!/^\d{2}:\d{2}-\d{2}:\d{2}$/.test(val)) {
+    showToast('Format: HH:MM-HH:MM');
     return;
   }
-  document.getElementById('noSubAvailable').style.display = 'none';
+  proposedShifts[key] = val;
+  updateHours();
+  renderDetailCards();
+  showToast('Vorschlag aktualisiert: ' + val);
+}
 
-  // Sortieren: FK zuerst, dann freie vor verschieben
-  options.sort(function(a, b) {
-    if (a.person.type !== b.person.type) return a.person.type === 'FK' ? -1 : 1;
-    if (a.type !== b.type) return a.type === 'frei' ? -1 : 1;
-    return 0;
-  });
+function clearProposal(name) {
+  var key = name + '-' + selectedDay;
+  proposedShifts[key] = null; // null = user cleared, don't regenerate
+  renderStaff();
+  updateHours();
+  renderDetailCards();
+}
 
-  // Priorität neu nummerieren nach Sortierung
-  options.forEach(function(opt, i) { opt.priorityNum = i + 1; });
+// ==========================================
+// DETAIL-KARTEN (Nachrichten)
+// ==========================================
+function renderDetailCards() {
+  var container = document.getElementById('detailList');
+  container.innerHTML = '';
 
-  options.forEach(function(opt, idx) {
-    var card = document.createElement('div');
-    card.className = 'sub-card' + (opt.constraints.some(function(c) { return c.type === 'warn'; }) ? ' warning' : '');
-    card.id = 'sub-' + opt.person.name + '-' + selectedDay;
+  var dayName = DAYS_FULL[selectedDay];
+  var dayDate = DATES[selectedDay];
+  var sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
+  var sickNames = sickToday.map(function(p) { return p.name; });
+  var hasSick = sickNames.length > 0;
 
-    var initials = opt.person.name.substring(0, 2).toUpperCase();
-    var typeLabel = opt.type === 'frei' ? 'Hat frei \u2192 einspringen' : 'Schicht verschieben';
-
-    // WhatsApp-Nachricht generieren
-    var waMsg = '';
-    if (optimizeMode) {
-      if (opt.type === 'frei') {
-        waMsg = 'Hey ' + opt.person.name + ',\n\n' +
-          'wir haben am ' + dayName + ' (' + dayDate + ') gerade reduzierte Öffnungszeiten.\n\n' +
-          'Könntest du einspringen? Wir bräuchten dich von ' + opt.suggestedShift + '.\n\n' +
-          'Wäre das möglich? Gib kurz Bescheid!';
-      } else {
-        waMsg = 'Hey ' + opt.person.name + ',\n\n' +
-          'wir haben am ' + dayName + ' (' + dayDate + ') gerade reduzierte Öffnungszeiten.\n\n' +
-          'Könntest du deine Schicht von ' + opt.currentShift + ' auf ' + opt.suggestedShift + ' verschieben?\n\n' +
-          'Wäre das möglich? Gib kurz Bescheid!';
-      }
-    } else {
-      if (opt.type === 'frei') {
-        waMsg = 'Hey ' + opt.person.name + ',\n\n' +
-          sickNames.join(' und ') + (sickNames.length > 1 ? ' sind' : ' ist') + ' am ' + dayName + ' (' + dayDate + ') krank.\n\n' +
-          'Könntest du einspringen? Wir bräuchten dich von ' + opt.suggestedShift + '.\n\n' +
-          'Wäre das möglich? Gib kurz Bescheid!';
-      } else {
-        waMsg = 'Hey ' + opt.person.name + ',\n\n' +
-          sickNames.join(' und ') + (sickNames.length > 1 ? ' sind' : ' ist') + ' am ' + dayName + ' (' + dayDate + ') krank.\n\n' +
-          'Könntest du deine Schicht von ' + opt.currentShift + ' auf ' + opt.suggestedShift + ' verschieben?\n\n' +
-          'Wäre das möglich? Gib kurz Bescheid!';
-      }
-    }
-
-    // Constraints HTML
-    var constraintsHtml = '<div class="constraint-chips">';
-    opt.constraints.forEach(function(c) {
-      constraintsHtml += '<span class="constraint-chip ' + c.type + '">' + (c.type === 'ok' ? '\u2713 ' : '\u26A0 ') + c.text + '</span>';
-    });
-    constraintsHtml += '</div>';
-
-    var key = opt.person.name + '-' + selectedDay;
+  // Karten für alle Personen mit Vorschlag oder Antwort
+  var hasCards = false;
+  STAFF.forEach(function(person) {
+    var key = person.name + '-' + selectedDay;
+    var proposal = proposedShifts[key];
+    var override = shiftOverrides[key];
     var response = subResponses[key];
+    var origShift = person.shifts[selectedDay];
 
-    var statusHtml = '';
-    if (response === 'ja') {
-      statusHtml = '<div class="anfrage-status ja">\u2713 Hat zugesagt! Schicht: ' + (shiftOverrides[key] || opt.suggestedShift) + '</div>';
-    } else if (response === 'nein') {
-      statusHtml = '<div class="anfrage-status nein">\u2717 Kann nicht</div>';
-    } else if (response === 'warten') {
-      statusHtml = '<div class="anfrage-status warten">\u23F3 Wartet auf Antwort...</div>';
+    // Karte zeigen wenn: Vorschlag vorhanden ODER Antwort vorhanden
+    if (!proposal && !override && !response) return;
+    hasCards = true;
+
+    var shift = proposal || override || origShift;
+    var initials = person.name.substring(0, 2).toUpperCase();
+    var isFrei = origShift === 'FREI';
+    var typeLabel = isFrei ? 'Einspringen: ' + shift : origShift + ' → ' + shift;
+
+    // WhatsApp-Nachricht
+    var waMsg = '';
+    var tplKey = isFrei ? 'frei' : 'verschieben';
+    var savedTpl = loadSubTemplate(tplKey);
+
+    if (savedTpl) {
+      waMsg = savedTpl;
+    } else if (hasSick) {
+      waMsg = 'Hey ' + person.name + ',\n\n' +
+        sickNames.join(' und ') + (sickNames.length > 1 ? ' sind' : ' ist') + ' am ' + dayName + ' (' + dayDate + ') krank.\n\n' +
+        (isFrei
+          ? 'Könntest du einspringen? Wir bräuchten dich von ' + shift + '.'
+          : 'Könntest du deine Schicht von ' + origShift + ' auf ' + shift + ' verschieben?') +
+        '\n\nWäre das möglich? Gib kurz Bescheid!';
+    } else {
+      waMsg = 'Hey ' + person.name + ',\n\n' +
+        'wir haben am ' + dayName + ' (' + dayDate + ') gerade reduzierte Öffnungszeiten.\n\n' +
+        (isFrei
+          ? 'Könntest du einspringen? Wir bräuchten dich von ' + shift + '.'
+          : 'Könntest du deine Schicht von ' + origShift + ' auf ' + shift + ' verschieben?') +
+        '\n\nWäre das möglich? Gib kurz Bescheid!';
     }
 
-    // WhatsApp-Direktlink
-    var waLink = buildWhatsAppLink(opt.person.phone, waMsg);
+    var waLink = buildWhatsAppLink(person.phone, waMsg);
 
-    // Editierbares Zeitfeld
-    var timeFieldHtml = '<div class="shift-time-row">' +
-      '<span class="shift-time-label">Vorgeschlagene Schicht:</span>' +
-      '<input type="text" class="shift-time-input" id="time-' + opt.person.name + '-' + idx + '" value="' + opt.suggestedShift + '" ' +
-      'onchange="updateShiftTime(\'' + opt.person.name + '\', ' + idx + ')">' +
-      '</div>';
+    // Status
+    var statusHtml = '';
+    if (response === 'ja') statusHtml = '<div class="anfrage-status ja">\u2713 Hat zugesagt!</div>';
+    else if (response === 'nein') statusHtml = '<div class="anfrage-status nein">\u2717 Kann nicht</div>';
+    else if (response === 'warten') statusHtml = '<div class="anfrage-status warten">\u23F3 Wartet auf Antwort...</div>';
 
     // Aktions-Buttons
-    var actionsHtml = '';
-    if (!response) {
-      actionsHtml =
-        '<div class="sub-card-actions">' +
-          '<a href="' + waLink + '" target="_blank" id="walink-' + opt.person.name + '-' + idx + '" class="btn-copy-wa">' +
-            '\uD83D\uDCF2 WhatsApp an ' + opt.person.name +
-          '</a>' +
+    var actions = '';
+    if (!response || response === 'warten') {
+      actions =
+        '<div class="detail-actions">' +
+          '<a href="' + waLink + '" target="_blank" id="walink-' + person.name + '" class="btn-wa-send">\uD83D\uDCF2 WhatsApp</a>' +
+          '<button class="btn-save-tpl" onclick="saveSubTplFromDetail(\'' + person.name + '\', \'' + tplKey + '\', this)">\uD83D\uDCBE Template</button>' +
         '</div>' +
-        '<div class="sub-card-actions" style="margin-top:6px;">' +
-          '<button class="btn-antwort-ja" onclick="markResponse(\'' + opt.person.name + '\', \'ja\')">' +
-            '\u2713 Zugesagt' +
-          '</button>' +
-          '<button class="btn-antwort-nein" onclick="markResponse(\'' + opt.person.name + '\', \'nein\')">' +
-            '\u2717 Absage' +
-          '</button>' +
-          '<button class="btn-skip" onclick="markResponse(\'' + opt.person.name + '\', \'warten\')">' +
-            '\u23F3 Warten' +
-          '</button>' +
+        '<div class="detail-actions" style="margin-top:6px;">' +
+          '<button class="btn-antwort-ja" onclick="markResponse(\'' + person.name + '\', \'ja\')">\u2713 Zugesagt</button>' +
+          '<button class="btn-antwort-nein" onclick="markResponse(\'' + person.name + '\', \'nein\')">\u2717 Absage</button>' +
+          (response !== 'warten' ? '<button class="btn-skip" onclick="markResponse(\'' + person.name + '\', \'warten\')">\u23F3 Warten</button>' : '') +
         '</div>';
-    } else if (response === 'warten') {
-      actionsHtml =
-        '<div class="sub-card-actions">' +
-          '<a href="' + waLink + '" target="_blank" id="walink-' + opt.person.name + '-' + idx + '" class="btn-copy-wa">' +
-            '\uD83D\uDCF2 Nochmal an ' + opt.person.name +
-          '</a>' +
-        '</div>' +
-        '<div class="sub-card-actions" style="margin-top:6px;">' +
-          '<button class="btn-antwort-ja" onclick="markResponse(\'' + opt.person.name + '\', \'ja\')">' +
-            '\u2713 Zugesagt' +
-          '</button>' +
-          '<button class="btn-antwort-nein" onclick="markResponse(\'' + opt.person.name + '\', \'nein\')">' +
-            '\u2717 Absage' +
-          '</button>' +
-        '</div>';
-    } else if (response === 'ja') {
-      actionsHtml =
-        '<div class="sub-card-actions">' +
-          '<button class="btn-undo" onclick="markResponse(\'' + opt.person.name + '\', \'reset\')">' +
-            '\u21A9 Rückgängig' +
-          '</button>' +
-        '</div>';
-    } else if (response === 'nein') {
-      actionsHtml =
-        '<div class="sub-card-actions">' +
-          '<button class="btn-undo" onclick="markResponse(\'' + opt.person.name + '\', \'reset\')">' +
-            '\u21A9 Rückgängig' +
-          '</button>' +
-        '</div>';
+    } else {
+      actions = '<div class="detail-actions"><button class="btn-undo" style="flex:1;" onclick="undoResponse(\'' + person.name + '\')">\u21A9 Rückgängig</button></div>';
     }
+
+    var card = document.createElement('div');
+    card.className = 'detail-card';
+    card.id = 'detail-' + person.name;
+    if (response === 'ja') { card.style.borderColor = '#c8e6c9'; }
+    else if (response === 'nein') { card.style.opacity = '0.5'; }
 
     card.innerHTML =
-      '<div class="sub-card-header">' +
-        '<div class="sub-card-avatar ' + opt.person.type.toLowerCase() + '">' + initials + '</div>' +
-        '<div class="sub-card-info">' +
-          '<div class="sub-card-name">' +
-            opt.person.name +
-            ' <span class="staff-badge ' + opt.person.type.toLowerCase() + '">' + opt.person.type + '</span>' +
-          '</div>' +
-          '<div class="sub-card-detail">' + typeLabel + ' \u2192 ' + opt.suggestedShift + '</div>' +
-        '</div>' +
-        '<div class="sub-card-priority ' + opt.priority + '">#' + opt.priorityNum + '</div>' +
+      '<div class="detail-card-header"' + (response === 'ja' ? ' style="background:var(--green-50);"' : '') + '>' +
+        '<div class="detail-card-avatar ' + person.type.toLowerCase() + '">' + initials + '</div>' +
+        '<div class="detail-card-info"><div class="detail-card-name">' + person.name + ' (' + person.type + ')</div>' +
+        '<div class="detail-card-shift">' + typeLabel + '</div></div>' +
       '</div>' +
-      '<div class="sub-card-body">' +
+      '<div class="detail-card-body">' +
         statusHtml +
-        constraintsHtml +
-        timeFieldHtml +
-        '<textarea class="wa-preview" id="wa-' + opt.person.name + '-' + idx + '" oninput="autoResize(this); updateSubWaLink(\'' + opt.person.name + '\', ' + idx + ')">' + waMsg + '</textarea>' +
-        '<div class="sub-card-actions" style="margin-bottom:8px;">' +
-          '<button class="btn-save-tpl" onclick="saveSubTemplate(\'' + opt.person.name + '\', ' + idx + ', \'' + opt.type + '\', this)">' +
-            '\uD83D\uDCBE Template speichern' +
-          '</button>' +
-        '</div>' +
-        actionsHtml +
+        '<textarea class="wa-preview" id="wa-' + person.name + '" oninput="autoResize(this); updateDetailWaLink(\'' + person.name + '\')">' + waMsg + '</textarea>' +
+        actions +
       '</div>';
-
-    // Styling je nach Status
-    if (response === 'ja') {
-      card.style.borderColor = '#c8e6c9';
-      card.querySelector('.sub-card-header').style.background = '#e8f5e9';
-    } else if (response === 'nein') {
-      card.style.opacity = '0.5';
-    }
 
     container.appendChild(card);
   });
 
-  // Alle Textareas auto-resizen
+  document.getElementById('detailSection').style.display = hasCards ? 'block' : 'none';
   setTimeout(autoResizeAll, 10);
 }
 
-// Letzte Optionen + Kontext merken für re-render
-var lastOptions = [];
-var lastSickNames = [];
-var lastDayName = '';
-var lastDayDate = '';
-
-function reRenderSubstitutes() {
-  // Optionen beibehalten, nur UI neu rendern (keine Neuberechnung)
-  renderSubstitutes(lastOptions, lastSickNames, lastDayName, lastDayDate);
+function scrollToDetail(name) {
+  var el = document.getElementById('detail-' + name);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.style.transition = 'box-shadow 0.3s';
+    el.style.boxShadow = '0 0 0 3px var(--teal-500)';
+    setTimeout(function() { el.style.boxShadow = ''; }, 2000);
+  }
 }
 
+function updateDetailWaLink(name) {
+  var el = document.getElementById('wa-' + name);
+  var link = document.getElementById('walink-' + name);
+  if (!el || !link) return;
+  var person = STAFF.find(function(p) { return p.name === name; });
+  link.href = buildWhatsAppLink(person ? person.phone : '', el.value);
+}
+
+// ==========================================
+// ANTWORTEN VERARBEITEN
+// ==========================================
 function markResponse(name, response) {
   var key = name + '-' + selectedDay;
 
-  if (response === 'reset') {
-    delete subResponses[key];
-    delete shiftOverrides[key];
-    showToast('\u21A9 ' + name + ' — Antwort zurückgesetzt');
-  } else if (response === 'ja') {
-    subResponses[key] = response;
-    // Finde die Option und setze Shift-Override (aus Zeitfeld lesen falls geändert)
-    var opt = lastOptions.find(function(o) { return o.person.name === name; });
-    if (opt) {
-      var idx = lastOptions.indexOf(opt);
-      var timeInput = document.getElementById('time-' + name + '-' + idx);
-      var shiftValue = timeInput ? timeInput.value.trim() : opt.suggestedShift;
-      shiftOverrides[key] = shiftValue;
+  if (response === 'ja') {
+    subResponses[key] = 'ja';
+    // Vorschlag wird zum Override
+    var shift = proposedShifts[key];
+    if (shift) {
+      shiftOverrides[key] = shift;
+      delete proposedShifts[key];
     }
     showToast('\u2713 ' + name + ' hat zugesagt! Öffnungszeiten aktualisiert.');
   } else if (response === 'nein') {
-    subResponses[key] = response;
+    subResponses[key] = 'nein';
     delete shiftOverrides[key];
+    showToast('\u2717 ' + name + ' kann nicht.');
   } else {
     subResponses[key] = response;
   }
 
-  // Alles neu rendern
   renderStaff();
   updateAmpel();
   updateHours();
-  updateSearchBtn();
-
-  // Vertretungs-Bereich neu rendern — aber Optionen beibehalten
-  reRenderSubstitutes();
+  renderDetailCards();
+  updateElternBtn();
 }
 
-function updateShiftTime(name, idx) {
-  var timeInput = document.getElementById('time-' + name + '-' + idx);
-  if (!timeInput) return;
-  var newTime = timeInput.value.trim();
-
-  // Validierung: Format HH:MM-HH:MM
-  if (!/^\d{2}:\d{2}-\d{2}:\d{2}$/.test(newTime)) {
-    showToast('Format: HH:MM-HH:MM (z.B. 08:00-14:00)');
-    return;
-  }
-
+function undoResponse(name) {
   var key = name + '-' + selectedDay;
-
-  // Option aktualisieren
-  var opt = lastOptions.find(function(o) { return o.person.name === name; });
-  if (opt) {
-    opt.suggestedShift = newTime;
-  }
-
-  // Falls bereits zugesagt: Override sofort aktualisieren
-  if (subResponses[key] === 'ja') {
-    shiftOverrides[key] = newTime;
-    renderStaff();
-    updateAmpel();
-    updateHours();
-    updateSearchBtn();
-  }
-
-  // WhatsApp-Nachricht aktualisieren
-  var waEl = document.getElementById('wa-' + name + '-' + idx);
-  if (waEl) {
-    var text = waEl.value;
-    // Alte Schichtzeit im Text ersetzen
-    text = text.replace(/\d{2}:\d{2}-\d{2}:\d{2}/g, newTime);
-    waEl.value = text;
-    autoResize(waEl);
-    updateSubWaLink(name, idx);
-  }
-
-  // Detail-Text aktualisieren
-  var card = document.getElementById('sub-' + name + '-' + selectedDay);
-  if (card) {
-    var detail = card.querySelector('.sub-card-detail');
-    if (detail && opt) {
-      var typeLabel = opt.type === 'frei' ? 'Hat frei \u2192 einspringen' : 'Schicht verschieben';
-      detail.textContent = typeLabel + ' \u2192 ' + newTime;
-    }
-  }
-
-  showToast('Schichtzeit aktualisiert: ' + newTime);
-}
-
-function updateSubWaLink(name, idx) {
-  var el = document.getElementById('wa-' + name + '-' + idx);
-  var link = document.getElementById('walink-' + name + '-' + idx);
-  if (!el || !link) return;
-  var text = el.value;
-  var person = STAFF.find(function(p) { return p.name === name; });
-  link.href = buildWhatsAppLink(person ? person.phone : '', text);
+  delete subResponses[key];
+  delete shiftOverrides[key];
+  // Vorschlag neu generieren lassen
+  delete proposedShifts[key];
+  generateProposals();
+  renderStaff();
+  updateAmpel();
+  updateHours();
+  renderDetailCards();
+  updateElternBtn();
+  showToast('\u21A9 ' + name + ' — zurückgesetzt');
 }
 
 // ==========================================
-// SCHRITT 3: ELTERN-NACHRICHTEN
+// ELTERN-BEREICH
 // ==========================================
+function updateElternBtn() {
+  var hasSick = Object.keys(sickStaff).some(function(k) { return k.endsWith('-' + selectedDay); });
+  document.getElementById('elternBtnWrap').style.display = hasSick ? 'block' : 'none';
+}
 
 function showParentMessages() {
   generateMessages();
-
-  document.getElementById('step2').className = 'process-step done';
-  document.getElementById('step3').className = 'process-step active';
-
-  var section = document.getElementById('messagesSection');
-  section.classList.add('visible');
-  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  // Textareas auto-resizen
+  var s = document.getElementById('messagesSection');
+  s.classList.add('visible');
+  s.scrollIntoView({ behavior: 'smooth', block: 'start' });
   setTimeout(autoResizeAll, 10);
 }
 
 function generateMessages() {
   var dayName = DAYS_FULL[selectedDay];
   var dayDate = DATES[selectedDay];
-
   var sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
   var sickNames = sickToday.map(function(p) { return p.name; }).join(' und ');
-
   var active = getActiveStaff(selectedDay);
   var win = computeOpeningWindow(active);
 
-  // Betreuungszeiten berechnen
   var zeitenText = '';
   if (win.status === 'GESCHLOSSEN') {
     zeitenText = dayName + ': Kita geschlossen';
   } else {
-    var startStr = formatTime(win.start);
-    var endStr = formatTime(win.end);
-    zeitenText = dayName + ' ' + dayDate + ' --- ' + startStr.replace(':', '.') + '-' + endStr.replace(':', '.');
-    if (win.start > parseTime('07:30') || win.end < parseTime('16:30')) {
-      zeitenText += ' !';
-    }
+    zeitenText = dayName + ' ' + dayDate + ' --- ' + formatTime(win.start).replace(':','.') + '-' + formatTime(win.end).replace(':','.');
+    if (win.start > TARGET_START || win.end < TARGET_END) zeitenText += ' !';
   }
 
-  // ===== Nachricht 1: Wichtige Info (Denise-Stil) =====
   var tpl1 = loadTemplate(1);
-  var msg1;
-  if (tpl1) {
-    msg1 = fillTemplate(tpl1, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText });
-  } else {
-    msg1 = 'Wichtige Info für ' + (selectedDay === 0 ? 'morgen' : dayName) + ', ' + dayDate + '\n\n' +
-      sickNames + ' fällt leider krankheitsbedingt aus' +
-      (sickToday.length > 1 ? '.' : ', daher bin ich gerade dabei umzuplanen.') + '\n\n' +
-      'Auf Grund dessen ändern sich die Betreuungszeiten wie folgt:\n\n' +
-      zeitenText + '\n\n' +
-      'Bitte schaut, dass ihr mind. 5min vor Ende dieser Zeit da seid und mit euren Kindern pünktlich die Kita verlasst.';
-  }
+  var msg1 = tpl1 ? fillTemplate(tpl1, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText }) :
+    'Wichtige Info für ' + (selectedDay === 0 ? 'morgen' : dayName) + ', ' + dayDate + '\n\n' +
+    sickNames + ' fällt leider krankheitsbedingt aus, daher bin ich gerade dabei umzuplanen.\n\n' +
+    'Auf Grund dessen ändern sich die Betreuungszeiten wie folgt:\n\n' + zeitenText + '\n\n' +
+    'Bitte schaut, dass ihr mind. 5min vor Ende dieser Zeit da seid und mit euren Kindern pünktlich die Kita verlasst.';
 
-  // ===== Poll-Optionen generieren =====
   var pollTitle = 'Abfrage für ' + dayName + ', ' + dayDate;
   var pollOpts = [];
   if (win.status !== 'GESCHLOSSEN') {
-    var startF = formatTime(win.start).replace(':', '.');
-    var endF = formatTime(win.end).replace(':', '.');
-    if (win.start > parseTime('07:30')) {
-      pollOpts.push('Mein Kind braucht ab ' + startF + ' Betreuung (Max 5)');
-    }
-    pollOpts.push('Mein Kind kann ab ' + (win.start > parseTime('08:30') ? startF : '9Uhr') + ' kommen.');
-    if (win.end < parseTime('16:30')) {
-      pollOpts.push('Mein Kind braucht von ' + endF + '-16.00 noch Betreuung (Max 5)');
-    }
+    var sF = formatTime(win.start).replace(':','.');
+    var eF = formatTime(win.end).replace(':','.');
+    if (win.start > TARGET_START) pollOpts.push('Mein Kind braucht ab ' + sF + ' Betreuung (Max 5)');
+    pollOpts.push('Mein Kind kann ab ' + (win.start > parseTime('08:30') ? sF : '9Uhr') + ' kommen.');
+    if (win.end < TARGET_END) pollOpts.push('Mein Kind braucht von ' + eF + '-16.30 noch Betreuung (Max 5)');
     pollOpts.push('Mein Kind kommt am ' + dayName + ' nicht.');
   }
-
   document.getElementById('pollTitle').textContent = pollTitle;
-  var pollHtml = '';
-  pollOpts.forEach(function(opt) {
-    pollHtml += '<div class="poll-option"><div class="poll-circle"></div><span>' + opt + '</span></div>';
-  });
-  document.getElementById('pollOptions').innerHTML = pollHtml;
+  document.getElementById('pollOptions').innerHTML = pollOpts.map(function(o) {
+    return '<div class="poll-option"><div class="poll-circle"></div><span>' + o + '</span></div>';
+  }).join('');
 
-  // ===== Nachricht 2: Finale Info (Denise-Stil) =====
   var tpl2 = loadTemplate(2);
-  var msg2;
-  if (tpl2) {
-    msg2 = fillTemplate(tpl2, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText });
-  } else {
-    if (win.status === 'GESCHLOSSEN') {
-      msg2 = 'Betreuungszeit ' + dayName + ', ' + dayDate + '\n\n' +
-        'Leider müssen wir die Kita am ' + dayName + ' geschlossen halten.\n\n' +
-        'Bitte organisiert alternative Betreuung für eure Kinder.';
-    } else {
-      var startF2 = formatTime(win.start).replace(':', '.');
-      var endF2 = formatTime(win.end).replace(':', '.');
-      msg2 = 'Betreuungszeit ' + (selectedDay === 0 ? 'morgen' : dayName) + ', ' + dayDate + '\n\n' +
-        startF2 + '-' + endF2 + ' alle Kinder\n\n' +
-        'Die finalen Öffnungszeiten stehen fest. Bitte haltet euch an die Zeiten.';
-    }
-  }
+  var msg2 = tpl2 ? fillTemplate(tpl2, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText }) :
+    (win.status === 'GESCHLOSSEN'
+      ? 'Betreuungszeit ' + dayName + ', ' + dayDate + '\n\nLeider müssen wir die Kita am ' + dayName + ' geschlossen halten.\n\nBitte organisiert alternative Betreuung für eure Kinder.'
+      : 'Betreuungszeit ' + (selectedDay === 0 ? 'morgen' : dayName) + ', ' + dayDate + '\n\n' + formatTime(win.start).replace(':','.') + '-' + formatTime(win.end).replace(':','.') + ' alle Kinder\n\nDie finalen Öffnungszeiten stehen fest. Bitte haltet euch an die Zeiten.');
 
-  // ===== Nachricht 3: Kita geschlossen (Denise-Stil) =====
   var tpl3 = loadTemplate(3);
-  var msg3;
-  if (tpl3) {
-    msg3 = fillTemplate(tpl3, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText });
-  } else {
-    msg3 = 'Wichtige Info für ' + dayName + ', ' + dayDate + '\n\n' +
-      'Auf Grund von krankheitsbedingten Ausfällen müssen wir die Kita am ' + dayName + ' leider geschlossen halten.\n\n' +
-      'Grund: Weniger als 2 Fachkräfte anwesend (KiBiz-Vorschrift).\n\n' +
-      'Bitte organisiert alternative Betreuung für eure Kinder.\n\n' +
-      'Entschuldigt die kurzfristige Absage.';
-  }
+  var msg3 = tpl3 ? fillTemplate(tpl3, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText }) :
+    'Wichtige Info für ' + dayName + ', ' + dayDate + '\n\nAuf Grund von krankheitsbedingten Ausfällen müssen wir die Kita am ' + dayName + ' leider geschlossen halten.\n\nGrund: Weniger als 2 Fachkräfte anwesend (KiBiz-Vorschrift).\n\nBitte organisiert alternative Betreuung für eure Kinder.\n\nEntschuldigt die kurzfristige Absage.';
 
   document.getElementById('msg1').value = msg1;
   document.getElementById('msg2').value = msg2;
   document.getElementById('msg3').value = msg3;
-
-  // WhatsApp-Direktlinks setzen
-  updateWaLink(1);
-  updateWaLink(2);
-  updateWaLink(3);
-
-  // Template-Hinweise anzeigen
+  updateWaLink(1); updateWaLink(2); updateWaLink(3);
   showTemplateHints();
 }
 
-function updateWaLink(num) {
-  var text = document.getElementById('msg' + num).value;
-  document.getElementById('waLink' + num).href = buildWhatsAppLink('', text);
+function updateWaLink(n) {
+  document.getElementById('waLink' + n).href = buildWhatsAppLink('', document.getElementById('msg' + n).value);
 }
 
 // ==========================================
-// TEMPLATES (localStorage)
+// TEMPLATES
 // ==========================================
-
-function saveTemplate(num, btn) {
-  var text = document.getElementById('msg' + num).value;
-  var tpl = text;
-  try {
-    localStorage.setItem('kita_tpl_' + num, tpl);
-  } catch(e) {}
-  btn.classList.add('saved');
-  btn.innerHTML = '\u2713 Gespeichert!';
-  showToast('\u2713 Template gespeichert — wird beim nächsten Mal automatisch geladen');
-  setTimeout(function() {
-    btn.classList.remove('saved');
-    btn.innerHTML = '\uD83D\uDCBE Template';
-  }, 2500);
+function saveTemplate(n, btn) {
+  try { localStorage.setItem('kita_tpl_' + n, document.getElementById('msg' + n).value); } catch(e) {}
+  btn.classList.add('saved'); btn.innerHTML = '\u2713 Gespeichert!';
+  showToast('\u2713 Template gespeichert');
+  setTimeout(function() { btn.classList.remove('saved'); btn.innerHTML = '\uD83D\uDCBE Template'; }, 2500);
   showTemplateHints();
 }
-
-function loadTemplate(num) {
-  try {
-    return localStorage.getItem('kita_tpl_' + num) || null;
-  } catch(e) {
-    return null;
-  }
+function loadTemplate(n) { try { return localStorage.getItem('kita_tpl_' + n) || null; } catch(e) { return null; } }
+function resetTemplate(n) {
+  try { localStorage.removeItem('kita_tpl_' + n); } catch(e) {}
+  showToast('Template gelöscht'); showTemplateHints(); generateMessages(); setTimeout(autoResizeAll, 10);
 }
-
-function resetTemplate(num) {
-  try {
-    localStorage.removeItem('kita_tpl_' + num);
-  } catch(e) {}
-  showToast('Template gelöscht — Standard wird verwendet');
-  showTemplateHints();
-  generateMessages();
-  setTimeout(autoResizeAll, 10);
+function fillTemplate(tpl, d) {
+  return tpl.replace(/\{dayName\}/g, d.dayName).replace(/\{dayDate\}/g, d.dayDate)
+    .replace(/\{sickNames\}/g, d.sickNames).replace(/\{zeiten\}/g, d.zeiten);
 }
-
-function fillTemplate(tpl, data) {
-  return tpl
-    .replace(/\{dayName\}/g, data.dayName)
-    .replace(/\{dayDate\}/g, data.dayDate)
-    .replace(/\{sickNames\}/g, data.sickNames)
-    .replace(/\{zeiten\}/g, data.zeiten);
-}
-
 function showTemplateHints() {
   for (var i = 1; i <= 3; i++) {
-    var hint = document.getElementById('tplHint' + i);
-    var reset = document.getElementById('tplReset' + i);
-    var hasTpl = loadTemplate(i);
-    if (hasTpl) {
-      hint.textContent = '\u2713 Gespeichertes Template wird verwendet';
-      hint.style.display = 'block';
-      reset.style.display = 'block';
-    } else {
-      hint.style.display = 'none';
-      reset.style.display = 'none';
-    }
+    var h = document.getElementById('tplHint' + i), r = document.getElementById('tplReset' + i);
+    var has = loadTemplate(i);
+    h.textContent = '\u2713 Gespeichertes Template'; h.style.display = has ? 'block' : 'none';
+    r.style.display = has ? 'block' : 'none';
   }
 }
 
-// ==========================================
-// ERZIEHERINNEN-TEMPLATES (localStorage)
-// ==========================================
-
-function saveSubTemplate(name, idx, type, btn) {
-  var el = document.getElementById('wa-' + name + '-' + idx);
+// Erzieherinnen-Templates
+function saveSubTplFromDetail(name, type, btn) {
+  var el = document.getElementById('wa-' + name);
   if (!el) return;
-  var text = el.value;
-  // Personennamen und konkrete Daten durch Platzhalter ersetzen für Wiederverwendung
-  var tplKey = 'kita_sub_tpl_' + type; // 'frei' oder 'verschieben'
-  try {
-    localStorage.setItem(tplKey, text);
-  } catch(e) {}
-  btn.classList.add('saved');
-  btn.innerHTML = '\u2713 Gespeichert!';
+  try { localStorage.setItem('kita_sub_tpl_' + type, el.value); } catch(e) {}
+  btn.classList.add('saved'); btn.innerHTML = '\u2713 Gespeichert!';
   showToast('\u2713 Erzieherinnen-Template gespeichert');
-  setTimeout(function() {
-    btn.classList.remove('saved');
-    btn.innerHTML = '\uD83D\uDCBE Template speichern';
-  }, 2500);
+  setTimeout(function() { btn.classList.remove('saved'); btn.innerHTML = '\uD83D\uDCBE Template'; }, 2500);
 }
-
-function loadSubTemplate(type) {
-  try {
-    return localStorage.getItem('kita_sub_tpl_' + type) || null;
-  } catch(e) {
-    return null;
-  }
-}
+function loadSubTemplate(type) { try { return localStorage.getItem('kita_sub_tpl_' + type) || null; } catch(e) { return null; } }
 
 // ==========================================
-// WHATSAPP DIREKTLINKS
+// WHATSAPP
 // ==========================================
-
 function buildWhatsAppLink(phone, text) {
-  var encoded = encodeURIComponent(text);
-  if (phone) {
-    return 'https://wa.me/' + phone + '?text=' + encoded;
-  }
-  return 'https://wa.me/?text=' + encoded;
-}
-
-async function doCopy(text) {
-  if (navigator.share) {
-    try {
-      await navigator.share({ text: text });
-      return true;
-    } catch(e) {}
-  }
-
-  if (navigator.clipboard && window.isSecureContext) {
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch(e) {}
-  }
-
-  var ta = document.createElement('textarea');
-  ta.value = text;
-  ta.setAttribute('readonly', '');
-  ta.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100%;opacity:0.01;z-index:99999;font-size:16px;';
-  document.body.appendChild(ta);
-
-  if (navigator.userAgent.match(/ipad|iphone/i)) {
-    var range = document.createRange();
-    range.selectNodeContents(ta);
-    var sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    ta.setSelectionRange(0, text.length);
-  } else {
-    ta.select();
-  }
-
-  var copied = false;
-  try { copied = document.execCommand('copy'); } catch(e) {}
-  document.body.removeChild(ta);
-  return copied;
+  var enc = encodeURIComponent(text);
+  return phone ? 'https://wa.me/' + phone + '?text=' + enc : 'https://wa.me/?text=' + enc;
 }
 
 function showToast(text) {
-  var toast = document.getElementById('toast');
-  toast.textContent = text;
-  toast.classList.add('show');
-  setTimeout(function() { toast.classList.remove('show'); }, 2500);
+  var t = document.getElementById('toast');
+  t.textContent = text; t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2500);
 }
 
 // ==========================================
 // RESET
 // ==========================================
-
 function resetAll() {
-  sickStaff = {};
-  subResponses = {};
-  shiftOverrides = {};
-  lastOptions = [];
-  optimizeMode = false;
-  document.getElementById('subSection').classList.remove('visible');
+  sickStaff = {}; subResponses = {}; shiftOverrides = {}; proposedShifts = {};
   document.getElementById('messagesSection').classList.remove('visible');
-  document.getElementById('processSteps').style.display = 'none';
   renderDay();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Start
 init();
 </script>
 </body>
