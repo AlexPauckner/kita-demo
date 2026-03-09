@@ -44,25 +44,65 @@
 
   .container { padding: 16px; max-width: 500px; margin: 0 auto; }
 
-  /* Ampel */
-  .ampel-banner {
-    border-radius: var(--radius); padding: 14px 16px; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 12px;
+  /* Kompakte Status-Zeile (ersetzt große Ampel + Öffnungszeiten) */
+  .status-line {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    padding: 10px 14px; border-radius: 10px;
+    font-size: 13px; font-weight: 700; flex-wrap: wrap;
     box-shadow: var(--shadow-sm); transition: all 0.3s ease;
   }
-  .ampel-banner.green { background: var(--green-50); border: 2px solid var(--green-100); }
-  .ampel-banner.orange { background: var(--orange-50); border: 2px solid var(--orange-100); }
-  .ampel-banner.red { background: var(--red-50); border: 2px solid var(--red-100); }
-  .ampel-dot {
-    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center; font-size: 18px;
+  .status-line.green { background: var(--green-50); border: 2px solid var(--green-100); color: var(--green-600); }
+  .status-line.orange { background: var(--orange-50); border: 2px solid var(--orange-100); color: var(--orange-600); }
+  .status-line.red { background: var(--red-50); border: 2px solid var(--red-100); color: var(--red-600); }
+  .status-line .status-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
   }
-  .ampel-banner.green .ampel-dot { background: var(--green-600); }
-  .ampel-banner.orange .ampel-dot { background: var(--orange-600); }
-  .ampel-banner.red .ampel-dot { background: var(--red-600); }
-  .ampel-text { flex: 1; }
-  .ampel-text .label { font-weight: 700; font-size: 15px; }
-  .ampel-text .detail { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+  .status-line.green .status-dot { background: var(--green-600); }
+  .status-line.orange .status-dot { background: var(--orange-600); }
+  .status-line.red .status-dot { background: var(--red-600); }
+  .status-line .status-text { flex: 1; }
+  .status-line .status-hours {
+    font-weight: 800; font-size: 14px; margin-left: auto;
+  }
+  .status-line .status-projected {
+    font-size: 12px; color: var(--blue-600); font-weight: 600;
+    width: 100%; margin-top: 2px;
+  }
+
+  /* Tages-Gantt (Hauptansicht) */
+  .day-gantt {
+    background: white; border-radius: var(--radius); margin-bottom: 14px;
+    box-shadow: var(--shadow-sm); overflow: hidden;
+  }
+  .day-gantt .gantt-day-body { padding: 10px 14px 14px; }
+  .day-gantt .gantt-row { height: 28px; margin-bottom: 4px; }
+  .day-gantt .gantt-row-name { width: 64px; font-size: 12px; }
+  .day-gantt .gantt-row-bar-container { height: 22px; }
+  .day-gantt .gantt-bar { font-size: 10px; }
+  .day-gantt .gantt-row-badge { font-size: 10px; padding: 2px 5px; }
+  .day-gantt .gantt-capacity { height: 24px; margin-bottom: 10px; }
+  .day-gantt .gantt-time-label { font-size: 11px; }
+
+  /* Sticky Status-Zeile */
+  .sticky-status {
+    position: sticky; top: 60px; z-index: 90;
+    background: white; border-bottom: 2px solid var(--gray-200);
+    padding: 10px 16px; margin: 0 -16px 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: none;
+    font-size: 13px; font-weight: 700;
+    gap: 8px; align-items: center;
+  }
+  .sticky-status.visible { display: flex; }
+  .sticky-status .ss-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .sticky-status.green .ss-dot { background: var(--green-600); }
+  .sticky-status.orange .ss-dot { background: var(--orange-600); }
+  .sticky-status.red .ss-dot { background: var(--red-600); }
+  .sticky-status .ss-label { color: var(--gray-600); }
+  .sticky-status .ss-hours { font-weight: 800; margin-left: auto; }
+  .sticky-status.green .ss-hours { color: var(--green-600); }
+  .sticky-status.orange .ss-hours { color: var(--orange-600); }
+  .sticky-status.red .ss-hours { color: var(--red-600); }
 
   /* Tag-Tabs */
   .day-tabs { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
@@ -76,39 +116,7 @@
   .day-tab .day-name { display: block; font-size: 12px; font-weight: 500; }
   .day-tab .day-date { display: block; font-size: 15px; margin-top: 2px; }
 
-  /* Öffnungszeiten */
-  .hours-card {
-    background: white; border-radius: var(--radius); padding: 16px;
-    margin-bottom: 16px; box-shadow: var(--shadow-sm);
-  }
-  /* Sticky-Öffnungszeiten (kompakte Leiste) */
-  .sticky-hours {
-    position: sticky; top: 60px; z-index: 90;
-    background: white; border-bottom: 2px solid var(--gray-200);
-    padding: 8px 16px; margin: 0 -16px 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    display: none; /* Wird per JS sichtbar wenn nötig */
-    transition: opacity 0.2s;
-  }
-  .sticky-hours.visible { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; }
-  .sticky-hours-item {
-    font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 4px;
-  }
-  .sticky-hours-item .sh-label { color: var(--gray-600); font-weight: 600; }
-  .sticky-hours-item .sh-value { font-weight: 700; }
-  .sticky-hours-item .sh-value.normal { color: var(--green-600); }
-  .sticky-hours-item .sh-value.reduced { color: var(--orange-600); }
-  .sticky-hours-item .sh-value.closed { color: var(--red-600); }
-  .sticky-hours-item .sh-value.projected { color: var(--blue-600); }
-  .hours-card h3 { font-size: 14px; color: var(--gray-600); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .hours-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
-  .hours-row + .hours-row { border-top: 1px solid var(--gray-100); }
-  .hours-label { font-size: 14px; color: var(--gray-600); }
-  .hours-value { font-size: 16px; font-weight: 700; }
-  .hours-value.normal { color: var(--green-600); }
-  .hours-value.reduced { color: var(--orange-600); }
-  .hours-value.closed { color: var(--red-600); }
-  .hours-value.projected { color: var(--blue-600); }
+  /* (Öffnungszeiten-Card und Sticky-Hours entfernt — integriert in Status-Zeile + Gantt) */
 
   /* Staff-Karten */
   .staff-card {
@@ -550,23 +558,26 @@
 <div class="container">
   <div class="day-tabs" id="dayTabs"></div>
 
-  <div class="ampel-banner green" id="ampelBanner">
-    <div class="ampel-dot">&#10003;</div>
-    <div class="ampel-text">
-      <div class="label" id="ampelLabel">Alles OK</div>
-      <div class="detail" id="ampelDetail"></div>
-    </div>
+  <!-- Kompakte Status-Zeile -->
+  <div class="status-line green" id="statusLine">
+    <div class="status-dot"></div>
+    <span class="status-text" id="statusText">Personaldecke OK</span>
+    <span class="status-hours" id="statusHours">07:30–16:30</span>
+    <span class="status-projected" id="statusProjected" style="display:none;"></span>
   </div>
 
-  <div class="hours-card">
-    <h3>Öffnungszeiten</h3>
-    <div id="hoursContent"></div>
+  <!-- Sticky Status (scrollt mit) -->
+  <div class="sticky-status green" id="stickyStatus">
+    <div class="ss-dot"></div>
+    <span class="ss-label" id="stickyLabel">Aktuell:</span>
+    <span class="ss-hours" id="stickyHoursText">07:30–16:30</span>
   </div>
 
-  <div class="sticky-hours" id="stickyHours"></div>
+  <!-- Tages-Gantt (Hauptansicht) -->
+  <div class="day-gantt" id="dayGantt"></div>
 
   <div class="view-toggle">
-    <button class="view-toggle-btn active" id="btnViewPlan" onclick="switchView('plan')">Planung</button>
+    <button class="view-toggle-btn active" id="btnViewPlan" onclick="switchView('plan')">Tagesansicht</button>
     <button class="view-toggle-btn" id="btnViewGantt" onclick="switchView('gantt')">Wochenübersicht</button>
   </div>
 
@@ -774,7 +785,7 @@ function init() {
   if (today >= 1 && today <= 5) selectedDay = today - 1;
   renderDayTabs();
   renderDay();
-  initStickyHoursObserver();
+  initStickyStatusObserver();
 }
 
 function renderDayTabs() {
@@ -792,9 +803,9 @@ function renderDayTabs() {
 function renderDay() {
   proposedShifts = {};
   generateProposals();
+  renderDayGantt();
   renderStaff();
-  updateAmpel();
-  updateHours();
+  updateStatusLine();
   renderDetailCards();
   document.getElementById('messagesSection').classList.remove('visible');
   updateElternBtn();
@@ -917,101 +928,61 @@ function generateProposals() {
 }
 
 // ==========================================
-// AMPEL
+// STATUS-ZEILE (kompakt, ersetzt Ampel + Öffnungszeiten)
 // ==========================================
-function updateAmpel() {
+function updateStatusLine() {
   var active = getActiveStaff(selectedDay);
   var fk = active.filter(function(s) { return s.isFK; }).length;
   var ek = active.filter(function(s) { return s.isEK; }).length;
   var win = computeOpeningWindow(active);
-  var b = document.getElementById('ampelBanner');
-  var l = document.getElementById('ampelLabel');
-  var d = document.getElementById('ampelDetail');
-  b.className = 'ampel-banner';
 
-  if (win.status === 'GESCHLOSSEN') {
-    b.classList.add('red'); b.querySelector('.ampel-dot').textContent = '\u2717';
-    l.textContent = 'Kita geschlossen'; d.textContent = 'Weniger als 2 Fachkräfte (KiBiz)';
-  } else if (win.start > TARGET_START || win.end < TARGET_END) {
-    b.classList.add('orange'); b.querySelector('.ampel-dot').textContent = '\u26A0';
-    l.textContent = 'Eingeschränkter Betrieb'; d.textContent = fk + ' FK, ' + ek + ' EK — reduzierte Öffnungszeiten';
-  } else {
-    b.classList.add('green'); b.querySelector('.ampel-dot').textContent = '\u2713';
-    l.textContent = 'Personaldecke OK'; d.textContent = fk + ' FK, ' + ek + ' EK anwesend';
-  }
-}
-
-// ==========================================
-// ÖFFNUNGSZEITEN (aktuell + geplant)
-// ==========================================
-function updateHours() {
-  var active = getActiveStaff(selectedDay);
-  var win = computeOpeningWindow(active);
   var projected = getProjectedActiveStaff(selectedDay);
   var projWin = computeOpeningWindow(projected);
-  var c = document.getElementById('hoursContent');
-
   var hasProposals = Object.keys(proposedShifts).some(function(k) {
     return k.endsWith('-' + selectedDay) && proposedShifts[k];
   });
 
-  var html = '<div class="hours-row"><span class="hours-label">Regulär</span><span class="hours-value normal">' + NORMAL_HOURS + '</span></div>';
+  var line = document.getElementById('statusLine');
+  var text = document.getElementById('statusText');
+  var hours = document.getElementById('statusHours');
+  var proj = document.getElementById('statusProjected');
+  var sticky = document.getElementById('stickyStatus');
+
+  line.className = 'status-line';
+  sticky.className = 'sticky-status';
 
   if (win.status === 'GESCHLOSSEN') {
-    html += '<div class="hours-row"><span class="hours-label">' + DAYS_FULL[selectedDay] + ' aktuell</span><span class="hours-value closed">GESCHLOSSEN</span></div>';
+    line.classList.add('red'); sticky.classList.add('red');
+    text.textContent = 'GESCHLOSSEN — < 2 FK';
+    hours.textContent = '—';
+  } else if (win.start > TARGET_START || win.end < TARGET_END) {
+    line.classList.add('orange'); sticky.classList.add('orange');
+    text.textContent = 'Eingeschränkt · ' + fk + 'FK ' + ek + 'EK';
+    hours.textContent = formatTime(win.start) + '–' + formatTime(win.end);
   } else {
-    var cur = formatTime(win.start) + ' \u2013 ' + formatTime(win.end);
-    var isRed = win.start > TARGET_START || win.end < TARGET_END;
-    html += '<div class="hours-row"><span class="hours-label">' + DAYS_FULL[selectedDay] + ' aktuell</span><span class="hours-value ' + (isRed ? 'reduced' : 'normal') + '">' + cur + '</span></div>';
+    line.classList.add('green'); sticky.classList.add('green');
+    text.textContent = 'OK · ' + fk + 'FK ' + ek + 'EK';
+    hours.textContent = formatTime(win.start) + '–' + formatTime(win.end);
   }
 
-  if (hasProposals) {
-    if (projWin.status === 'GESCHLOSSEN') {
-      html += '<div class="hours-row"><span class="hours-label">Mit Anfragen</span><span class="hours-value closed">GESCHLOSSEN</span></div>';
-    } else {
-      var proj = formatTime(projWin.start) + ' \u2013 ' + formatTime(projWin.end);
-      var projOK = projWin.start <= TARGET_START && projWin.end >= TARGET_END;
-      html += '<div class="hours-row"><span class="hours-label">Mit Anfragen</span><span class="hours-value ' + (projOK ? 'projected' : 'reduced') + '">' + proj + (projOK ? ' \u2713' : '') + '</span></div>';
-    }
+  // Geplante Zeiten (mit Vorschlägen)
+  if (hasProposals && projWin.status !== 'GESCHLOSSEN') {
+    var projOK = projWin.start <= TARGET_START && projWin.end >= TARGET_END;
+    proj.textContent = 'Mit Anfragen: ' + formatTime(projWin.start) + '–' + formatTime(projWin.end) + (projOK ? ' ✓' : '');
+    proj.style.display = 'block';
+  } else {
+    proj.style.display = 'none';
   }
 
-  c.innerHTML = html;
-
-  // Sticky-Leiste aktualisieren
-  updateStickyHours(win, projWin, hasProposals);
+  // Sticky updaten
+  document.getElementById('stickyLabel').textContent = DAYS[selectedDay] + ':';
+  document.getElementById('stickyHoursText').textContent = win.status === 'GESCHLOSSEN' ? 'GESCHLOSSEN' : formatTime(win.start) + '–' + formatTime(win.end);
 }
 
-function updateStickyHours(win, projWin, hasProposals) {
-  var sticky = document.getElementById('stickyHours');
-  var stickyHtml = '';
-
-  // Aktuell
-  if (win.status === 'GESCHLOSSEN') {
-    stickyHtml += '<span class="sticky-hours-item"><span class="sh-label">Aktuell:</span> <span class="sh-value closed">GESCHLOSSEN</span></span>';
-  } else {
-    var cur = formatTime(win.start) + '–' + formatTime(win.end);
-    var isRed = win.start > TARGET_START || win.end < TARGET_END;
-    stickyHtml += '<span class="sticky-hours-item"><span class="sh-label">Aktuell:</span> <span class="sh-value ' + (isRed ? 'reduced' : 'normal') + '">' + cur + '</span></span>';
-  }
-
-  // Mit Anfragen
-  if (hasProposals) {
-    if (projWin.status === 'GESCHLOSSEN') {
-      stickyHtml += '<span class="sticky-hours-item"><span class="sh-label">Geplant:</span> <span class="sh-value closed">GESCHLOSSEN</span></span>';
-    } else {
-      var proj = formatTime(projWin.start) + '–' + formatTime(projWin.end);
-      var projOK = projWin.start <= TARGET_START && projWin.end >= TARGET_END;
-      stickyHtml += '<span class="sticky-hours-item"><span class="sh-label">Geplant:</span> <span class="sh-value ' + (projOK ? 'projected' : 'reduced') + '">' + proj + (projOK ? ' ✓' : '') + '</span></span>';
-    }
-  }
-
-  sticky.innerHTML = stickyHtml;
-}
-
-function initStickyHoursObserver() {
-  var hoursCard = document.querySelector('.hours-card');
-  var sticky = document.getElementById('stickyHours');
-  if (!hoursCard || !sticky) return;
+function initStickyStatusObserver() {
+  var statusEl = document.getElementById('statusLine');
+  var sticky = document.getElementById('stickyStatus');
+  if (!statusEl || !sticky) return;
   new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
@@ -1020,7 +991,7 @@ function initStickyHoursObserver() {
         sticky.classList.add('visible');
       }
     });
-  }, { threshold: 0, rootMargin: '-60px 0px 0px 0px' }).observe(hoursCard);
+  }, { threshold: 0, rootMargin: '-60px 0px 0px 0px' }).observe(statusEl);
 }
 
 // ==========================================
@@ -1136,9 +1107,9 @@ function refreshAll() {
   });
   proposedShifts = keepProposals;
   generateProposals();
+  renderDayGantt();
   renderStaff();
-  updateAmpel();
-  updateHours();
+  updateStatusLine();
   renderDetailCards();
   updateElternBtn();
   if (currentView === 'gantt') renderGanttView();
@@ -1286,7 +1257,7 @@ function confirmProposal(name) {
     // Gleiche Schicht → Vorschlag löschen (keine Anfrage nötig)
     proposedShifts[key] = null;
     renderStaff();
-    updateHours();
+    updateStatusLine(); renderDayGantt();
     renderDetailCards();
     showToast('Keine Änderung nötig — Vorschlag entfernt');
     return;
@@ -1295,7 +1266,7 @@ function confirmProposal(name) {
   var oldProposal = proposedShifts[key];
   proposedShifts[key] = val;
   renderStaff();
-  updateHours();
+  updateStatusLine(); renderDayGantt();
   renderDetailCards();
   showToast('✓ Vorschlag bestätigt: ' + val);
 
@@ -1319,7 +1290,7 @@ function clearProposal(name) {
   var key = name + '-' + selectedDay;
   proposedShifts[key] = null;
   renderStaff();
-  updateHours();
+  updateStatusLine(); renderDayGantt();
   renderDetailCards();
 }
 
@@ -1475,9 +1446,9 @@ function markResponse(name, response) {
     subResponses[key] = response;
   }
 
+  renderDayGantt();
   renderStaff();
-  updateAmpel();
-  updateHours();
+  updateStatusLine();
   renderDetailCards();
   updateElternBtn();
 
@@ -1507,9 +1478,9 @@ function undoResponse(name) {
   delete shiftOverrides[key];
   delete proposedShifts[key];
   generateProposals();
+  renderDayGantt();
   renderStaff();
-  updateAmpel();
-  updateHours();
+  updateStatusLine();
   renderDetailCards();
   updateElternBtn();
   showToast('\u21A9 ' + name + ' — zurückgesetzt');
@@ -1673,7 +1644,101 @@ function resetAll() {
 }
 
 // ==========================================
-// VIEW-TOGGLE (Planung / Wochenübersicht)
+// TAGES-GANTT (Hauptansicht — Balken des gewählten Tags)
+// ==========================================
+function renderDayGantt() {
+  var container = document.getElementById('dayGantt');
+  var d = selectedDay;
+  var dayActive = getActiveStaffForGantt(d);
+
+  var html = '<div class="gantt-day-body">';
+
+  // Zeitachse
+  html += '<div class="gantt-time-axis">';
+  for (var h = 7; h <= 17; h++) {
+    html += '<span class="gantt-time-label">' + h + '</span>';
+  }
+  html += '</div>';
+
+  // Kapazitäts-Heatmap
+  html += renderCapacityBar(dayActive, d);
+
+  // Personen-Balken
+  dayActive.forEach(function(s) {
+    var rowClass = 'gantt-row';
+    if (s.isFrei) rowClass += ' frei-row';
+    html += '<div class="' + rowClass + '">';
+    html += '<span class="gantt-row-name">' + s.name + '</span>';
+    html += '<div class="gantt-row-bar-container">';
+
+    var barClass = 'gantt-bar';
+    var draggable = true;
+    if (s.isFrei) { barClass += ' frei-bar'; draggable = false; }
+    else if (s.isSick) { barClass += ' sick'; draggable = false; }
+    else if (s.isOverride) barClass += ' override';
+    else if (s.isAngefragt) barClass += ' angefragt';
+    else if (s.isProposal) barClass += ' proposal';
+    else if (s.isVerspaetet) barClass += ' verspaetet';
+    else barClass += ' ' + s.type.toLowerCase();
+
+    var left = ganttPercent(s.start);
+    var width = ganttPercent(s.end) - left;
+    var timeLabel = formatTime(s.start) + '–' + formatTime(s.end);
+
+    html += '<div class="' + barClass + '" style="left:' + left + '%;width:' + width + '%;"';
+    html += ' data-name="' + s.name + '" data-day="' + d + '"';
+    html += ' data-start="' + s.start + '" data-end="' + s.end + '"';
+    if (draggable) html += ' data-draggable="1"';
+    html += ' title="' + s.name + ': ' + timeLabel + '">';
+    if (s.isFrei) {
+      html += 'FREI';
+    } else if (width > 10) {
+      html += timeLabel;
+    }
+    html += '</div>';
+
+    html += '</div>';
+    html += '<span class="gantt-row-badge ' + s.type.toLowerCase() + '">' + s.type + '</span>';
+    html += '</div>';
+  });
+
+  html += '</div>';
+
+  // Kompakte Legende
+  html += '<div style="display:flex;flex-wrap:wrap;gap:6px;padding:6px 14px 10px;justify-content:center;">';
+  html += '<span style="font-size:10px;color:var(--gray-400);">Balken ziehen = Zeiten ändern</span>';
+  html += '</div>';
+
+  container.innerHTML = html;
+  initDayGanttDrag();
+}
+
+function initDayGanttDrag() {
+  var bars = document.querySelectorAll('#dayGantt .gantt-bar[data-draggable="1"]');
+  bars.forEach(function(bar) {
+    bar.addEventListener('mousedown', ganttDragStart);
+    bar.addEventListener('touchstart', ganttDragStart, { passive: false });
+  });
+
+  // FREI-Balken: Klick → Vorschlag erstellen
+  var freiBars = document.querySelectorAll('#dayGantt .gantt-bar.frei-bar');
+  freiBars.forEach(function(bar) {
+    bar.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var name = bar.getAttribute('data-name');
+      var day = parseInt(bar.getAttribute('data-day'));
+      var key = name + '-' + day;
+      if (!proposedShifts[key]) {
+        proposedShifts[key] = formatTime(TARGET_START) + '-' + formatTime(TARGET_END);
+      }
+      refreshAll();
+      showToast('💡 Vorschlag für ' + name + ' erstellt');
+    });
+  });
+}
+
+// ==========================================
+// VIEW-TOGGLE (Tagesansicht / Wochenübersicht)
 // ==========================================
 var currentView = 'plan';
 
@@ -2110,13 +2175,13 @@ function ganttDragEnd(e) {
 
     // Alles neu rendern
     if (day === selectedDay) {
+      renderDayGantt();
       renderStaff();
-      updateAmpel();
-      updateHours();
+      updateStatusLine();
       renderDetailCards();
       updateElternBtn();
     }
-    renderGanttView();
+    if (currentView === 'gantt') renderGanttView();
   }
 
   ganttDrag = null;
