@@ -505,6 +505,71 @@ var ABSENCE_TYPES = {
 };
 
 // ==========================================
+// DECISION-LOG (stilles Protokoll für Agent-Training)
+// ==========================================
+var decisionLog = [];
+var currentSessionId = null;
+
+function startDecisionSession() {
+  currentSessionId = 'sess_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
+  return currentSessionId;
+}
+
+function logDecision(eventType, person, details) {
+  if (!currentSessionId) startDecisionSession();
+  var active = getActiveStaff(selectedDay);
+  var win = computeOpeningWindow(active);
+
+  var entry = {
+    timestamp: new Date().toISOString(),
+    session_id: currentSessionId,
+    kw: KW,
+    day: DAYS[selectedDay],
+    day_index: selectedDay,
+    event_type: eventType,
+    person: person || null,
+    details: details || {},
+  };
+
+  // Bei bestimmten Events: Situation automatisch mitloggen
+  if (eventType === 'ABSENCE' || eventType === 'ABSENCE_CLEAR' || eventType === 'OVERRIDE' || eventType === 'RESULT') {
+    var fk = active.filter(function(s) { return s.isFK; }).length;
+    var ek = active.filter(function(s) { return s.isEK; }).length;
+    entry.situation = {
+      fk_count: fk,
+      ek_count: ek,
+      opening_start: win.start ? formatTime(win.start) : null,
+      opening_end: win.end ? formatTime(win.end) : null,
+      status: win.status
+    };
+  }
+
+  decisionLog.push(entry);
+  console.log('[Decision-Log]', eventType, person || '', JSON.stringify(details || {}));
+
+  // In localStorage persistieren
+  try { localStorage.setItem('kita_decision_log', JSON.stringify(decisionLog)); } catch(e) {}
+}
+
+function getDecisionLog() { return decisionLog; }
+
+function exportDecisionLog() {
+  var blob = new Blob([JSON.stringify(decisionLog, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'decision-log-kw' + KW + '.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Beim Start: vorherige Logs laden
+(function() {
+  try {
+    var stored = localStorage.getItem('kita_decision_log');
+    if (stored) decisionLog = JSON.parse(stored);
+  } catch(e) {}
+})();
+
+// ==========================================
 // INIT
 // ==========================================
 function init() {
@@ -801,6 +866,12 @@ function setAbsence(name, type) {
   refreshAll();
   var cfg = ABSENCE_TYPES[type];
   showToast(cfg.icon + ' ' + name + ': ' + cfg.label);
+
+  // Decision-Log
+  var person = STAFF.find(function(p) { return p.name === name; });
+  var logDetails = { type: type, shift: person ? person.shifts[selectedDay] : '' };
+  if (type === 'verspaetung') logDetails.late_start = staffLateStart[key];
+  logDecision('ABSENCE', name, logDetails);
 }
 
 function clearAbsence(name) {
@@ -811,6 +882,9 @@ function clearAbsence(name) {
   closeStatusMenu();
   refreshAll();
   showToast('✓ ' + name + ' — Status aufgehoben');
+
+  // Decision-Log
+  logDecision('ABSENCE_CLEAR', name, { previous_type: staffAbsence[key] || 'unknown' });
 }
 
 function refreshAll() {
@@ -963,11 +1037,23 @@ function confirmProposal(name) {
     return;
   }
 
+  var oldProposal = proposedShifts[key];
   proposedShifts[key] = val;
   renderStaff();
   updateHours();
   renderDetailCards();
   showToast('✓ Vorschlag bestätigt: ' + val);
+
+  // Decision-Log
+  var person = STAFF.find(function(p) { return p.name === name; });
+  var origShift = person ? person.shifts[selectedDay] : '';
+  if (oldProposal && oldProposal !== val) {
+    logDecision('PROPOSAL_EDIT', name, { old_shift: oldProposal, new_shift: val });
+  } else {
+    // Rang berechnen: wie viele Proposals wurden vor diesem bestätigt?
+    var rank = decisionLog.filter(function(e) { return e.session_id === currentSessionId && e.event_type === 'PROPOSAL'; }).length + 1;
+    logDecision('PROPOSAL', name, { from_shift: origShift, to_shift: val, rank: rank });
+  }
 }
 
 function updateProposal(name) {
@@ -1100,6 +1186,8 @@ function scrollToDetail(name) {
     el.style.boxShadow = '0 0 0 3px var(--teal-500)';
     setTimeout(function() { el.style.boxShadow = ''; }, 2000);
   }
+  // Decision-Log: Anfrage gesendet
+  logDecision('REQUEST', name, { channel: 'whatsapp' });
 }
 
 function updateDetailWaLink(name) {
@@ -1137,6 +1225,25 @@ function markResponse(name, response) {
   updateHours();
   renderDetailCards();
   updateElternBtn();
+
+  // Decision-Log
+  var logDetails = { result: response };
+  // Berechne Wartezeit seit letztem REQUEST für diese Person
+  var lastRequest = null;
+  for (var i = decisionLog.length - 1; i >= 0; i--) {
+    if (decisionLog[i].person === name && decisionLog[i].event_type === 'REQUEST') {
+      lastRequest = decisionLog[i]; break;
+    }
+  }
+  if (lastRequest) {
+    logDetails.delay_min = Math.round((Date.now() - new Date(lastRequest.timestamp).getTime()) / 60000);
+  }
+  logDecision('RESPONSE', name, logDetails);
+
+  // Bei Zusage auch OVERRIDE loggen
+  if (response === 'ja' && shiftOverrides[key]) {
+    logDecision('OVERRIDE', name, { shift: shiftOverrides[key] });
+  }
 }
 
 function undoResponse(name) {
@@ -1167,6 +1274,9 @@ function showParentMessages() {
   s.classList.add('visible');
   s.scrollIntoView({ behavior: 'smooth', block: 'start' });
   setTimeout(autoResizeAll, 10);
+
+  // Decision-Log
+  logDecision('PARENT_NOTIFY', null, { message_type: 'info' });
 }
 
 function generateMessages() {
@@ -1285,6 +1395,22 @@ function showToast(text) {
 // RESET
 // ==========================================
 function resetAll() {
+  // Decision-Log: Session abschließen mit RESULT
+  if (currentSessionId && Object.keys(staffAbsence).length > 0) {
+    var active = getActiveStaff(selectedDay);
+    var win = computeOpeningWindow(active);
+    var staffSummary = active.map(function(s) { return s.name + ':' + formatTime(s.start) + '-' + formatTime(s.end); }).join(', ');
+    logDecision('RESULT', null, {
+      final_opening: win.start ? formatTime(win.start) + '-' + formatTime(win.end) : 'GESCHLOSSEN',
+      final_status: win.status,
+      staff_summary: staffSummary,
+      overrides_count: Object.keys(shiftOverrides).length,
+      absences_count: Object.keys(staffAbsence).length
+    });
+  }
+  // Neue Session starten
+  currentSessionId = null;
+
   staffAbsence = {}; staffLateStart = {}; subResponses = {}; shiftOverrides = {}; proposedShifts = {};
   document.getElementById('messagesSection').classList.remove('visible');
   renderDay();
