@@ -81,6 +81,25 @@
     background: white; border-radius: var(--radius); padding: 16px;
     margin-bottom: 16px; box-shadow: var(--shadow-sm);
   }
+  /* Sticky-Öffnungszeiten (kompakte Leiste) */
+  .sticky-hours {
+    position: sticky; top: 60px; z-index: 90;
+    background: white; border-bottom: 2px solid var(--gray-200);
+    padding: 8px 16px; margin: 0 -16px 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: none; /* Wird per JS sichtbar wenn nötig */
+    transition: opacity 0.2s;
+  }
+  .sticky-hours.visible { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .sticky-hours-item {
+    font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 4px;
+  }
+  .sticky-hours-item .sh-label { color: var(--gray-600); font-weight: 600; }
+  .sticky-hours-item .sh-value { font-weight: 700; }
+  .sticky-hours-item .sh-value.normal { color: var(--green-600); }
+  .sticky-hours-item .sh-value.reduced { color: var(--orange-600); }
+  .sticky-hours-item .sh-value.closed { color: var(--red-600); }
+  .sticky-hours-item .sh-value.projected { color: var(--blue-600); }
   .hours-card h3 { font-size: 14px; color: var(--gray-600); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
   .hours-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; }
   .hours-row + .hours-row { border-top: 1px solid var(--gray-100); }
@@ -481,6 +500,8 @@
     <div id="hoursContent"></div>
   </div>
 
+  <div class="sticky-hours" id="stickyHours"></div>
+
   <div class="view-toggle">
     <button class="view-toggle-btn active" id="btnViewPlan" onclick="switchView('plan')">Planung</button>
     <button class="view-toggle-btn" id="btnViewGantt" onclick="switchView('gantt')">Wochenübersicht</button>
@@ -586,7 +607,7 @@ var STAFF = [
   { name: 'Dilsad',  type: 'FK', phone: '', shifts: ['10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30'] },
   { name: 'Lidija',  type: 'EK', phone: '', shifts: ['09:00-14:00','07:30-12:30','07:30-12:30','09:00-14:00','FREI'] },
   { name: 'Hurguel', type: 'EK', phone: '', shifts: ['FREI','FREI','FREI','07:30-15:45','07:30-15:45'] },
-  { name: 'Niels',   type: 'EK', phone: '', shifts: ['FREI','FREI','FREI','FREI','08:00-14:00'] },
+  { name: 'Niels',   type: 'FK', phone: '', shifts: ['FREI','FREI','FREI','FREI','08:00-14:00'] },
   { name: 'Gul',     type: 'EK', phone: '', shifts: ['FREI','FREI','FREI','07:45-16:00','07:45-16:00'] },
 ];
 
@@ -688,6 +709,7 @@ function init() {
   if (today >= 1 && today <= 5) selectedDay = today - 1;
   renderDayTabs();
   renderDay();
+  initStickyHoursObserver();
 }
 
 function renderDayTabs() {
@@ -889,6 +911,51 @@ function updateHours() {
   }
 
   c.innerHTML = html;
+
+  // Sticky-Leiste aktualisieren
+  updateStickyHours(win, projWin, hasProposals);
+}
+
+function updateStickyHours(win, projWin, hasProposals) {
+  var sticky = document.getElementById('stickyHours');
+  var stickyHtml = '';
+
+  // Aktuell
+  if (win.status === 'GESCHLOSSEN') {
+    stickyHtml += '<span class="sticky-hours-item"><span class="sh-label">Aktuell:</span> <span class="sh-value closed">GESCHLOSSEN</span></span>';
+  } else {
+    var cur = formatTime(win.start) + '–' + formatTime(win.end);
+    var isRed = win.start > TARGET_START || win.end < TARGET_END;
+    stickyHtml += '<span class="sticky-hours-item"><span class="sh-label">Aktuell:</span> <span class="sh-value ' + (isRed ? 'reduced' : 'normal') + '">' + cur + '</span></span>';
+  }
+
+  // Mit Anfragen
+  if (hasProposals) {
+    if (projWin.status === 'GESCHLOSSEN') {
+      stickyHtml += '<span class="sticky-hours-item"><span class="sh-label">Geplant:</span> <span class="sh-value closed">GESCHLOSSEN</span></span>';
+    } else {
+      var proj = formatTime(projWin.start) + '–' + formatTime(projWin.end);
+      var projOK = projWin.start <= TARGET_START && projWin.end >= TARGET_END;
+      stickyHtml += '<span class="sticky-hours-item"><span class="sh-label">Geplant:</span> <span class="sh-value ' + (projOK ? 'projected' : 'reduced') + '">' + proj + (projOK ? ' ✓' : '') + '</span></span>';
+    }
+  }
+
+  sticky.innerHTML = stickyHtml;
+}
+
+function initStickyHoursObserver() {
+  var hoursCard = document.querySelector('.hours-card');
+  var sticky = document.getElementById('stickyHours');
+  if (!hoursCard || !sticky) return;
+  new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        sticky.classList.remove('visible');
+      } else {
+        sticky.classList.add('visible');
+      }
+    });
+  }, { threshold: 0, rootMargin: '-60px 0px 0px 0px' }).observe(hoursCard);
 }
 
 // ==========================================
@@ -1016,6 +1083,18 @@ function refreshAll() {
 // PERSONAL RENDERN
 // ==========================================
 function renderStaff() {
+  // Bug-Fix: Nicht-bestätigte Input-Werte sichern bevor DOM neu gebaut wird
+  STAFF.forEach(function(p) {
+    var key = p.name + '-' + selectedDay;
+    var input = document.getElementById('prop-' + p.name);
+    if (input && proposedShifts[key]) {
+      var val = input.value.trim();
+      if (/^\d{2}:\d{2}-\d{2}:\d{2}$/.test(val)) {
+        proposedShifts[key] = val;
+      }
+    }
+  });
+
   var container = document.getElementById('staffList');
   container.innerHTML = '';
 
