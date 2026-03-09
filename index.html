@@ -261,6 +261,47 @@
   .proposal-chip.warn { background: var(--orange-50); color: var(--orange-600); border: 1px solid var(--orange-100); }
   .proposal-chip.ok { background: var(--green-50); color: var(--green-600); border: 1px solid var(--green-100); }
 
+  /* Wochenstunden-Badge */
+  .hours-delta {
+    font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 4px;
+    margin-left: 4px; white-space: nowrap;
+  }
+  .hours-delta.plus { background: var(--red-50); color: var(--red-600); border: 1px solid var(--red-100); }
+  .hours-delta.minus { background: var(--blue-50); color: var(--blue-600); border: 1px solid var(--blue-100); }
+  .hours-delta.zero { background: var(--green-50); color: var(--green-600); border: 1px solid var(--green-100); }
+
+  /* Wochenstunden-Panel */
+  .weekly-hours-panel {
+    background: white; border-radius: var(--radius); margin-bottom: 14px;
+    box-shadow: var(--shadow-sm); overflow: hidden;
+  }
+  .weekly-hours-header {
+    padding: 10px 14px; font-size: 13px; font-weight: 700; color: var(--gray-600);
+    border-bottom: 1px solid var(--gray-200); display: flex; align-items: center;
+    justify-content: space-between; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .weekly-hours-header .toggle-icon { font-size: 11px; color: var(--gray-400); transition: transform 0.2s; }
+  .weekly-hours-header.open .toggle-icon { transform: rotate(180deg); }
+  .weekly-hours-body { padding: 8px 14px 12px; display: none; }
+  .weekly-hours-body.open { display: block; }
+  .weekly-hours-row {
+    display: flex; align-items: center; gap: 8px; padding: 5px 0;
+    font-size: 13px; border-bottom: 1px solid var(--gray-100);
+  }
+  .weekly-hours-row:last-child { border-bottom: none; }
+  .weekly-hours-row .wh-name { width: 70px; font-weight: 600; }
+  .weekly-hours-row .wh-bar { flex: 1; height: 6px; background: var(--gray-200); border-radius: 3px; position: relative; overflow: visible; }
+  .weekly-hours-row .wh-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  .weekly-hours-row .wh-bar-fill.ok { background: var(--green-600); }
+  .weekly-hours-row .wh-bar-fill.over { background: var(--red-600); }
+  .weekly-hours-row .wh-bar-fill.under { background: var(--blue-600); }
+  .weekly-hours-row .wh-values { font-size: 12px; color: var(--gray-600); width: 90px; text-align: right; white-space: nowrap; }
+  .weekly-hours-row .wh-delta { font-size: 12px; font-weight: 700; width: 50px; text-align: right; }
+  .weekly-hours-row .wh-delta.plus { color: var(--red-600); }
+  .weekly-hours-row .wh-delta.minus { color: var(--blue-600); }
+  .weekly-hours-row .wh-delta.zero { color: var(--green-600); }
+
   /* Zugesagt-Zeile */
   .staff-accepted {
     padding: 8px 16px 10px; border-top: 1px solid var(--green-100);
@@ -582,6 +623,16 @@
   </div>
 
   <div id="planView">
+
+  <!-- Wochenstunden-Tracker -->
+  <div class="weekly-hours-panel" id="weeklyHoursPanel" style="display:none;">
+    <div class="weekly-hours-header" onclick="toggleWeeklyHours()">
+      <span>⏱ Wochenstunden-Saldo</span>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="weekly-hours-body"></div>
+  </div>
+
   <div class="section-header">Pädagoginnen</div>
   <div id="staffList"></div>
 
@@ -807,6 +858,7 @@ function renderDay() {
   renderStaff();
   updateStatusLine();
   renderDetailCards();
+  renderWeeklyHoursPanel();
   document.getElementById('messagesSection').classList.remove('visible');
   updateElternBtn();
 }
@@ -1111,6 +1163,7 @@ function refreshAll() {
   renderStaff();
   updateStatusLine();
   renderDetailCards();
+  renderWeeklyHoursPanel();
   updateElternBtn();
   if (currentView === 'gantt') renderGanttView();
 }
@@ -1183,11 +1236,14 @@ function renderStaff() {
       shiftDisplay = '<s style="color:#bdbdbd;">' + origShift + '</s>';
     }
 
+    // Wochenstunden-Delta-Badge
+    var deltaBadge = getDeltaBadgeHtml(person);
+
     // Hauptzeile (NICHT mehr klickbar für Krankmeldung)
     var mainHtml = '<div class="staff-main">' +
       '<div class="staff-avatar ' + person.type.toLowerCase() + '">' + initials + '</div>' +
       '<div class="staff-info"><div class="staff-name">' + person.name +
-      ' <span class="staff-badge ' + person.type.toLowerCase() + '">' + person.type + '</span></div>' +
+      ' <span class="staff-badge ' + person.type.toLowerCase() + '">' + person.type + '</span>' + deltaBadge + '</div>' +
       '<div class="staff-shift">' + shiftDisplay + '</div></div>' +
       rightHtml + '</div>';
 
@@ -1641,6 +1697,131 @@ function resetAll() {
   document.getElementById('messagesSection').classList.remove('visible');
   renderDay();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ==========================================
+// WOCHENSTUNDEN-TRACKER
+// ==========================================
+function calcShiftHours(shiftStr) {
+  if (!shiftStr || shiftStr === 'FREI') return 0;
+  var parts = shiftStr.split('-');
+  if (parts.length !== 2) return 0;
+  return (parseTime(parts[1]) - parseTime(parts[0])) / 60;
+}
+
+function getWeeklyHours() {
+  var result = [];
+  STAFF.forEach(function(person) {
+    var planned = 0;
+    var effective = 0;
+    var dayDeltas = [];
+
+    for (var d = 0; d < 5; d++) {
+      var origShift = person.shifts[d];
+      var plannedH = calcShiftHours(origShift);
+      planned += plannedH;
+
+      var key = person.name + '-' + d;
+      var effH = 0;
+
+      if (isAbsent(key)) {
+        // Krank/Urlaub/Schule: 0 Stunden effektiv, aber Soll bleibt
+        effH = 0;
+      } else if (shiftOverrides[key]) {
+        effH = calcShiftHours(shiftOverrides[key]);
+      } else if (proposedShifts[key] && proposedShifts[key] !== null) {
+        // Vorschläge noch nicht bestätigt — zeigen aber was passieren WÜRDE
+        effH = calcShiftHours(proposedShifts[key]);
+      } else {
+        effH = calcShiftHours(getEffectiveShift(person, d));
+      }
+
+      var dayDelta = effH - plannedH;
+      dayDeltas.push({ day: d, planned: plannedH, effective: effH, delta: dayDelta });
+      effective += effH;
+    }
+
+    var delta = effective - planned;
+    result.push({
+      name: person.name,
+      type: person.type,
+      planned: planned,
+      effective: effective,
+      delta: delta,
+      dayDeltas: dayDeltas
+    });
+  });
+  return result;
+}
+
+function formatHoursDelta(delta) {
+  if (Math.abs(delta) < 0.01) return '±0';
+  var sign = delta > 0 ? '+' : '';
+  var h = Math.floor(Math.abs(delta));
+  var m = Math.round((Math.abs(delta) - h) * 60);
+  if (m === 0) return sign + h + 'h';
+  if (h === 0) return sign + (delta < 0 ? '-' : '') + m + 'min';
+  return sign + (delta < 0 ? '-' : '') + h + ':' + m.toString().padStart(2, '0');
+}
+
+function getDeltaBadgeHtml(person) {
+  var hours = getWeeklyHours();
+  var entry = hours.find(function(h) { return h.name === person.name; });
+  if (!entry || Math.abs(entry.delta) < 0.01) return '';
+  var cls = entry.delta > 0 ? 'plus' : 'minus';
+  return '<span class="hours-delta ' + cls + '">' + formatHoursDelta(entry.delta) + ' Woche</span>';
+}
+
+function renderWeeklyHoursPanel() {
+  var container = document.getElementById('weeklyHoursPanel');
+  if (!container) return;
+
+  var hours = getWeeklyHours();
+  var hasAnyDelta = hours.some(function(h) { return Math.abs(h.delta) > 0.01; });
+
+  // Panel nur zeigen wenn es Abweichungen gibt
+  if (!hasAnyDelta) {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'block';
+
+  var body = container.querySelector('.weekly-hours-body');
+  if (!body) return;
+
+  var maxPlanned = Math.max.apply(null, hours.map(function(h) { return h.planned; }));
+  if (maxPlanned === 0) maxPlanned = 40;
+
+  var html = '';
+  hours.forEach(function(h) {
+    if (h.planned === 0 && h.effective === 0) return; // Überspringen wenn gar nicht eingeplant
+
+    var pct = Math.min(100, (h.effective / maxPlanned) * 100);
+    var barClass = 'ok';
+    if (h.delta > 0.01) barClass = 'over';
+    else if (h.delta < -0.01) barClass = 'under';
+
+    var deltaClass = 'zero';
+    if (h.delta > 0.01) deltaClass = 'plus';
+    else if (h.delta < -0.01) deltaClass = 'minus';
+
+    html += '<div class="weekly-hours-row">' +
+      '<span class="wh-name">' + h.name + '</span>' +
+      '<div class="wh-bar"><div class="wh-bar-fill ' + barClass + '" style="width:' + pct + '%;"></div></div>' +
+      '<span class="wh-values">' + h.effective.toFixed(1) + ' / ' + h.planned.toFixed(1) + 'h</span>' +
+      '<span class="wh-delta ' + deltaClass + '">' + formatHoursDelta(h.delta) + '</span>' +
+      '</div>';
+  });
+
+  body.innerHTML = html;
+}
+
+function toggleWeeklyHours() {
+  var header = document.querySelector('.weekly-hours-header');
+  var body = document.querySelector('.weekly-hours-body');
+  if (!header || !body) return;
+  header.classList.toggle('open');
+  body.classList.toggle('open');
 }
 
 // ==========================================
