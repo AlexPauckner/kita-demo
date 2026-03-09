@@ -99,14 +99,15 @@
   }
   .staff-card.sick { border-color: var(--red-100); background: var(--red-50); }
   .staff-card.absent { border-color: var(--gray-200); background: var(--gray-50); opacity: 0.6; }
+  .staff-card.urlaub { border-color: var(--purple-100); background: var(--purple-50); }
+  .staff-card.schule { border-color: var(--blue-100); background: var(--blue-50); }
+  .staff-card.verspaetet { border-color: var(--orange-100); background: var(--orange-50); }
   .staff-card.has-override { border-color: var(--green-100); background: var(--green-50); }
   .staff-card.has-proposal { border-color: var(--blue-100); }
 
   .staff-main {
     padding: 14px 16px; display: flex; align-items: center; gap: 12px;
-    cursor: pointer; -webkit-tap-highlight-color: transparent;
   }
-  .staff-main:active { opacity: 0.8; }
   .staff-avatar {
     width: 44px; height: 44px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
@@ -114,7 +115,7 @@
   }
   .staff-avatar.fk { background: var(--teal-700); }
   .staff-avatar.ek { background: var(--teal-400); }
-  .staff-info { flex: 1; }
+  .staff-info { flex: 1; min-width: 0; }
   .staff-name { font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 6px; }
   .staff-badge {
     font-size: 10px; padding: 2px 6px; border-radius: 4px;
@@ -130,8 +131,65 @@
     border-radius: 8px; flex-shrink: 0;
   }
   .staff-status.krank { background: var(--red-600); color: white; }
+  .staff-status.urlaub { background: var(--purple-600); color: white; }
+  .staff-status.schule { background: var(--blue-600); color: white; }
+  .staff-status.verspaetet { background: var(--orange-600); color: white; }
   .staff-status.frei { background: var(--gray-200); color: var(--gray-600); }
   .staff-status.override { background: var(--green-100); color: var(--green-600); }
+
+  /* Meldung-Button */
+  .btn-meldung {
+    background: var(--gray-100); color: var(--gray-600); border: 2px solid var(--gray-200);
+    border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 700;
+    cursor: pointer; flex-shrink: 0; -webkit-tap-highlight-color: transparent;
+    transition: all 0.2s;
+  }
+  .btn-meldung:active { background: var(--gray-200); transform: scale(0.96); }
+
+  /* Status-Menu (Bottom Sheet) */
+  .status-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4); z-index: 300;
+    display: none; align-items: flex-end; justify-content: center;
+    animation: fadeIn 0.2s ease;
+  }
+  .status-overlay.visible { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .status-menu {
+    background: white; border-radius: 16px 16px 0 0; padding: 8px 0;
+    width: 100%; max-width: 500px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 8px);
+    animation: slideUp 0.25s ease;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); } to { transform: translateY(0); }
+  }
+  .status-menu-title {
+    padding: 16px 20px 8px; font-size: 13px; font-weight: 700;
+    color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .status-option {
+    display: flex; align-items: center; gap: 14px; padding: 14px 20px;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s;
+  }
+  .status-option:active { background: var(--gray-100); }
+  .status-option .status-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .status-option .status-icon.krank { background: var(--red-50); }
+  .status-option .status-icon.verspaetung { background: var(--orange-50); }
+  .status-option .status-icon.urlaub { background: var(--purple-50); }
+  .status-option .status-icon.schule { background: var(--blue-50); }
+  .status-option .status-icon.aufheben { background: var(--green-50); }
+  .status-option .status-icon.cancel { background: var(--gray-100); }
+  .status-option-text { flex: 1; }
+  .status-option-label { font-weight: 600; font-size: 16px; }
+  .status-option-desc { font-size: 13px; color: var(--gray-600); margin-top: 1px; }
+  .status-divider { height: 1px; background: var(--gray-200); margin: 4px 20px; }
 
   /* Vorschlag-Zeile in Staff-Karte */
   .staff-proposal {
@@ -148,6 +206,13 @@
     padding: 5px 8px; text-align: center; outline: none;
   }
   .proposal-input:focus { border-color: var(--teal-600); }
+  .proposal-confirm {
+    background: var(--green-600); color: white; border: none; border-radius: 6px;
+    width: 36px; height: 36px; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent; flex-shrink: 0;
+  }
+  .proposal-confirm:active { transform: scale(0.92); background: var(--green-600); }
   .proposal-clear {
     background: none; border: none; color: var(--gray-400); font-size: 18px;
     cursor: pointer; padding: 0 4px; line-height: 1;
@@ -219,8 +284,8 @@
 
   .detail-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .detail-actions button, .detail-actions a {
-    flex: 1; padding: 10px; border-radius: 8px; border: none;
-    font-size: 14px; font-weight: 600; cursor: pointer;
+    flex: 1; padding: 14px; border-radius: 10px; border: none;
+    font-size: 15px; font-weight: 700; cursor: pointer;
     display: flex; align-items: center; justify-content: center; gap: 6px;
     text-decoration: none; text-align: center; min-width: 100px;
     -webkit-tap-highlight-color: transparent;
@@ -229,9 +294,10 @@
   .btn-wa-send { background: #25D366; color: white; }
   .btn-save-tpl { background: var(--blue-50); color: var(--blue-600); border: 2px solid var(--blue-100); }
   .btn-save-tpl.saved { background: var(--green-100); color: var(--green-600); border-color: var(--green-100); }
-  .btn-antwort-ja { background: var(--green-50); color: var(--green-600); }
-  .btn-antwort-nein { background: var(--red-50); color: var(--red-600); }
-  .btn-skip { background: var(--gray-100); color: var(--gray-600); }
+  .btn-antwort-ja { background: var(--green-600); color: white; min-height: 48px; }
+  .btn-antwort-ja:active { background: var(--green-600); }
+  .btn-antwort-nein { background: var(--red-50); color: var(--red-600); border: 2px solid var(--red-100); min-height: 48px; }
+  .btn-skip { background: var(--gray-100); color: var(--gray-600); min-height: 48px; }
 
   .anfrage-status {
     display: flex; align-items: center; gap: 8px;
@@ -243,9 +309,9 @@
   .anfrage-status.nein { background: var(--red-50); color: var(--red-600); }
 
   /* Eltern-Bereich */
-  .animated-section { display: none; animation: slideUp 0.3s ease; }
+  .animated-section { display: none; animation: slideUpAnim 0.3s ease; }
   .animated-section.visible { display: block; }
-  @keyframes slideUp {
+  @keyframes slideUpAnim {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
@@ -323,9 +389,8 @@
     <div id="hoursContent"></div>
   </div>
 
-  <div class="section-header">Pädagoginnen — Tap zum Krankmelden</div>
+  <div class="section-header">Pädagoginnen</div>
   <div id="staffList"></div>
-  <div class="hint" id="staffHint">Tippe auf eine Person, um sie als KRANK zu markieren</div>
 
   <!-- Detail-Bereich: WA-Nachrichten für angefragte Personen -->
   <div class="detail-section" id="detailSection" style="display:none;">
@@ -391,6 +456,14 @@
   </div>
 </div>
 
+<!-- Status-Menü (Bottom Sheet) -->
+<div class="status-overlay" id="statusOverlay" onclick="closeStatusMenu()">
+  <div class="status-menu" id="statusMenu" onclick="event.stopPropagation()">
+    <div class="status-menu-title" id="statusMenuTitle">Meldung</div>
+    <div id="statusMenuOptions"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -416,10 +489,20 @@ var TARGET_START = 7 * 60 + 30;  // 07:30
 var TARGET_END = 16 * 60 + 30;   // 16:30
 
 var selectedDay = 0;
-var sickStaff = {};
+var staffAbsence = {};      // key → 'krank' | 'urlaub' | 'schule' | 'verspaetung'
+var staffLateStart = {};    // key → 'HH:MM' (nur bei Verspätung)
 var subResponses = {};
-var shiftOverrides = {};   // Bestätigte Schichtänderungen
-var proposedShifts = {};   // Geplante Vorschläge (noch nicht bestätigt)
+var shiftOverrides = {};    // Bestätigte Schichtänderungen
+var proposedShifts = {};    // Geplante Vorschläge (noch nicht bestätigt)
+var statusMenuTarget = null; // Aktuell geöffnetes Menü für Person
+
+// Absence-Typen Konfiguration
+var ABSENCE_TYPES = {
+  krank:       { label: 'Krank',              icon: '🤒', desc: 'Ganzer Tag',         cardClass: 'sick',       badgeClass: 'krank' },
+  verspaetung: { label: 'Verspätet',          icon: '⏰', desc: 'Kommt später',       cardClass: 'verspaetet', badgeClass: 'verspaetet' },
+  urlaub:      { label: 'Urlaub',             icon: '🏖️', desc: 'Geplante Abwesenheit', cardClass: 'urlaub',     badgeClass: 'urlaub' },
+  schule:      { label: 'Schule/Fortbildung', icon: '📚', desc: 'Ganzer Tag',         cardClass: 'schule',     badgeClass: 'schule' }
+};
 
 // ==========================================
 // INIT
@@ -445,7 +528,6 @@ function renderDayTabs() {
 }
 
 function renderDay() {
-  // Proposals für neuen Tag neu generieren, bestehende Responses/Overrides behalten
   proposedShifts = {};
   generateProposals();
   renderStaff();
@@ -465,21 +547,33 @@ function formatTime(m) { return Math.floor(m/60).toString().padStart(2,'0') + ':
 function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
 function autoResizeAll() { document.querySelectorAll('.wa-preview, .msg-textarea').forEach(autoResize); }
 
+function isAbsent(key) {
+  var type = staffAbsence[key];
+  return type === 'krank' || type === 'urlaub' || type === 'schule';
+}
+
 function getEffectiveShift(person, dayIndex) {
   var key = person.name + '-' + dayIndex;
   if (shiftOverrides[key]) return shiftOverrides[key];
+  // Bei Verspätung: angepasste Startzeit
+  if (staffAbsence[key] === 'verspaetung' && staffLateStart[key]) {
+    var orig = person.shifts[dayIndex];
+    if (orig === 'FREI') return 'FREI';
+    var parts = orig.split('-');
+    return staffLateStart[key] + '-' + parts[1];
+  }
   return person.shifts[dayIndex];
 }
 
 function getActiveStaff(dayIndex) {
   var active = [];
   STAFF.forEach(function(p) {
-    var shift = getEffectiveShift(p, dayIndex);
     var key = p.name + '-' + dayIndex;
-    if (shift !== 'FREI' && !sickStaff[key]) {
-      var parts = shift.split('-');
-      active.push({ name: p.name, type: p.type, isFK: p.type === 'FK', isEK: p.type === 'EK', start: parseTime(parts[0]), end: parseTime(parts[1]) });
-    }
+    if (isAbsent(key)) return;
+    var shift = getEffectiveShift(p, dayIndex);
+    if (shift === 'FREI') return;
+    var parts = shift.split('-');
+    active.push({ name: p.name, type: p.type, isFK: p.type === 'FK', isEK: p.type === 'EK', start: parseTime(parts[0]), end: parseTime(parts[1]) });
   });
   return active;
 }
@@ -489,8 +583,8 @@ function getProjectedActiveStaff(dayIndex) {
   var active = [];
   STAFF.forEach(function(p) {
     var key = p.name + '-' + dayIndex;
-    if (sickStaff[key]) return;
-    var shift = shiftOverrides[key] || proposedShifts[key] || p.shifts[dayIndex];
+    if (isAbsent(key)) return;
+    var shift = shiftOverrides[key] || proposedShifts[key] || getEffectiveShift(p, dayIndex);
     if (!shift || shift === 'FREI') return;
     var parts = shift.split('-');
     active.push({ name: p.name, type: p.type, isFK: p.type === 'FK', isEK: p.type === 'EK', start: parseTime(parts[0]), end: parseTime(parts[1]) });
@@ -530,20 +624,18 @@ function generateProposals() {
 
   STAFF.forEach(function(person) {
     var key = person.name + '-' + selectedDay;
-    if (sickStaff[key] || shiftOverrides[key]) return;
-    if (proposedShifts[key] !== undefined) return; // Bereits gesetzt (auch null = gelöscht)
+    if (isAbsent(key) || shiftOverrides[key]) return;
+    if (proposedShifts[key] !== undefined) return;
 
-    var orig = person.shifts[selectedDay];
+    var orig = getEffectiveShift(person, selectedDay);
 
     if (orig === 'FREI') {
-      // Freie Person: Vorschlag für Lücke
       var sS = needEarly ? TARGET_START : (win.end - 60);
       var sE = needLate ? TARGET_END : (win.start + 60);
-      if (sE - sS > 480) sE = sS + 480; // Max 8h
+      if (sE - sS > 480) sE = sS + 480;
       if (sE <= sS) return;
       proposedShifts[key] = formatTime(sS) + '-' + formatTime(sE);
     } else {
-      // Arbeitende Person: Schicht ausweiten Richtung Ziel
       var parts = orig.split('-');
       var pS = parseTime(parts[0]);
       var pE = parseTime(parts[1]);
@@ -552,11 +644,9 @@ function generateProposals() {
       if (needEarly && pS > TARGET_START) newS = TARGET_START;
       if (needLate && pE < TARGET_END) newE = TARGET_END;
 
-      // Nie kürzer machen
       if (newS > pS) newS = pS;
       if (newE < pE) newE = pE;
 
-      // Nur vorschlagen wenn es sich ändert
       if (newS !== pS || newE !== pE) {
         proposedShifts[key] = formatTime(newS) + '-' + formatTime(newE);
       }
@@ -605,7 +695,6 @@ function updateHours() {
 
   var html = '<div class="hours-row"><span class="hours-label">Regulär</span><span class="hours-value normal">' + NORMAL_HOURS + '</span></div>';
 
-  // Aktuell
   if (win.status === 'GESCHLOSSEN') {
     html += '<div class="hours-row"><span class="hours-label">' + DAYS_FULL[selectedDay] + ' aktuell</span><span class="hours-value closed">GESCHLOSSEN</span></div>';
   } else {
@@ -614,7 +703,6 @@ function updateHours() {
     html += '<div class="hours-row"><span class="hours-label">' + DAYS_FULL[selectedDay] + ' aktuell</span><span class="hours-value ' + (isRed ? 'reduced' : 'normal') + '">' + cur + '</span></div>';
   }
 
-  // Geplant (nur wenn Proposals existieren und sich was ändert)
   if (hasProposals) {
     if (projWin.status === 'GESCHLOSSEN') {
       html += '<div class="hours-row"><span class="hours-label">Mit Anfragen</span><span class="hours-value closed">GESCHLOSSEN</span></div>';
@@ -629,6 +717,117 @@ function updateHours() {
 }
 
 // ==========================================
+// STATUS-MENÜ (Bottom Sheet)
+// ==========================================
+function showStatusMenu(name) {
+  statusMenuTarget = name;
+  var key = name + '-' + selectedDay;
+  var currentAbsence = staffAbsence[key];
+
+  document.getElementById('statusMenuTitle').textContent = 'Meldung — ' + name;
+
+  var html = '';
+  Object.keys(ABSENCE_TYPES).forEach(function(type) {
+    var cfg = ABSENCE_TYPES[type];
+    var isActive = currentAbsence === type;
+    html += '<div class="status-option" onclick="setAbsence(\'' + name + '\', \'' + type + '\')">' +
+      '<div class="status-icon ' + type + '">' + cfg.icon + '</div>' +
+      '<div class="status-option-text">' +
+        '<div class="status-option-label">' + cfg.label + (isActive ? ' ✓' : '') + '</div>' +
+        '<div class="status-option-desc">' + cfg.desc + '</div>' +
+      '</div></div>';
+  });
+
+  if (currentAbsence) {
+    html += '<div class="status-divider"></div>' +
+      '<div class="status-option" onclick="clearAbsence(\'' + name + '\')">' +
+        '<div class="status-icon aufheben">✓</div>' +
+        '<div class="status-option-text">' +
+          '<div class="status-option-label">Status aufheben</div>' +
+          '<div class="status-option-desc">' + name + ' ist wieder normal da</div>' +
+        '</div></div>';
+  }
+
+  html += '<div class="status-divider"></div>' +
+    '<div class="status-option" onclick="closeStatusMenu()">' +
+      '<div class="status-icon cancel">✕</div>' +
+      '<div class="status-option-text">' +
+        '<div class="status-option-label">Abbrechen</div>' +
+      '</div></div>';
+
+  document.getElementById('statusMenuOptions').innerHTML = html;
+  document.getElementById('statusOverlay').classList.add('visible');
+}
+
+function closeStatusMenu() {
+  document.getElementById('statusOverlay').classList.remove('visible');
+  statusMenuTarget = null;
+}
+
+function setAbsence(name, type) {
+  var key = name + '-' + selectedDay;
+
+  if (type === 'verspaetung') {
+    closeStatusMenu();
+    var person = STAFF.find(function(p) { return p.name === name; });
+    var origShift = person ? person.shifts[selectedDay] : '';
+    var defaultTime = '09:00';
+    if (origShift && origShift !== 'FREI') {
+      var parts = origShift.split('-');
+      var origStart = parseTime(parts[0]);
+      defaultTime = formatTime(origStart + 60); // 1h später als Vorschlag
+    }
+    var newStart = prompt('Ab wann kommt ' + name + '?', defaultTime);
+    if (!newStart) return;
+    if (!/^\d{2}:\d{2}$/.test(newStart)) {
+      showToast('Format: HH:MM');
+      return;
+    }
+    staffAbsence[key] = 'verspaetung';
+    staffLateStart[key] = newStart;
+  } else {
+    staffAbsence[key] = type;
+    delete staffLateStart[key];
+  }
+
+  // Vorschläge/Overrides für abwesende Person löschen
+  if (isAbsent(key)) {
+    delete proposedShifts[key];
+    delete shiftOverrides[key];
+    delete subResponses[key];
+  }
+
+  closeStatusMenu();
+  refreshAll();
+  var cfg = ABSENCE_TYPES[type];
+  showToast(cfg.icon + ' ' + name + ': ' + cfg.label);
+}
+
+function clearAbsence(name) {
+  var key = name + '-' + selectedDay;
+  delete staffAbsence[key];
+  delete staffLateStart[key];
+  delete proposedShifts[key];
+  closeStatusMenu();
+  refreshAll();
+  showToast('✓ ' + name + ' — Status aufgehoben');
+}
+
+function refreshAll() {
+  var keepProposals = {};
+  Object.keys(proposedShifts).forEach(function(k) {
+    if (proposedShifts[k] !== undefined) keepProposals[k] = proposedShifts[k];
+  });
+  proposedShifts = keepProposals;
+  generateProposals();
+  renderStaff();
+  updateAmpel();
+  updateHours();
+  renderDetailCards();
+  updateElternBtn();
+}
+
+// ==========================================
 // PERSONAL RENDERN
 // ==========================================
 function renderStaff() {
@@ -639,16 +838,15 @@ function renderStaff() {
     var key = person.name + '-' + selectedDay;
     var origShift = person.shifts[selectedDay];
     var effectiveShift = getEffectiveShift(person, selectedDay);
-    var isSick = sickStaff[key] === true;
+    var absence = staffAbsence[key];
     var isFrei = origShift === 'FREI' && !shiftOverrides[key];
     var hasOverride = !!shiftOverrides[key];
     var proposal = proposedShifts[key];
     var hasProposal = proposal && !hasOverride;
-    var response = subResponses[key];
 
     var card = document.createElement('div');
     var cls = 'staff-card';
-    if (isSick) cls += ' sick';
+    if (absence && ABSENCE_TYPES[absence]) cls += ' ' + ABSENCE_TYPES[absence].cardClass;
     else if (isFrei && !hasProposal) cls += ' absent';
     if (hasOverride) cls += ' has-override';
     else if (hasProposal) cls += ' has-proposal';
@@ -656,31 +854,46 @@ function renderStaff() {
 
     var initials = person.name.substring(0, 2).toUpperCase();
 
-    // Status-Badge
-    var statusHtml = '';
-    if (isSick) statusHtml = '<div class="staff-status krank">KRANK</div>';
-    else if (hasOverride) statusHtml = '<div class="staff-status override">\u2713 ZUGESAGT</div>';
-    else if (isFrei && !hasProposal) statusHtml = '<div class="staff-status frei">FREI</div>';
+    // Status-Badge + Meldung-Button
+    var rightHtml = '';
+    if (absence && ABSENCE_TYPES[absence]) {
+      var cfg = ABSENCE_TYPES[absence];
+      var label = cfg.label.toUpperCase();
+      if (absence === 'verspaetung' && staffLateStart[key]) {
+        label = 'AB ' + staffLateStart[key];
+      }
+      rightHtml = '<div class="staff-status ' + cfg.badgeClass + '" onclick="showStatusMenu(\'' + person.name + '\')" style="cursor:pointer;">' + label + '</div>';
+    } else if (hasOverride) {
+      rightHtml = '<div class="staff-status override">\u2713 ZUGESAGT</div>';
+    } else if (isFrei && !hasProposal) {
+      rightHtml = '<div class="staff-status frei">FREI</div>';
+    } else {
+      rightHtml = '<button class="btn-meldung" onclick="showStatusMenu(\'' + person.name + '\')">Meldung</button>';
+    }
 
     // Schicht-Anzeige
     var shiftDisplay = isFrei ? 'Frei' : effectiveShift;
-    if (hasOverride && origShift !== 'FREI') {
-      shiftDisplay = '<s style="color:#bdbdbd;">' + origShift + '</s> \u2192 ' + effectiveShift;
+    if (absence === 'verspaetung' && staffLateStart[key] && origShift !== 'FREI') {
+      shiftDisplay = '<s style="color:#bdbdbd;">' + origShift + '</s> → ' + effectiveShift;
+    } else if (hasOverride && origShift !== 'FREI') {
+      shiftDisplay = '<s style="color:#bdbdbd;">' + origShift + '</s> → ' + effectiveShift;
     } else if (hasOverride && origShift === 'FREI') {
       shiftDisplay = effectiveShift + ' (springt ein)';
+    } else if (isAbsent(key)) {
+      shiftDisplay = '<s style="color:#bdbdbd;">' + origShift + '</s>';
     }
 
-    // Hauptzeile (tappable für Krankmeldung)
-    var mainHtml = '<div class="staff-main" onclick="toggleSick(\'' + person.name + '\')">' +
+    // Hauptzeile (NICHT mehr klickbar für Krankmeldung)
+    var mainHtml = '<div class="staff-main">' +
       '<div class="staff-avatar ' + person.type.toLowerCase() + '">' + initials + '</div>' +
       '<div class="staff-info"><div class="staff-name">' + person.name +
       ' <span class="staff-badge ' + person.type.toLowerCase() + '">' + person.type + '</span></div>' +
       '<div class="staff-shift">' + shiftDisplay + '</div></div>' +
-      statusHtml + '</div>';
+      rightHtml + '</div>';
 
     // Vorschlag-Zeile (wenn Vorschlag existiert und nicht bestätigt)
     var proposalHtml = '';
-    if (hasProposal && !isSick) {
+    if (hasProposal && !isAbsent(key)) {
       var dur = 0;
       try {
         var pp = proposal.split('-');
@@ -698,11 +911,14 @@ function renderStaff() {
         '<div class="proposal-row">' +
         '<span class="proposal-label">Vorschlag:</span>' +
         '<input type="text" class="proposal-input" id="prop-' + person.name + '" value="' + proposal + '" ' +
-        'onchange="updateProposal(\'' + person.name + '\')" onclick="event.stopPropagation()">' +
+        'onclick="event.stopPropagation()" onkeydown="if(event.key===\'Enter\'){event.preventDefault();confirmProposal(\'' + person.name + '\');}">' +
+        '<button class="proposal-confirm" onclick="event.stopPropagation(); confirmProposal(\'' + person.name + '\')" title="Vorschlag bestätigen">✓</button>' +
         '<button class="proposal-clear" onclick="event.stopPropagation(); clearProposal(\'' + person.name + '\')" title="Vorschlag löschen">\u2715</button>' +
-        '<button class="btn-anfragen" onclick="event.stopPropagation(); scrollToDetail(\'' + person.name + '\')">\uD83D\uDCF2 Anfragen</button>' +
         '</div>' +
-        (chips ? '<div class="proposal-chips">' + chips + '</div>' : '') +
+        '<div style="display:flex;align-items:center;gap:8px;margin-top:8px;">' +
+        '<button class="btn-anfragen" onclick="event.stopPropagation(); scrollToDetail(\'' + person.name + '\')">\uD83D\uDCF2 Anfragen</button>' +
+        (chips ? '<div class="proposal-chips" style="flex:1;">' + chips + '</div>' : '') +
+        '</div>' +
         '</div>';
     }
 
@@ -720,34 +936,10 @@ function renderStaff() {
   });
 }
 
-function toggleSick(name) {
-  var key = name + '-' + selectedDay;
-  if (sickStaff[key]) {
-    delete sickStaff[key];
-  } else {
-    sickStaff[key] = true;
-    delete proposedShifts[key]; // Kranke Person hat keinen Vorschlag
-    delete shiftOverrides[key];
-    delete subResponses[key];
-  }
-  // Proposals neu generieren für geänderte Situation
-  var keepProposals = {};
-  Object.keys(proposedShifts).forEach(function(k) {
-    if (proposedShifts[k] !== undefined) keepProposals[k] = proposedShifts[k];
-  });
-  proposedShifts = keepProposals;
-  generateProposals();
-  renderStaff();
-  updateAmpel();
-  updateHours();
-  renderDetailCards();
-  updateElternBtn();
-}
-
 // ==========================================
-// VORSCHLAG BEARBEITEN
+// VORSCHLAG BEARBEITEN + BESTÄTIGEN
 // ==========================================
-function updateProposal(name) {
+function confirmProposal(name) {
   var input = document.getElementById('prop-' + name);
   if (!input) return;
   var val = input.value.trim();
@@ -757,15 +949,34 @@ function updateProposal(name) {
     showToast('Format: HH:MM-HH:MM');
     return;
   }
+
+  // Prüfe ob der Vorschlag identisch mit der aktuellen Schicht ist
+  var person = STAFF.find(function(p) { return p.name === name; });
+  var currentShift = person ? getEffectiveShift(person, selectedDay) : '';
+  if (val === currentShift) {
+    // Gleiche Schicht → Vorschlag löschen (keine Anfrage nötig)
+    proposedShifts[key] = null;
+    renderStaff();
+    updateHours();
+    renderDetailCards();
+    showToast('Keine Änderung nötig — Vorschlag entfernt');
+    return;
+  }
+
   proposedShifts[key] = val;
+  renderStaff();
   updateHours();
   renderDetailCards();
-  showToast('Vorschlag aktualisiert: ' + val);
+  showToast('✓ Vorschlag bestätigt: ' + val);
+}
+
+function updateProposal(name) {
+  confirmProposal(name);
 }
 
 function clearProposal(name) {
   var key = name + '-' + selectedDay;
-  proposedShifts[key] = null; // null = user cleared, don't regenerate
+  proposedShifts[key] = null;
   renderStaff();
   updateHours();
   renderDetailCards();
@@ -780,11 +991,15 @@ function renderDetailCards() {
 
   var dayName = DAYS_FULL[selectedDay];
   var dayDate = DATES[selectedDay];
-  var sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
-  var sickNames = sickToday.map(function(p) { return p.name; });
+
+  // Abwesende heute (für Nachrichtentext)
+  var absentToday = STAFF.filter(function(p) {
+    var key = p.name + '-' + selectedDay;
+    return staffAbsence[key] === 'krank';
+  });
+  var sickNames = absentToday.map(function(p) { return p.name; });
   var hasSick = sickNames.length > 0;
 
-  // Karten für alle Personen mit Vorschlag oder Antwort
   var hasCards = false;
   STAFF.forEach(function(person) {
     var key = person.name + '-' + selectedDay;
@@ -793,7 +1008,6 @@ function renderDetailCards() {
     var response = subResponses[key];
     var origShift = person.shifts[selectedDay];
 
-    // Karte zeigen wenn: Vorschlag vorhanden ODER Antwort vorhanden
     if (!proposal && !override && !response) return;
     hasCards = true;
 
@@ -833,21 +1047,24 @@ function renderDetailCards() {
     else if (response === 'nein') statusHtml = '<div class="anfrage-status nein">\u2717 Kann nicht</div>';
     else if (response === 'warten') statusHtml = '<div class="anfrage-status warten">\u23F3 Wartet auf Antwort...</div>';
 
-    // Aktions-Buttons
+    // Aktions-Buttons (größer und prominenter)
     var actions = '';
     if (!response || response === 'warten') {
       actions =
         '<div class="detail-actions">' +
-          '<a href="' + waLink + '" target="_blank" id="walink-' + person.name + '" class="btn-wa-send">\uD83D\uDCF2 WhatsApp</a>' +
-          '<button class="btn-save-tpl" onclick="saveSubTplFromDetail(\'' + person.name + '\', \'' + tplKey + '\', this)">\uD83D\uDCBE Template</button>' +
+          '<a href="' + waLink + '" target="_blank" id="walink-' + person.name + '" class="btn-wa-send" style="min-height:48px;">\uD83D\uDCF2 WhatsApp senden</a>' +
         '</div>' +
-        '<div class="detail-actions" style="margin-top:6px;">' +
+        '<div class="detail-actions" style="margin-top:8px;">' +
+          '<button class="btn-save-tpl" onclick="saveSubTplFromDetail(\'' + person.name + '\', \'' + tplKey + '\', this)" style="min-height:44px;">\uD83D\uDCBE Template</button>' +
+        '</div>' +
+        '<div style="padding:8px 0 4px;font-size:12px;font-weight:600;color:var(--gray-600);text-transform:uppercase;">Antwort von ' + person.name + ':</div>' +
+        '<div class="detail-actions" style="margin-top:4px;">' +
           '<button class="btn-antwort-ja" onclick="markResponse(\'' + person.name + '\', \'ja\')">\u2713 Zugesagt</button>' +
           '<button class="btn-antwort-nein" onclick="markResponse(\'' + person.name + '\', \'nein\')">\u2717 Absage</button>' +
           (response !== 'warten' ? '<button class="btn-skip" onclick="markResponse(\'' + person.name + '\', \'warten\')">\u23F3 Warten</button>' : '') +
         '</div>';
     } else {
-      actions = '<div class="detail-actions"><button class="btn-undo" style="flex:1;" onclick="undoResponse(\'' + person.name + '\')">\u21A9 Rückgängig</button></div>';
+      actions = '<div class="detail-actions"><button class="btn-undo" style="flex:1;min-height:48px;font-size:15px;" onclick="undoResponse(\'' + person.name + '\')">\u21A9 Rückgängig</button></div>';
     }
 
     var card = document.createElement('div');
@@ -901,7 +1118,6 @@ function markResponse(name, response) {
 
   if (response === 'ja') {
     subResponses[key] = 'ja';
-    // Vorschlag wird zum Override
     var shift = proposedShifts[key];
     if (shift) {
       shiftOverrides[key] = shift;
@@ -927,7 +1143,6 @@ function undoResponse(name) {
   var key = name + '-' + selectedDay;
   delete subResponses[key];
   delete shiftOverrides[key];
-  // Vorschlag neu generieren lassen
   delete proposedShifts[key];
   generateProposals();
   renderStaff();
@@ -942,8 +1157,8 @@ function undoResponse(name) {
 // ELTERN-BEREICH
 // ==========================================
 function updateElternBtn() {
-  var hasSick = Object.keys(sickStaff).some(function(k) { return k.endsWith('-' + selectedDay); });
-  document.getElementById('elternBtnWrap').style.display = hasSick ? 'block' : 'none';
+  var hasAbsent = Object.keys(staffAbsence).some(function(k) { return k.endsWith('-' + selectedDay); });
+  document.getElementById('elternBtnWrap').style.display = hasAbsent ? 'block' : 'none';
 }
 
 function showParentMessages() {
@@ -957,8 +1172,8 @@ function showParentMessages() {
 function generateMessages() {
   var dayName = DAYS_FULL[selectedDay];
   var dayDate = DATES[selectedDay];
-  var sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
-  var sickNames = sickToday.map(function(p) { return p.name; }).join(' und ');
+  var absentToday = STAFF.filter(function(p) { return staffAbsence[p.name + '-' + selectedDay] === 'krank'; });
+  var sickNames = absentToday.map(function(p) { return p.name; }).join(' und ');
   var active = getActiveStaff(selectedDay);
   var win = computeOpeningWindow(active);
 
@@ -973,7 +1188,7 @@ function generateMessages() {
   var tpl1 = loadTemplate(1);
   var msg1 = tpl1 ? fillTemplate(tpl1, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText }) :
     'Wichtige Info für ' + (selectedDay === 0 ? 'morgen' : dayName) + ', ' + dayDate + '\n\n' +
-    sickNames + ' fällt leider krankheitsbedingt aus, daher bin ich gerade dabei umzuplanen.\n\n' +
+    (sickNames ? sickNames + ' fällt leider krankheitsbedingt aus, daher bin ich gerade dabei umzuplanen.\n\n' : 'Wir haben personelle Änderungen, daher bin ich gerade dabei umzuplanen.\n\n') +
     'Auf Grund dessen ändern sich die Betreuungszeiten wie folgt:\n\n' + zeitenText + '\n\n' +
     'Bitte schaut, dass ihr mind. 5min vor Ende dieser Zeit da seid und mit euren Kindern pünktlich die Kita verlasst.';
 
@@ -1070,7 +1285,7 @@ function showToast(text) {
 // RESET
 // ==========================================
 function resetAll() {
-  sickStaff = {}; subResponses = {}; shiftOverrides = {}; proposedShifts = {};
+  staffAbsence = {}; staffLateStart = {}; subResponses = {}; shiftOverrides = {}; proposedShifts = {};
   document.getElementById('messagesSection').classList.remove('visible');
   renderDay();
   window.scrollTo({ top: 0, behavior: 'smooth' });
