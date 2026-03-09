@@ -1899,16 +1899,13 @@ function getActiveStaffForGantt(dayIndex) {
     result.push(entry);
   });
 
-  // Sortieren: Arbeitende zuerst (FK>EK>Proposal), dann Frei
+  // Feste Reihenfolge: FK oben, EK unten, innerhalb nach STAFF-Array-Position
+  // So springt niemand beim Drag in eine andere Zeile
+  var staffOrder = {};
+  STAFF.forEach(function(p, i) { staffOrder[p.name] = i; });
   result.sort(function(a, b) {
-    // Frei immer unten
-    if (a.isFrei !== b.isFrei) return a.isFrei ? 1 : -1;
-    // Krank unten (aber über Frei)
-    if (a.isSick !== b.isSick) return a.isSick ? 1 : -1;
-    // FK über EK
     if (a.isFK !== b.isFK) return a.isFK ? -1 : 1;
-    // Nach Startzeit
-    return a.start - b.start;
+    return staffOrder[a.name] - staffOrder[b.name];
   });
 
   return result;
