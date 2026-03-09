@@ -250,7 +250,7 @@
     color: var(--gray-600);
   }
 
-  /* Oeffnungszeiten-Info */
+  /* Öffnungszeiten-Info */
   .hours-card {
     background: white;
     border-radius: var(--radius);
@@ -514,10 +514,10 @@
     line-height: 1.5;
     color: var(--gray-800);
     margin-bottom: 10px;
-    min-height: 80px;
     border: 1px solid var(--gray-200);
-    resize: vertical;
+    resize: none;
     outline: none;
+    overflow: hidden;
     transition: border-color 0.2s;
   }
   .wa-preview:focus {
@@ -529,7 +529,7 @@
     display: flex;
     gap: 8px;
   }
-  .sub-card-actions button {
+  .sub-card-actions button, .sub-card-actions a {
     flex: 1;
     padding: 10px;
     border-radius: 8px;
@@ -543,8 +543,10 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    text-decoration: none;
+    text-align: center;
   }
-  .sub-card-actions button:active { transform: scale(0.97); }
+  .sub-card-actions button:active, .sub-card-actions a:active { transform: scale(0.97); }
   .btn-copy-wa {
     background: var(--teal-50);
     color: var(--teal-700);
@@ -560,6 +562,45 @@
   .btn-skip {
     background: var(--gray-100);
     color: var(--gray-600);
+  }
+  .btn-undo {
+    background: var(--orange-50);
+    color: var(--orange-600);
+    border: 1px solid var(--orange-100);
+  }
+
+  /* Schichtzeit-Eingabe */
+  .shift-time-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background: var(--teal-50);
+    border-radius: 8px;
+    border: 1px solid var(--teal-100);
+  }
+  .shift-time-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--teal-800);
+    white-space: nowrap;
+  }
+  .shift-time-input {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--teal-900);
+    background: white;
+    border: 2px solid var(--teal-200, #80cbc4);
+    border-radius: 6px;
+    padding: 6px 10px;
+    text-align: center;
+    outline: none;
+    max-width: 140px;
+  }
+  .shift-time-input:focus {
+    border-color: var(--teal-600);
   }
 
   /* Gestufter Prozess Hinweis */
@@ -580,7 +621,6 @@
   /* Editierbare Nachrichten */
   .msg-textarea {
     width: 100%;
-    min-height: 140px;
     padding: 12px 16px;
     font-family: inherit;
     font-size: 14px;
@@ -589,7 +629,8 @@
     border: none;
     border-bottom: 2px solid var(--teal-100);
     background: var(--gray-50);
-    resize: vertical;
+    resize: none;
+    overflow: hidden;
     outline: none;
     transition: border-color 0.2s;
   }
@@ -626,12 +667,15 @@
     color: white;
   }
   .btn-save-tpl {
-    background: var(--gray-100);
-    color: var(--gray-600);
+    background: var(--blue-50);
+    color: var(--blue-600);
+    border: 2px solid var(--blue-100);
+    font-weight: 700;
   }
   .btn-save-tpl.saved {
     background: var(--green-100);
     color: var(--green-600);
+    border-color: var(--green-100);
   }
 
   /* Template-Hinweis */
@@ -714,41 +758,6 @@
   .message-header.info { background: var(--orange-50); color: var(--orange-600); }
   .message-header.urgent { background: var(--red-50); color: var(--red-600); }
   .message-header.closed { background: var(--gray-100); color: var(--gray-800); }
-  .message-body {
-    padding: 12px 16px;
-    font-size: 14px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    color: var(--gray-800);
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  .message-footer {
-    padding: 10px 16px;
-    border-top: 1px solid var(--gray-100);
-  }
-  .copy-btn {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: none;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    background: var(--teal-50);
-    color: var(--teal-700);
-    transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .copy-btn:active { background: var(--teal-100); }
-  .copy-btn.copied {
-    background: var(--green-100);
-    color: var(--green-600);
-  }
 
   /* Reset-Link */
   .reset-link {
@@ -829,19 +838,19 @@
     </div>
   </div>
 
-  <!-- Oeffnungszeiten -->
+  <!-- Öffnungszeiten -->
   <div class="hours-card" id="hoursCard">
-    <h3>Oeffnungszeiten</h3>
+    <h3>Öffnungszeiten</h3>
     <div id="hoursContent"></div>
   </div>
 
   <!-- Personal -->
-  <div class="section-header">Paedagoginnen — Tap zum Krankmelden</div>
+  <div class="section-header">Pädagoginnen — Tap zum Krankmelden</div>
   <div id="staffList"></div>
   <div class="hint" id="staffHint">Tippe auf eine Person, um sie als KRANK zu markieren</div>
 
-  <!-- SCHRITT 1: Vertretung suchen -->
-  <button class="action-btn primary" id="searchSubBtn" disabled onclick="searchSubstitutes()">
+  <!-- Aktion: Vertretung suchen ODER Dienstplan optimieren -->
+  <button class="action-btn primary" id="searchSubBtn" onclick="searchSubstitutes()">
     Erst jemanden als KRANK markieren
   </button>
 
@@ -865,10 +874,10 @@
 
   <!-- SCHRITT 2: Erzieherinnen-Anfrage -->
   <div class="animated-section" id="subSection">
-    <div class="section-header">Schritt 1 — Vertretung suchen</div>
+    <div class="section-header" id="subSectionHeader">Schritt 1 — Vertretung suchen</div>
 
-    <div class="stufig-hinweis">
-      <strong>Gestufter Prozess:</strong> Frage erst die beste Option. Bei Absage -> naechste Person fragen. So vermeidest du unnoetige Anfragen.
+    <div class="stufig-hinweis" id="stufigHinweis">
+      <strong>Gestufter Prozess:</strong> Frage erst die beste Option. Bei Absage → nächste Person fragen. So vermeidest du unnötige Anfragen.
     </div>
 
     <div id="subList"></div>
@@ -877,7 +886,7 @@
       <div class="ampel-banner red" style="margin-top:8px;">
         <div class="ampel-dot">&#10007;</div>
         <div class="ampel-text">
-          <div class="label">Keine Vertretung verfuegbar</div>
+          <div class="label">Keine Vertretung verfügbar</div>
           <div class="detail">Niemand kann an diesem Tag einspringen</div>
         </div>
       </div>
@@ -886,7 +895,7 @@
     <hr class="section-divider">
 
     <button class="action-btn warning" id="noSubBtn" onclick="showParentMessages()">
-      Keine Vertretung moeglich &#x2192; Eltern benachrichtigen
+      Keine Vertretung möglich &#x2192; Eltern benachrichtigen
     </button>
   </div>
 
@@ -898,16 +907,16 @@
     <div class="message-card">
       <div class="message-header info">Wichtige Info — Betreuungszeiten</div>
       <div id="tplHint1" class="tpl-hint" style="display:none;"></div>
-      <textarea class="msg-textarea" id="msg1" rows="6" oninput="updateWaLink(1)"></textarea>
+      <textarea class="msg-textarea" id="msg1" oninput="autoResize(this); updateWaLink(1)"></textarea>
       <div class="msg-actions">
         <a class="btn-wa-send" id="waLink1" href="#" target="_blank">
           &#x1F4F2; WhatsApp
         </a>
         <button class="btn-save-tpl" onclick="saveTemplate(1, this)">
-          &#x1F4BE; Template speichern
+          &#x1F4BE; Template
         </button>
       </div>
-      <span class="tpl-reset" id="tplReset1" style="display:none;" onclick="resetTemplate(1)">Gespeichertes Template loeschen</span>
+      <span class="tpl-reset" id="tplReset1" style="display:none;" onclick="resetTemplate(1)">Gespeichertes Template löschen</span>
     </div>
 
     <!-- Poll-Helfer: Abfrage -->
@@ -920,7 +929,7 @@
         <div id="pollTitle" style="font-weight:700;font-size:14px;margin:8px 0;"></div>
         <div id="pollOptions"></div>
         <div class="poll-hint" style="margin-top:8px;">
-          Tipp: "Waehle mindestens eine Option aus" aktivieren.
+          Tipp: „Wähle mindestens eine Option aus" aktivieren.
         </div>
       </div>
     </div>
@@ -929,35 +938,35 @@
     <div class="message-card">
       <div class="message-header urgent">Betreuungszeit — Finale Info</div>
       <div id="tplHint2" class="tpl-hint" style="display:none;"></div>
-      <textarea class="msg-textarea" id="msg2" rows="6" oninput="updateWaLink(2)"></textarea>
+      <textarea class="msg-textarea" id="msg2" oninput="autoResize(this); updateWaLink(2)"></textarea>
       <div class="msg-actions">
         <a class="btn-wa-send" id="waLink2" href="#" target="_blank">
           &#x1F4F2; WhatsApp
         </a>
         <button class="btn-save-tpl" onclick="saveTemplate(2, this)">
-          &#x1F4BE; Template speichern
+          &#x1F4BE; Template
         </button>
       </div>
-      <span class="tpl-reset" id="tplReset2" style="display:none;" onclick="resetTemplate(2)">Gespeichertes Template loeschen</span>
+      <span class="tpl-reset" id="tplReset2" style="display:none;" onclick="resetTemplate(2)">Gespeichertes Template löschen</span>
     </div>
 
     <!-- Nachricht 3: Kita geschlossen -->
     <div class="message-card">
-      <div class="message-header closed">Kita-Schliessung</div>
+      <div class="message-header closed">Kita-Schließung</div>
       <div id="tplHint3" class="tpl-hint" style="display:none;"></div>
-      <textarea class="msg-textarea" id="msg3" rows="5" oninput="updateWaLink(3)"></textarea>
+      <textarea class="msg-textarea" id="msg3" oninput="autoResize(this); updateWaLink(3)"></textarea>
       <div class="msg-actions">
         <a class="btn-wa-send" id="waLink3" href="#" target="_blank">
           &#x1F4F2; WhatsApp
         </a>
         <button class="btn-save-tpl" onclick="saveTemplate(3, this)">
-          &#x1F4BE; Template speichern
+          &#x1F4BE; Template
         </button>
       </div>
-      <span class="tpl-reset" id="tplReset3" style="display:none;" onclick="resetTemplate(3)">Gespeichertes Template loeschen</span>
+      <span class="tpl-reset" id="tplReset3" style="display:none;" onclick="resetTemplate(3)">Gespeichertes Template löschen</span>
     </div>
 
-    <a href="#" class="reset-link" onclick="resetAll(); return false;">&#x21A9; Zuruecksetzen</a>
+    <a href="#" class="reset-link" onclick="resetAll(); return false;">&#x21A9; Zurücksetzen</a>
   </div>
 </div>
 
@@ -969,13 +978,13 @@
 // ==========================================
 
 // Telefonnummern: Internationales Format ohne + (z.B. '491711234567')
-// Wenn leer/'': WhatsApp oeffnet Kontakt-Picker statt Direkt-Chat
+// Wenn leer/'': WhatsApp öffnet Kontakt-Picker statt Direkt-Chat
 //
 // ECHTE DATEN aus dienstplan-grundschema.csv / _Erzieher-Tab
 // KW11 = UNGERADE Woche (09.03. - 13.03.2026)
 // Jenny: ausgeschieden → nicht im System
-// Steffi: Koechin → keine Betreuungskraft, nicht anfragbar
-const STAFF = [
+// Steffi: Köchin → keine Betreuungskraft, nicht anfragbar
+var STAFF = [
   { name: 'Hannah',  type: 'FK', phone: '', shifts: ['07:30-16:00','08:00-16:30','08:00-16:30','07:30-15:00','07:30-10:30'] },
   { name: 'Lioba',   type: 'FK', phone: '', shifts: ['09:00-14:00','08:00-13:00','08:00-13:00','09:00-14:00','FREI'] },
   { name: 'Dilsad',  type: 'FK', phone: '', shifts: ['10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30','10:30-16:30'] },
@@ -985,27 +994,28 @@ const STAFF = [
   { name: 'Gul',     type: 'EK', phone: '', shifts: ['FREI','FREI','FREI','07:45-16:00','07:45-16:00'] },
 ];
 
-const DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
-const DAYS_FULL = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
+var DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr'];
+var DAYS_FULL = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
 
 // KW11 2026: 09.03 - 13.03
-const KW = 11;
-const DATES = ['09.03.', '10.03.', '11.03.', '12.03.', '13.03.'];
-const NORMAL_HOURS = '07:30 - 16:30';
+var KW = 11;
+var DATES = ['09.03.', '10.03.', '11.03.', '12.03.', '13.03.'];
+var NORMAL_HOURS = '07:30 - 16:30';
 
-let selectedDay = 0;
-let sickStaff = {};
-let subResponses = {}; // { "Hannah-0": "ja"|"nein"|"warten" }
-let shiftOverrides = {}; // { "Lioba-0": "08:00-14:00" } — akzeptierte Schichtaenderungen
+var selectedDay = 0;
+var sickStaff = {};
+var subResponses = {}; // { "Hannah-0": "ja"|"nein"|"warten" }
+var shiftOverrides = {}; // { "Lioba-0": "08:00-14:00" } — akzeptierte Schichtänderungen
+var optimizeMode = false; // true wenn ohne Krankmeldung optimiert wird
 
 // ==========================================
 // INIT
 // ==========================================
 
 function init() {
-  document.getElementById('kwInfo').textContent = 'KW ' + KW + ' \u00B7 ' + DATES[0] + ' \u2013 ' + DATES[4] + ' Maerz 2026';
+  document.getElementById('kwInfo').textContent = 'KW ' + KW + ' \u00B7 ' + DATES[0] + ' \u2013 ' + DATES[4] + ' März 2026';
 
-  const today = new Date().getDay();
+  var today = new Date().getDay();
   if (today >= 1 && today <= 5) {
     selectedDay = today - 1;
   }
@@ -1015,10 +1025,10 @@ function init() {
 }
 
 function renderDayTabs() {
-  const container = document.getElementById('dayTabs');
+  var container = document.getElementById('dayTabs');
   container.innerHTML = '';
   DAYS.forEach(function(day, i) {
-    const tab = document.createElement('div');
+    var tab = document.createElement('div');
     tab.className = 'day-tab' + (i === selectedDay ? ' active' : '');
     tab.innerHTML = '<span class="day-name">' + day + '</span><span class="day-date">' + DATES[i] + '</span>';
     tab.onclick = function() { selectedDay = i; renderDayTabs(); renderDay(); };
@@ -1032,11 +1042,27 @@ function renderDay() {
   updateHours();
   updateSearchBtn();
 
-  // Beide Bereiche ausblenden bei Tag-Wechsel
+  // Bereiche bei Tag-Wechsel ausblenden
   document.getElementById('subSection').classList.remove('visible');
   document.getElementById('messagesSection').classList.remove('visible');
   document.getElementById('processSteps').style.display = 'none';
   subResponses = {};
+  optimizeMode = false;
+}
+
+// ==========================================
+// TEXTAREA AUTO-RESIZE
+// ==========================================
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = el.scrollHeight + 'px';
+}
+
+function autoResizeAll() {
+  document.querySelectorAll('.msg-textarea, .wa-preview').forEach(function(el) {
+    autoResize(el);
+  });
 }
 
 // ==========================================
@@ -1044,25 +1070,25 @@ function renderDay() {
 // ==========================================
 
 function renderStaff() {
-  const container = document.getElementById('staffList');
+  var container = document.getElementById('staffList');
   container.innerHTML = '';
 
   STAFF.forEach(function(person) {
-    const shift = getEffectiveShift(person, selectedDay);
-    const originalShift = person.shifts[selectedDay];
-    const key = person.name + '-' + selectedDay;
-    const isSick = sickStaff[key] === true;
-    const isFrei = shift === 'FREI';
-    const hasOverride = shiftOverrides[key] && shiftOverrides[key] !== originalShift;
+    var shift = getEffectiveShift(person, selectedDay);
+    var originalShift = person.shifts[selectedDay];
+    var key = person.name + '-' + selectedDay;
+    var isSick = sickStaff[key] === true;
+    var isFrei = shift === 'FREI';
+    var hasOverride = shiftOverrides[key] && shiftOverrides[key] !== originalShift;
 
-    const card = document.createElement('div');
+    var card = document.createElement('div');
     card.className = 'staff-card' + (isSick ? ' sick' : '') + (isFrei && !isSick ? ' absent' : '');
     if (hasOverride) {
       card.style.borderColor = '#c8e6c9';
       card.style.background = '#e8f5e9';
     }
 
-    const initials = person.name.substring(0, 2).toUpperCase();
+    var initials = person.name.substring(0, 2).toUpperCase();
 
     var statusHtml = '';
     if (isSick) {
@@ -1100,7 +1126,7 @@ function renderStaff() {
 }
 
 function toggleSick(name) {
-  const key = name + '-' + selectedDay;
+  var key = name + '-' + selectedDay;
   if (sickStaff[key]) {
     delete sickStaff[key];
   } else {
@@ -1110,25 +1136,24 @@ function toggleSick(name) {
 }
 
 // ==========================================
-// AMPEL + OEFFNUNGSZEITEN
+// AMPEL + ÖFFNUNGSZEITEN
 // ==========================================
 
 function getEffectiveShift(person, dayIndex) {
   var key = person.name + '-' + dayIndex;
-  // Override hat Vorrang (akzeptierte Vertretung)
   if (shiftOverrides[key]) return shiftOverrides[key];
   return person.shifts[dayIndex];
 }
 
 function getActiveStaff(dayIndex) {
-  const active = [];
+  var active = [];
   STAFF.forEach(function(person) {
-    const shift = getEffectiveShift(person, dayIndex);
-    const key = person.name + '-' + dayIndex;
+    var shift = getEffectiveShift(person, dayIndex);
+    var key = person.name + '-' + dayIndex;
     if (shift !== 'FREI' && !sickStaff[key]) {
-      const parts = shift.split('-');
-      const start = parseTime(parts[0]);
-      const end = parseTime(parts[1]);
+      var parts = shift.split('-');
+      var start = parseTime(parts[0]);
+      var end = parseTime(parts[1]);
       active.push({
         name: person.name,
         type: person.type,
@@ -1143,13 +1168,13 @@ function getActiveStaff(dayIndex) {
 }
 
 function parseTime(str) {
-  const parts = str.split(':').map(Number);
+  var parts = str.split(':').map(Number);
   return parts[0] * 60 + parts[1];
 }
 
 function formatTime(minutes) {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
+  var h = Math.floor(minutes / 60);
+  var m = minutes % 60;
   return h.toString().padStart(2,'0') + ':' + m.toString().padStart(2,'0');
 }
 
@@ -1158,8 +1183,8 @@ function computeOpeningWindow(active) {
     return { start: null, end: null, status: 'GESCHLOSSEN', fkStart: null, fkEnd: null };
   }
 
-  const rasterStart = 7 * 60;
-  const rasterEnd = 17 * 60;
+  var rasterStart = 7 * 60;
+  var rasterEnd = 17 * 60;
 
   var fkStart = null, fkEnd = null;
   var notStart = null, notEnd = null;
@@ -1202,15 +1227,23 @@ function computeOpeningWindow(active) {
   return { start: null, end: null, status: 'GESCHLOSSEN', fkStart: null, fkEnd: null };
 }
 
-function updateAmpel() {
-  const active = getActiveStaff(selectedDay);
-  const fkCount = active.filter(function(s) { return s.isFK; }).length;
-  const ekCount = active.filter(function(s) { return s.isEK; }).length;
-  const win = computeOpeningWindow(active);
+function isHoursReduced() {
+  var active = getActiveStaff(selectedDay);
+  var win = computeOpeningWindow(active);
+  if (win.status === 'GESCHLOSSEN') return true;
+  if (win.start > parseTime('07:30') || win.end < parseTime('16:30')) return true;
+  return false;
+}
 
-  const banner = document.getElementById('ampelBanner');
-  const label = document.getElementById('ampelLabel');
-  const detail = document.getElementById('ampelDetail');
+function updateAmpel() {
+  var active = getActiveStaff(selectedDay);
+  var fkCount = active.filter(function(s) { return s.isFK; }).length;
+  var ekCount = active.filter(function(s) { return s.isEK; }).length;
+  var win = computeOpeningWindow(active);
+
+  var banner = document.getElementById('ampelBanner');
+  var label = document.getElementById('ampelLabel');
+  var detail = document.getElementById('ampelDetail');
 
   banner.className = 'ampel-banner';
 
@@ -1222,27 +1255,27 @@ function updateAmpel() {
   } else if (win.status === 'NOTBETRIEB' || (win.status === 'OK' && fkCount < 3)) {
     banner.classList.add('orange');
     banner.querySelector('.ampel-dot').textContent = '\u26A0';
-    label.textContent = 'Eingeschraenkter Betrieb';
-    detail.textContent = 'Nur ' + fkCount + ' FK \u2014 reduzierte Oeffnungszeiten';
+    label.textContent = 'Eingeschränkter Betrieb';
+    detail.textContent = 'Nur ' + fkCount + ' FK \u2014 reduzierte Öffnungszeiten';
   }
 
   if (win.status === 'GESCHLOSSEN') {
     banner.classList.add('red');
     banner.querySelector('.ampel-dot').textContent = '\u2717';
     label.textContent = 'Kita geschlossen';
-    detail.textContent = 'Weniger als 2 Fachkraefte (KiBiz)';
+    detail.textContent = 'Weniger als 2 Fachkräfte (KiBiz)';
   }
 }
 
 function updateHours() {
-  const active = getActiveStaff(selectedDay);
-  const win = computeOpeningWindow(active);
-  const content = document.getElementById('hoursContent');
+  var active = getActiveStaff(selectedDay);
+  var win = computeOpeningWindow(active);
+  var content = document.getElementById('hoursContent');
 
   if (win.status === 'GESCHLOSSEN') {
     content.innerHTML =
       '<div class="hours-row">' +
-        '<span class="hours-label">Regulaer</span>' +
+        '<span class="hours-label">Regulär</span>' +
         '<span class="hours-value normal">' + NORMAL_HOURS + '</span>' +
       '</div>' +
       '<div class="hours-row">' +
@@ -1250,11 +1283,11 @@ function updateHours() {
         '<span class="hours-value closed">GESCHLOSSEN</span>' +
       '</div>';
   } else {
-    const reduced = formatTime(win.start) + ' \u2013 ' + formatTime(win.end);
-    const isReduced = win.start > parseTime('07:30') || win.end < parseTime('16:30');
+    var reduced = formatTime(win.start) + ' \u2013 ' + formatTime(win.end);
+    var isReduced = win.start > parseTime('07:30') || win.end < parseTime('16:30');
     content.innerHTML =
       '<div class="hours-row">' +
-        '<span class="hours-label">Regulaer</span>' +
+        '<span class="hours-label">Regulär</span>' +
         '<span class="hours-value normal">' + NORMAL_HOURS + '</span>' +
       '</div>' +
       '<div class="hours-row">' +
@@ -1265,65 +1298,102 @@ function updateHours() {
 }
 
 function updateSearchBtn() {
-  const hasSick = Object.keys(sickStaff).some(function(k) { return k.endsWith('-' + selectedDay); });
-  const btn = document.getElementById('searchSubBtn');
-  btn.disabled = !hasSick;
-  btn.textContent = hasSick ? '\uD83D\uDD0D Vertretung suchen' : 'Erst jemanden als KRANK markieren';
+  var hasSick = Object.keys(sickStaff).some(function(k) { return k.endsWith('-' + selectedDay); });
+  var btn = document.getElementById('searchSubBtn');
+  var reduced = isHoursReduced();
+
+  if (hasSick) {
+    btn.disabled = false;
+    btn.textContent = '\uD83D\uDD0D Vertretung suchen';
+    btn.className = 'action-btn primary';
+  } else if (reduced) {
+    btn.disabled = false;
+    btn.textContent = '\uD83D\uDCCB Dienstplan optimieren — Erzieherinnen kontaktieren';
+    btn.className = 'action-btn secondary';
+  } else {
+    btn.disabled = true;
+    btn.textContent = 'Alles OK — volle Öffnungszeiten';
+    btn.className = 'action-btn primary';
+  }
 }
 
 // ==========================================
-// SCHRITT 2: VERTRETUNG SUCHEN
+// SCHRITT 2: VERTRETUNG SUCHEN / OPTIMIEREN
 // ==========================================
 
 function searchSubstitutes() {
-  const dayName = DAYS_FULL[selectedDay];
-  const dayDate = DATES[selectedDay];
+  var dayName = DAYS_FULL[selectedDay];
+  var dayDate = DATES[selectedDay];
 
   // Wer ist krank?
-  const sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
-  const sickNames = sickToday.map(function(p) { return p.name; });
+  var sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
+  var sickNames = sickToday.map(function(p) { return p.name; });
 
-  // Aktive nach Krankheit
-  const active = getActiveStaff(selectedDay);
-  const fkCount = active.filter(function(s) { return s.isFK; }).length;
+  // Modus erkennen
+  optimizeMode = sickToday.length === 0;
 
-  // Wer hat FREI an diesem Tag und koennte einspringen?
-  // (Original-Schicht pruefen, nicht Override — sonst verschwindet die Option nach Zusage)
-  const freeToday = STAFF.filter(function(p) {
+  // Header und Hinweis anpassen
+  var header = document.getElementById('subSectionHeader');
+  var hinweis = document.getElementById('stufigHinweis');
+  if (optimizeMode) {
+    header.textContent = 'Dienstplan optimieren — Erzieherinnen anfragen';
+    hinweis.innerHTML = '<strong>Öffnungszeiten verbessern:</strong> Die aktuellen Schichten ergeben reduzierte Öffnungszeiten. Frage Erzieherinnen, ob sie ihre Schicht anpassen können.';
+  } else {
+    header.textContent = 'Schritt 1 — Vertretung suchen';
+    hinweis.innerHTML = '<strong>Gestufter Prozess:</strong> Frage erst die beste Option. Bei Absage → nächste Person fragen. So vermeidest du unnötige Anfragen.';
+  }
+
+  // Aktive nach Krankheit/Overrides
+  var active = getActiveStaff(selectedDay);
+  var fkCount = active.filter(function(s) { return s.isFK; }).length;
+
+  // Wer hat FREI und könnte einspringen?
+  var freeToday = STAFF.filter(function(p) {
     return p.shifts[selectedDay] === 'FREI' && !sickStaff[p.name + '-' + selectedDay];
   });
 
-  // Wer arbeitet, koennte aber Schicht verschieben/verlaengern?
-  const shiftable = STAFF.filter(function(p) {
-    const shift = p.shifts[selectedDay];
+  // Wer arbeitet, könnte aber Schicht verschieben/verlängern?
+  var shiftable = STAFF.filter(function(p) {
+    var shift = p.shifts[selectedDay];
     return shift !== 'FREI' && !sickStaff[p.name + '-' + selectedDay];
   });
 
   // Berechne was gebraucht wird
-  const win = computeOpeningWindow(active);
+  var win = computeOpeningWindow(active);
   var needEarly = false, needLate = false, needFK = fkCount < 2;
 
   // Zeitfenster-Analyse: Wo fehlt Personal?
   var gapStart = null, gapEnd = null;
   if (win.status !== 'GESCHLOSSEN') {
-    // Pruefen ob frueh oder spaet Personal fehlt
-    const earlyFK = active.filter(function(s) { return s.isFK && s.start <= parseTime('08:00'); }).length;
-    const lateFK = active.filter(function(s) { return s.isFK && s.end >= parseTime('16:00'); }).length;
+    var earlyFK = active.filter(function(s) { return s.isFK && s.start <= parseTime('08:00'); }).length;
+    var lateFK = active.filter(function(s) { return s.isFK && s.end >= parseTime('16:00'); }).length;
     if (earlyFK < 2) needEarly = true;
     if (lateFK < 2) needLate = true;
   }
 
-  // Kranke Personen Schichten fuer Gap-Berechnung
+  // Kranke Personen Schichten für Gap-Berechnung
   sickToday.forEach(function(p) {
-    const shift = p.shifts[selectedDay];
+    var shift = p.shifts[selectedDay];
     if (shift !== 'FREI') {
-      const parts = shift.split('-');
-      const s = parseTime(parts[0]);
-      const e = parseTime(parts[1]);
+      var parts = shift.split('-');
+      var s = parseTime(parts[0]);
+      var e = parseTime(parts[1]);
       if (gapStart === null || s < gapStart) gapStart = s;
       if (gapEnd === null || e > gapEnd) gapEnd = e;
     }
   });
+
+  // Im Optimier-Modus: Lücken aus reduzierten Öffnungszeiten ableiten
+  if (optimizeMode && win.status !== 'GESCHLOSSEN') {
+    if (win.start > parseTime('07:30')) {
+      gapStart = parseTime('07:30');
+      if (!gapEnd || gapEnd < win.start) gapEnd = win.start + 60;
+    }
+    if (win.end < parseTime('16:30')) {
+      if (!gapStart) gapStart = win.end - 60;
+      gapEnd = parseTime('16:30');
+    }
+  }
 
   // Vertretungs-Optionen generieren
   var options = [];
@@ -1334,12 +1404,10 @@ function searchSubstitutes() {
     var suggestedShift = formatTime(gapStart || parseTime('08:00')) + '-' + formatTime(gapEnd || parseTime('14:30'));
     var shiftDuration = ((gapEnd || parseTime('14:30')) - (gapStart || parseTime('08:00'))) / 60;
 
-    // Constraint: >6h braucht Pause
     var constraints = [];
     if (shiftDuration > 6) {
-      constraints.push({ type: 'warn', text: '>' + Math.round(shiftDuration) + 'h = Pause noetig' });
-      // Kuerzere Schicht vorschlagen
-      var maxEnd = (gapStart || parseTime('08:00')) + 360; // 6h
+      constraints.push({ type: 'warn', text: '>' + Math.round(shiftDuration) + 'h = Pause nötig' });
+      var maxEnd = (gapStart || parseTime('08:00')) + 360;
       suggestedShift = formatTime(gapStart || parseTime('08:00')) + '-' + formatTime(Math.min(maxEnd, gapEnd || parseTime('14:30')));
       shiftDuration = Math.min(6, shiftDuration);
     }
@@ -1349,7 +1417,7 @@ function searchSubstitutes() {
     }
 
     if (person.type === 'FK') {
-      constraints.push({ type: 'ok', text: 'Fachkraft \u2192 FK-Schluessel' });
+      constraints.push({ type: 'ok', text: 'Fachkraft \u2192 FK-Schlüssel' });
     }
 
     options.push({
@@ -1363,24 +1431,22 @@ function searchSubstitutes() {
     });
   });
 
-  // Option B: Schicht verschieben/verlaengern
+  // Option B: Schicht verschieben/verlängern
   shiftable.forEach(function(person) {
-    const shift = person.shifts[selectedDay];
-    const parts = shift.split('-');
-    const pStart = parseTime(parts[0]);
-    const pEnd = parseTime(parts[1]);
-    const currentDuration = (pEnd - pStart) / 60;
+    var shift = person.shifts[selectedDay];
+    var parts = shift.split('-');
+    var pStart = parseTime(parts[0]);
+    var pEnd = parseTime(parts[1]);
 
     var suggestion = null;
     var constraints = [];
 
-    // Kann frueher kommen?
+    // Kann früher kommen?
     if (needEarly && pStart > parseTime('08:00')) {
       var newStart = Math.max(parseTime('07:30'), pStart - 60);
       var newDuration = (pEnd - newStart) / 60;
 
       if (newDuration > 6) {
-        // Muss frueher gehen oder Pause einplanen
         var newEnd = newStart + 360;
         constraints.push({ type: 'warn', text: 'Nur bis ' + formatTime(newEnd) + ' (6h-Regel)' });
         suggestion = formatTime(newStart) + '-' + formatTime(newEnd);
@@ -1389,7 +1455,7 @@ function searchSubstitutes() {
         suggestion = formatTime(newStart) + '-' + formatTime(pEnd);
       }
     }
-    // Kann laenger bleiben?
+    // Kann länger bleiben?
     else if (needLate && pEnd < parseTime('16:00')) {
       var newEnd2 = Math.min(parseTime('16:30'), pEnd + 60);
       var newDuration2 = (newEnd2 - pStart) / 60;
@@ -1421,18 +1487,25 @@ function searchSubstitutes() {
     }
   });
 
-  // Optionen cachen fuer markResponse
+  // Optionen cachen für markResponse
   lastOptions = options;
 
   // Rendern
   renderSubstitutes(options, sickNames, dayName, dayDate);
 
-  // Prozess-Schritte anzeigen
+  // Prozess-Schritte
   var steps = document.getElementById('processSteps');
-  steps.style.display = 'flex';
-  document.getElementById('step1').className = 'process-step done';
-  document.getElementById('step2').className = 'process-step active';
-  document.getElementById('step3').className = 'process-step';
+  if (optimizeMode) {
+    steps.style.display = 'none';
+  } else {
+    steps.style.display = 'flex';
+    document.getElementById('step1').className = 'process-step done';
+    document.getElementById('step2').className = 'process-step active';
+    document.getElementById('step3').className = 'process-step';
+  }
+
+  // Eltern-Button im Optimiermodus ausblenden
+  document.getElementById('noSubBtn').style.display = optimizeMode ? 'none' : 'block';
 
   var section = document.getElementById('subSection');
   section.classList.add('visible');
@@ -1440,7 +1513,7 @@ function searchSubstitutes() {
 }
 
 function renderSubstitutes(options, sickNames, dayName, dayDate) {
-  const container = document.getElementById('subList');
+  var container = document.getElementById('subList');
   container.innerHTML = '';
 
   if (options.length === 0) {
@@ -1456,7 +1529,7 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
     return 0;
   });
 
-  // Prioritaet neu nummerieren nach Sortierung
+  // Priorität neu nummerieren nach Sortierung
   options.forEach(function(opt, i) { opt.priorityNum = i + 1; });
 
   options.forEach(function(opt, idx) {
@@ -1469,16 +1542,30 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
 
     // WhatsApp-Nachricht generieren
     var waMsg = '';
-    if (opt.type === 'frei') {
-      waMsg = 'Hey ' + opt.person.name + ',\n\n' +
-        sickNames.join(' und ') + (sickNames.length > 1 ? ' sind' : ' ist') + ' am ' + dayName + ' (' + dayDate + ') krank.\n\n' +
-        'Koenntest du einspringen? Wir bräuchten dich von ' + opt.suggestedShift + '.\n\n' +
-        'Waere das moeglich? Gib kurz Bescheid!';
+    if (optimizeMode) {
+      if (opt.type === 'frei') {
+        waMsg = 'Hey ' + opt.person.name + ',\n\n' +
+          'wir haben am ' + dayName + ' (' + dayDate + ') gerade reduzierte Öffnungszeiten.\n\n' +
+          'Könntest du einspringen? Wir bräuchten dich von ' + opt.suggestedShift + '.\n\n' +
+          'Wäre das möglich? Gib kurz Bescheid!';
+      } else {
+        waMsg = 'Hey ' + opt.person.name + ',\n\n' +
+          'wir haben am ' + dayName + ' (' + dayDate + ') gerade reduzierte Öffnungszeiten.\n\n' +
+          'Könntest du deine Schicht von ' + opt.currentShift + ' auf ' + opt.suggestedShift + ' verschieben?\n\n' +
+          'Wäre das möglich? Gib kurz Bescheid!';
+      }
     } else {
-      waMsg = 'Hey ' + opt.person.name + ',\n\n' +
-        sickNames.join(' und ') + (sickNames.length > 1 ? ' sind' : ' ist') + ' am ' + dayName + ' (' + dayDate + ') krank.\n\n' +
-        'Koenntest du deine Schicht von ' + opt.currentShift + ' auf ' + opt.suggestedShift + ' verschieben?\n\n' +
-        'Waere das moeglich? Gib kurz Bescheid!';
+      if (opt.type === 'frei') {
+        waMsg = 'Hey ' + opt.person.name + ',\n\n' +
+          sickNames.join(' und ') + (sickNames.length > 1 ? ' sind' : ' ist') + ' am ' + dayName + ' (' + dayDate + ') krank.\n\n' +
+          'Könntest du einspringen? Wir bräuchten dich von ' + opt.suggestedShift + '.\n\n' +
+          'Wäre das möglich? Gib kurz Bescheid!';
+      } else {
+        waMsg = 'Hey ' + opt.person.name + ',\n\n' +
+          sickNames.join(' und ') + (sickNames.length > 1 ? ' sind' : ' ist') + ' am ' + dayName + ' (' + dayDate + ') krank.\n\n' +
+          'Könntest du deine Schicht von ' + opt.currentShift + ' auf ' + opt.suggestedShift + ' verschieben?\n\n' +
+          'Wäre das möglich? Gib kurz Bescheid!';
+      }
     }
 
     // Constraints HTML
@@ -1493,21 +1580,29 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
 
     var statusHtml = '';
     if (response === 'ja') {
-      statusHtml = '<div class="anfrage-status ja">\u2713 Hat zugesagt!</div>';
+      statusHtml = '<div class="anfrage-status ja">\u2713 Hat zugesagt! Schicht: ' + (shiftOverrides[key] || opt.suggestedShift) + '</div>';
     } else if (response === 'nein') {
       statusHtml = '<div class="anfrage-status nein">\u2717 Kann nicht</div>';
     } else if (response === 'warten') {
       statusHtml = '<div class="anfrage-status warten">\u23F3 Wartet auf Antwort...</div>';
     }
 
-    // WhatsApp-Direktlink generieren
+    // WhatsApp-Direktlink
     var waLink = buildWhatsAppLink(opt.person.phone, waMsg);
 
+    // Editierbares Zeitfeld
+    var timeFieldHtml = '<div class="shift-time-row">' +
+      '<span class="shift-time-label">Vorgeschlagene Schicht:</span>' +
+      '<input type="text" class="shift-time-input" id="time-' + opt.person.name + '-' + idx + '" value="' + opt.suggestedShift + '" ' +
+      'onchange="updateShiftTime(\'' + opt.person.name + '\', ' + idx + ')">' +
+      '</div>';
+
+    // Aktions-Buttons
     var actionsHtml = '';
     if (!response) {
       actionsHtml =
         '<div class="sub-card-actions">' +
-          '<a href="' + waLink + '" target="_blank" id="walink-' + opt.person.name + '-' + idx + '" class="btn-copy-wa" style="text-decoration:none;text-align:center;">' +
+          '<a href="' + waLink + '" target="_blank" id="walink-' + opt.person.name + '-' + idx + '" class="btn-copy-wa">' +
             '\uD83D\uDCF2 WhatsApp an ' + opt.person.name +
           '</a>' +
         '</div>' +
@@ -1525,7 +1620,7 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
     } else if (response === 'warten') {
       actionsHtml =
         '<div class="sub-card-actions">' +
-          '<a href="' + waLink + '" target="_blank" id="walink-' + opt.person.name + '-' + idx + '" class="btn-copy-wa" style="text-decoration:none;text-align:center;">' +
+          '<a href="' + waLink + '" target="_blank" id="walink-' + opt.person.name + '-' + idx + '" class="btn-copy-wa">' +
             '\uD83D\uDCF2 Nochmal an ' + opt.person.name +
           '</a>' +
         '</div>' +
@@ -1535,6 +1630,20 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
           '</button>' +
           '<button class="btn-antwort-nein" onclick="markResponse(\'' + opt.person.name + '\', \'nein\')">' +
             '\u2717 Absage' +
+          '</button>' +
+        '</div>';
+    } else if (response === 'ja') {
+      actionsHtml =
+        '<div class="sub-card-actions">' +
+          '<button class="btn-undo" onclick="markResponse(\'' + opt.person.name + '\', \'reset\')">' +
+            '\u21A9 Rückgängig' +
+          '</button>' +
+        '</div>';
+    } else if (response === 'nein') {
+      actionsHtml =
+        '<div class="sub-card-actions">' +
+          '<button class="btn-undo" onclick="markResponse(\'' + opt.person.name + '\', \'reset\')">' +
+            '\u21A9 Rückgängig' +
           '</button>' +
         '</div>';
     }
@@ -1554,11 +1663,12 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
       '<div class="sub-card-body">' +
         statusHtml +
         constraintsHtml +
-        '<textarea class="wa-preview" id="wa-' + opt.person.name + '-' + idx + '" oninput="updateSubWaLink(\'' + opt.person.name + '\', ' + idx + ')">' + waMsg + '</textarea>' +
+        timeFieldHtml +
+        '<textarea class="wa-preview" id="wa-' + opt.person.name + '-' + idx + '" oninput="autoResize(this); updateSubWaLink(\'' + opt.person.name + '\', ' + idx + ')">' + waMsg + '</textarea>' +
         actionsHtml +
       '</div>';
 
-    // Wenn jemand zugesagt hat, andere Karten abdunkeln
+    // Styling je nach Status
     if (response === 'ja') {
       card.style.borderColor = '#c8e6c9';
       card.querySelector('.sub-card-header').style.background = '#e8f5e9';
@@ -1568,34 +1678,97 @@ function renderSubstitutes(options, sickNames, dayName, dayDate) {
 
     container.appendChild(card);
   });
+
+  // Alle Textareas auto-resizen
+  setTimeout(autoResizeAll, 10);
 }
 
-// Letzte Optionen merken fuer re-render und markResponse
+// Letzte Optionen merken für re-render und markResponse
 var lastOptions = [];
 
 function markResponse(name, response) {
   var key = name + '-' + selectedDay;
-  subResponses[key] = response;
 
-  if (response === 'ja') {
-    // Finde die akzeptierte Option und setze Shift-Override
+  if (response === 'reset') {
+    delete subResponses[key];
+    delete shiftOverrides[key];
+    showToast('\u21A9 ' + name + ' — Antwort zurückgesetzt');
+  } else if (response === 'ja') {
+    subResponses[key] = response;
+    // Finde die Option und setze Shift-Override (aus Zeitfeld lesen falls geändert)
     var opt = lastOptions.find(function(o) { return o.person.name === name; });
     if (opt) {
-      shiftOverrides[key] = opt.suggestedShift;
+      var idx = lastOptions.indexOf(opt);
+      var timeInput = document.getElementById('time-' + name + '-' + idx);
+      var shiftValue = timeInput ? timeInput.value.trim() : opt.suggestedShift;
+      shiftOverrides[key] = shiftValue;
     }
-    showToast('\u2713 ' + name + ' hat zugesagt! Oeffnungszeiten aktualisiert.');
+    showToast('\u2713 ' + name + ' hat zugesagt! Öffnungszeiten aktualisiert.');
   } else if (response === 'nein') {
-    // Override entfernen falls vorher zugesagt
+    subResponses[key] = response;
     delete shiftOverrides[key];
+  } else {
+    subResponses[key] = response;
   }
 
-  // Alles neu rendern: Staff-Liste, Ampel, Oeffnungszeiten
+  // Alles neu rendern
   renderStaff();
   updateAmpel();
   updateHours();
-
-  // Vertretungs-Bereich neu rendern
+  updateSearchBtn();
   searchSubstitutes();
+}
+
+function updateShiftTime(name, idx) {
+  var timeInput = document.getElementById('time-' + name + '-' + idx);
+  if (!timeInput) return;
+  var newTime = timeInput.value.trim();
+
+  // Validierung: Format HH:MM-HH:MM
+  if (!/^\d{2}:\d{2}-\d{2}:\d{2}$/.test(newTime)) {
+    showToast('Format: HH:MM-HH:MM (z.B. 08:00-14:00)');
+    return;
+  }
+
+  var key = name + '-' + selectedDay;
+
+  // Option aktualisieren
+  var opt = lastOptions.find(function(o) { return o.person.name === name; });
+  if (opt) {
+    opt.suggestedShift = newTime;
+  }
+
+  // Falls bereits zugesagt: Override sofort aktualisieren
+  if (subResponses[key] === 'ja') {
+    shiftOverrides[key] = newTime;
+    renderStaff();
+    updateAmpel();
+    updateHours();
+    updateSearchBtn();
+  }
+
+  // WhatsApp-Nachricht aktualisieren
+  var waEl = document.getElementById('wa-' + name + '-' + idx);
+  if (waEl) {
+    var text = waEl.value;
+    // Alte Schichtzeit im Text ersetzen
+    text = text.replace(/\d{2}:\d{2}-\d{2}:\d{2}/g, newTime);
+    waEl.value = text;
+    autoResize(waEl);
+    updateSubWaLink(name, idx);
+  }
+
+  // Detail-Text aktualisieren
+  var card = document.getElementById('sub-' + name + '-' + selectedDay);
+  if (card) {
+    var detail = card.querySelector('.sub-card-detail');
+    if (detail && opt) {
+      var typeLabel = opt.type === 'frei' ? 'Hat frei \u2192 einspringen' : 'Schicht verschieben';
+      detail.textContent = typeLabel + ' \u2192 ' + newTime;
+    }
+  }
+
+  showToast('Schichtzeit aktualisiert: ' + newTime);
 }
 
 function updateSubWaLink(name, idx) {
@@ -1620,17 +1793,20 @@ function showParentMessages() {
   var section = document.getElementById('messagesSection');
   section.classList.add('visible');
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Textareas auto-resizen
+  setTimeout(autoResizeAll, 10);
 }
 
 function generateMessages() {
-  const dayName = DAYS_FULL[selectedDay];
-  const dayDate = DATES[selectedDay];
+  var dayName = DAYS_FULL[selectedDay];
+  var dayDate = DATES[selectedDay];
 
-  const sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
-  const sickNames = sickToday.map(function(p) { return p.name; }).join(' und ');
+  var sickToday = STAFF.filter(function(p) { return sickStaff[p.name + '-' + selectedDay]; });
+  var sickNames = sickToday.map(function(p) { return p.name; }).join(' und ');
 
-  const active = getActiveStaff(selectedDay);
-  const win = computeOpeningWindow(active);
+  var active = getActiveStaff(selectedDay);
+  var win = computeOpeningWindow(active);
 
   // Betreuungszeiten berechnen
   var zeitenText = '';
@@ -1640,7 +1816,6 @@ function generateMessages() {
     var startStr = formatTime(win.start);
     var endStr = formatTime(win.end);
     zeitenText = dayName + ' ' + dayDate + ' --- ' + startStr.replace(':', '.') + '-' + endStr.replace(':', '.');
-    // Pruefen ob reduziert
     if (win.start > parseTime('07:30') || win.end < parseTime('16:30')) {
       zeitenText += ' !';
     }
@@ -1652,26 +1827,24 @@ function generateMessages() {
   if (tpl1) {
     msg1 = fillTemplate(tpl1, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText });
   } else {
-    msg1 = 'Wichtige Info fuer ' + (selectedDay === 0 ? 'morgen' : dayName) + ', ' + dayDate + '\n\n' +
-      sickNames + ' faellt leider krankheitsbedingt aus' +
+    msg1 = 'Wichtige Info für ' + (selectedDay === 0 ? 'morgen' : dayName) + ', ' + dayDate + '\n\n' +
+      sickNames + ' fällt leider krankheitsbedingt aus' +
       (sickToday.length > 1 ? '.' : ', daher bin ich gerade dabei umzuplanen.') + '\n\n' +
-      'Auf Grund dessen aendern sich die Betreuungszeiten wie folgt:\n\n' +
+      'Auf Grund dessen ändern sich die Betreuungszeiten wie folgt:\n\n' +
       zeitenText + '\n\n' +
-      'Bitte schaut, dass ihr mind. 5min vor Ende dieser Zeit da seid und mit euren Kindern puenktlich die Kita verlasst.';
+      'Bitte schaut, dass ihr mind. 5min vor Ende dieser Zeit da seid und mit euren Kindern pünktlich die Kita verlasst.';
   }
 
   // ===== Poll-Optionen generieren =====
-  var pollTitle = 'Abfrage fuer ' + dayName + ', ' + dayDate;
+  var pollTitle = 'Abfrage für ' + dayName + ', ' + dayDate;
   var pollOpts = [];
   if (win.status !== 'GESCHLOSSEN') {
     var startF = formatTime(win.start).replace(':', '.');
     var endF = formatTime(win.end).replace(':', '.');
-    // Frueh-Betreuung wenn reduziert
     if (win.start > parseTime('07:30')) {
       pollOpts.push('Mein Kind braucht ab ' + startF + ' Betreuung (Max 5)');
     }
     pollOpts.push('Mein Kind kann ab ' + (win.start > parseTime('08:30') ? startF : '9Uhr') + ' kommen.');
-    // Spaet-Betreuung wenn reduziert
     if (win.end < parseTime('16:30')) {
       pollOpts.push('Mein Kind braucht von ' + endF + '-16.00 noch Betreuung (Max 5)');
     }
@@ -1685,7 +1858,7 @@ function generateMessages() {
   });
   document.getElementById('pollOptions').innerHTML = pollHtml;
 
-  // ===== Nachricht 2: Finale Info / Betreuungszeit (Denise-Stil) =====
+  // ===== Nachricht 2: Finale Info (Denise-Stil) =====
   var tpl2 = loadTemplate(2);
   var msg2;
   if (tpl2) {
@@ -1693,14 +1866,14 @@ function generateMessages() {
   } else {
     if (win.status === 'GESCHLOSSEN') {
       msg2 = 'Betreuungszeit ' + dayName + ', ' + dayDate + '\n\n' +
-        'Leider muessen wir die Kita am ' + dayName + ' geschlossen halten.\n\n' +
-        'Bitte organisiert alternative Betreuung fuer eure Kinder.';
+        'Leider müssen wir die Kita am ' + dayName + ' geschlossen halten.\n\n' +
+        'Bitte organisiert alternative Betreuung für eure Kinder.';
     } else {
       var startF2 = formatTime(win.start).replace(':', '.');
       var endF2 = formatTime(win.end).replace(':', '.');
       msg2 = 'Betreuungszeit ' + (selectedDay === 0 ? 'morgen' : dayName) + ', ' + dayDate + '\n\n' +
         startF2 + '-' + endF2 + ' alle Kinder\n\n' +
-        'Die finalen Oeffnungszeiten stehen fest. Bitte haltet euch an die Zeiten.';
+        'Die finalen Öffnungszeiten stehen fest. Bitte haltet euch an die Zeiten.';
     }
   }
 
@@ -1710,10 +1883,10 @@ function generateMessages() {
   if (tpl3) {
     msg3 = fillTemplate(tpl3, { dayName: dayName, dayDate: dayDate, sickNames: sickNames, zeiten: zeitenText });
   } else {
-    msg3 = 'Wichtige Info fuer ' + dayName + ', ' + dayDate + '\n\n' +
-      'Auf Grund von krankheitsbedingten Ausfaellen muessen wir die Kita am ' + dayName + ' leider geschlossen halten.\n\n' +
-      'Grund: Weniger als 2 Fachkraefte anwesend (KiBiz-Vorschrift).\n\n' +
-      'Bitte organisiert alternative Betreuung fuer eure Kinder.\n\n' +
+    msg3 = 'Wichtige Info für ' + dayName + ', ' + dayDate + '\n\n' +
+      'Auf Grund von krankheitsbedingten Ausfällen müssen wir die Kita am ' + dayName + ' leider geschlossen halten.\n\n' +
+      'Grund: Weniger als 2 Fachkräfte anwesend (KiBiz-Vorschrift).\n\n' +
+      'Bitte organisiert alternative Betreuung für eure Kinder.\n\n' +
       'Entschuldigt die kurzfristige Absage.';
   }
 
@@ -1741,18 +1914,16 @@ function updateWaLink(num) {
 
 function saveTemplate(num, btn) {
   var text = document.getElementById('msg' + num).value;
-  // Platzhalter zurueck einsetzen
   var tpl = text;
-  // Speichern
   try {
     localStorage.setItem('kita_tpl_' + num, tpl);
   } catch(e) {}
   btn.classList.add('saved');
   btn.innerHTML = '\u2713 Gespeichert!';
-  showToast('\u2713 Template gespeichert — wird beim naechsten Mal automatisch geladen');
+  showToast('\u2713 Template gespeichert — wird beim nächsten Mal automatisch geladen');
   setTimeout(function() {
     btn.classList.remove('saved');
-    btn.innerHTML = '\uD83D\uDCBE Template speichern';
+    btn.innerHTML = '\uD83D\uDCBE Template';
   }, 2500);
   showTemplateHints();
 }
@@ -1769,14 +1940,13 @@ function resetTemplate(num) {
   try {
     localStorage.removeItem('kita_tpl_' + num);
   } catch(e) {}
-  showToast('Template geloescht — Standard wird verwendet');
+  showToast('Template gelöscht — Standard wird verwendet');
   showTemplateHints();
-  // Nachricht neu generieren
   generateMessages();
+  setTimeout(autoResizeAll, 10);
 }
 
 function fillTemplate(tpl, data) {
-  // Einfache Platzhalter ersetzen
   return tpl
     .replace(/\{dayName\}/g, data.dayName)
     .replace(/\{dayDate\}/g, data.dayDate)
@@ -1801,10 +1971,6 @@ function showTemplateHints() {
 }
 
 // ==========================================
-// KOPIEREN (Shared)
-// ==========================================
-
-// ==========================================
 // WHATSAPP DIREKTLINKS
 // ==========================================
 
@@ -1813,12 +1979,10 @@ function buildWhatsAppLink(phone, text) {
   if (phone) {
     return 'https://wa.me/' + phone + '?text=' + encoded;
   }
-  // Ohne Nummer: oeffnet WhatsApp Kontakt-Picker
   return 'https://wa.me/?text=' + encoded;
 }
 
 async function doCopy(text) {
-  // Methode 1: Web Share API
   if (navigator.share) {
     try {
       await navigator.share({ text: text });
@@ -1826,7 +1990,6 @@ async function doCopy(text) {
     } catch(e) {}
   }
 
-  // Methode 2: Clipboard API
   if (navigator.clipboard && window.isSecureContext) {
     try {
       await navigator.clipboard.writeText(text);
@@ -1834,7 +1997,6 @@ async function doCopy(text) {
     } catch(e) {}
   }
 
-  // Methode 3: Textarea-Trick
   var ta = document.createElement('textarea');
   ta.value = text;
   ta.setAttribute('readonly', '');
@@ -1858,8 +2020,6 @@ async function doCopy(text) {
   return copied;
 }
 
-// copyMessage nicht mehr noetig — WhatsApp-Links direkt
-
 function showToast(text) {
   var toast = document.getElementById('toast');
   toast.textContent = text;
@@ -1876,6 +2036,7 @@ function resetAll() {
   subResponses = {};
   shiftOverrides = {};
   lastOptions = [];
+  optimizeMode = false;
   document.getElementById('subSection').classList.remove('visible');
   document.getElementById('messagesSection').classList.remove('visible');
   document.getElementById('processSteps').style.display = 'none';
